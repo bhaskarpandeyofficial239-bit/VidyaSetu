@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Class 6 Chemistry - VidyaSetu</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body { font-family: 'Open Sans', sans-serif; }
+    h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+    .tile { transition: transform 0.4s ease, box-shadow 0.4s ease; }
+    .tile:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 12px 25px rgba(0,0,0,0.15); }
+    .fade-in { opacity: 0; transform: translateY(30px); animation: fadeUp 0.8s forwards; }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-yellow-50 via-white to-yellow-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="fixed top-0 w-full bg-white/80 backdrop-blur-md shadow-md z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between p-4">
+      <h2 class="text-2xl font-bold text-yellow-600">🧪 VidyaSetu <span class="text-gray-700">Chemistry - Class 6</span></h2>
+      <button onclick="location.href='../../../../index.html'" class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-5 py-2 rounded-full">Back to Home</button>
+    </div>
+  </header>
+
+  <!-- Main Section -->
+  <main class="pt-28 pb-20 fade-in">
+    <div class="max-w-6xl mx-auto text-center">
+      <h1 class="text-4xl font-bold text-yellow-700 mb-4">Explore Chemistry Chapters</h1>
+      <p class="text-gray-600 mb-10">Interactive quizzes for curious minds</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-8">
+        <!-- Chapter 1 -->
+        <a href="lesson-1.html" class="tile bg-white rounded-2xl p-6 text-center shadow-md hover:bg-yellow-50 block">
+          <h3 class="text-2xl font-semibold text-yellow-600">Chapter 1</h3>
+          <p class="text-gray-600 mt-2">🔬 Atoms & Matter</p>
+          <div class="mt-4 inline-block bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-4 py-2 rounded-full">Take Quiz</div>
+        </a>
+
+        <!-- Chapter 2 -->
+        <a href="lesson-2.html" class="tile bg-white rounded-2xl p-6 text-center shadow-md hover:bg-yellow-50 block">
+          <h3 class="text-2xl font-semibold text-yellow-600">Chapter 2</h3>
+          <p class="text-gray-600 mt-2">💧 States of Matter</p>
+          <div class="mt-4 inline-block bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-4 py-2 rounded-full">Take Quiz</div>
+        </a>
+
+        <!-- Chapter 3 -->
+        <a href="lesson-3.html" class="tile bg-white rounded-2xl p-6 text-center shadow-md hover:bg-yellow-50 block">
+          <h3 class="text-2xl font-semibold text-yellow-600">Chapter 3</h3>
+          <p class="text-gray-600 mt-2">⚗️ Chemical Changes</p>
+          <div class="mt-4 inline-block bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-4 py-2 rounded-full">Take Quiz</div>
+        </a>
+
+        <!-- Chapter 4 -->
+        <a href="lesson-4.html" class="tile bg-white rounded-2xl p-6 text-center shadow-md hover:bg-yellow-50 block">
+          <h3 class="text-2xl font-semibold text-yellow-600">Chapter 4</h3>
+          <p class="text-gray-600 mt-2">🧃 Acids & Bases</p>
+          <div class="mt-4 inline-block bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-4 py-2 rounded-full">Take Quiz</div>
+        </a>
+      </div>
+      <!-- Chapter 5 -->
+        <a href="molecule.html" class="tile bg-white rounded-2xl p-6 text-center shadow-md hover:bg-yellow-50 block">
+          <h3 class="text-2xl font-semibold text-yellow-600">Chapter 4</h3>
+          <p class="text-gray-600 mt-2">⌬MOLECULE GENERATOR</p>
+          <div class="mt-4 inline-block bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-4 py-2 rounded-full">Take Quiz</div>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-yellow-700 text-white py-8 text-center mt-12">
+    <p>Made with 🧪 for Nabha Students | Powered by SIH</p>
+    <p class="mt-2">Contact: support@nabhaedu.in | Helpline: +91-XXXX-XXXXXX</p>
+  </footer>
+
+</body>
+</html>

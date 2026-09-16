@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Date Sheet - VidyaSetu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; }
+
+    .fade-in { opacity: 0; transform: translateY(10px); animation: fadeUp 0.6s ease-out forwards; }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Header -->
+  <header class="bg-sky-700 text-white flex justify-between items-center px-6 py-4 shadow-md">
+    <h1 class="text-2xl font-bold">📘 VIDYASETU</h1>
+    <div class="flex items-center space-x-4">
+      <span class="font-bold text-lg">HELLO, RAHUL 👋</span>
+      <img src="https://i.pravatar.cc/40?img=23" class="w-10 h-10 rounded-full border-2 border-white">
+      <a href="../auth/login.html" class="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600">Logout</a>
+      <button onclick="openLangModal()" class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-medium hover-lift">🌐 Language</button>
+    </div>
+  </header>
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg min-h-screen p-6">
+      <nav class="space-y-4 text-sm font-medium text-gray-700">
+        <a href="attendance.html" class="block p-3 rounded-lg hover:bg-sky-100">📊 Attendance</a>
+        <a href="marks.html" class="block p-3 rounded-lg hover:bg-sky-100">📝 Marks</a>
+        <a href="date-sheet.html" class="block p-3 rounded-lg bg-sky-100">📅 Date Sheet</a>
+        <a href="assignments1.html" class="block p-3 rounded-lg hover:bg-sky-100">📚 Assignments</a>
+        <a href="courses.html" class="block p-3 rounded-lg hover:bg-sky-100">📚 My Courses</a>
+        <a href="quizzes1.html" class="block p-3 rounded-lg hover:bg-sky-100">🎮 Quizzes</a>
+        <a href="videos1.html" class="block p-3 rounded-lg hover:bg-sky-100">🎥 Video Library</a>
+        <a href="achievements1.html" class="block p-3 rounded-lg hover:bg-sky-100">🏆 Achievements</a>
+        <a href="community1.html" class="block p-3 rounded-lg hover:bg-sky-100">👥 Community</a>
+        <a href="community1.html" class="block p-3 rounded-lg hover:bg-sky-100">🖥️  Join class</a>
+        <a href="community1.html" class="block p-3 rounded-lg hover:bg-sky-100">🙋 Ask doubt</a>
+        <a href="settings1.html" class="block p-3 rounded-lg hover:bg-sky-100">⚙️ Settings</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8 fade-in">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Exam Date Sheet</h2>
+
+      <!-- Summary Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-4 rounded shadow hover-lift text-center">
+          <h3 class="text-sm text-gray-500">Total Subjects</h3>
+          <p class="text-xl font-semibold text-blue-600">5</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow hover-lift text-center">
+          <h3 class="text-sm text-gray-500">Start Date</h3>
+          <p class="text-xl font-semibold text-gray-800">20 Sep 2025</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow hover-lift text-center">
+          <h3 class="text-sm text-gray-500">Duration</h3>
+          <p class="text-xl font-semibold text-gray-700">10 Days</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow hover-lift text-center">
+          <h3 class="text-sm text-gray-500">First Exam</h3>
+          <p class="text-xl font-semibold text-green-600">Mathematics</p>
+        </div>
+      </div>
+
+      <!-- Exam Timetable -->
+      <h3 class="text-lg font-medium text-gray-700 mb-4">Exam Schedule</h3>
+      <div class="overflow-x-auto mb-10">
+        <table class="min-w-full bg-white rounded shadow text-sm">
+          <thead class="bg-gray-100 text-gray-600">
+            <tr>
+              <th class="text-left px-4 py-2">Date</th>
+              <th class="text-left px-4 py-2">Day</th>
+              <th class="text-left px-4 py-2">Subject</th>
+              <th class="text-center px-4 py-2">Time</th>
+              <th class="text-center px-4 py-2">Duration</th>
+              <th class="text-left px-4 py-2">Venue</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-t">
+              <td class="px-4 py-2">20 Sep</td>
+              <td class="px-4 py-2">Friday</td>
+              <td class="px-4 py-2">Mathematics</td>
+              <td class="text-center px-4 py-2">09:00–12:00</td>
+              <td class="text-center px-4 py-2">3 hrs</td>
+              <td class="px-4 py-2">Room 101</td>
+            </tr>
+            <tr class="border-t">
+              <td class="px-4 py-2">21 Sep</td>
+              <td class="px-4 py-2">Saturday</td>
+              <td class="px-4 py-2">Science</td>
+              <td class="text-center px-4 py-2">09:00–12:00</td>
+              <td class="text-center px-4 py-2">3 hrs</td>
+              <td class="px-4 py-2">Room 102</td>
+            </tr>
+            <tr class="border-t">
+              <td class="px-4 py-2">23 Sep</td>
+              <td class="px-4 py-2">Monday</td>
+              <td class="px-4 py-2">English</td>
+              <td class="text-center px-4 py-2">09:00–12:00</td>
+              <td class="text-center px-4 py-2">3 hrs</td>
+              <td class="px-4 py-2">Room 103</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Download Section -->
+      <div class="bg-gray-100 p-6 rounded shadow text-center hover-lift mb-10">
+        <h3 class="text-sm font-medium text-gray-700">Download Date Sheet</h3>
+        <p class="text-xs text-gray-500 mt-1">Export your exam schedule as PDF or CSV</p>
+        <button class="mt-4 bg-sky-600 text-white px-6 py-2 rounded hover:bg-sky-700">Download</button>
+      </div>
+
+      <!-- Instructions -->
+      <div class="bg-white p-6 rounded shadow hover-lift">
+        <h3 class="text-sm font-medium text-gray-700 mb-2">Exam Instructions</h3>
+        <ul class="list-disc pl-5 text-sm text-gray-600 space-y-1">
+          <li>Report 30 minutes before the exam start time.</li>
+          <li>Carry your school ID card and admit card.</li>
+          <li>Mobile phones and smart devices are strictly prohibited.</li>
+          <li>Contact your class teacher for any queries.</li>
+        </ul>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

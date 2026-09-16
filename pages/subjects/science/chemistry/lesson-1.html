@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Atom Builder – Atoms & Molecules Game</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .btn {
+      background-color: #6366f1;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #4f46e5;
+    }
+    .game-box {
+      background-color: #ede9fe;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #c4b5fd;
+    }
+    .emoji {
+      font-size: 48px;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-indigo-50 via-white to-indigo-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
+      <h2 class="text-xl font-bold text-indigo-600">⚛️ Atom Builder – Atoms & Molecules Game</h2>
+      <a href="../../../../index.html" class="text-indigo-500 hover:underline">← Back to Chemistry Chapters</a>
+    </div>
+  </header>
+
+  <!-- Game Container -->
+  <main class="max-w-3xl mx-auto py-12 px-4 text-center">
+    <h1 class="text-3xl font-bold text-indigo-700 mb-4">🔬 Build the Molecule!</h1>
+    <p class="text-gray-600 mb-6">Choose the correct atoms to form each molecule and learn how matter is made!</p>
+
+    <div id="gameBox" class="game-box">
+      <!-- Game content will be injected here -->
+    </div>
+
+    <div id="feedback" class="mt-6 text-lg font-semibold"></div>
+    <div id="scoreDisplay" class="mt-2 text-indigo-700 font-medium">Score: 0</div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-indigo-700 text-white py-6 text-center">
+    <p>Made with ❤️ for Nabha Students | Powered by SIH</p>
+  </footer>
+
+  <!-- Game Script -->
+  <script>
+    let score = 0;
+    let moleculeIndex = 0;
+
+    const molecules = [
+      {
+        emoji: "💧",
+        name: "Water (H₂O)",
+        question: "Which atoms make up a water molecule?",
+        options: {
+          A: { text: "2 Hydrogen + 1 Oxygen", correct: true, fact: "Water is made of two hydrogen atoms and one oxygen atom." },
+          B: { text: "1 Hydrogen + 2 Oxygen", correct: false, fact: "That would be hydrogen peroxide!" }
+        }
+      },
+      {
+        emoji: "🌬️",
+        name: "Carbon Dioxide (CO₂)",
+        question: "Which atoms make up carbon dioxide?",
+        options: {
+          A: { text: "1 Carbon + 2 Oxygen", correct: true, fact: "CO₂ is made of one carbon atom and two oxygen atoms." },
+          B: { text: "2 Carbon + 1 Oxygen", correct: false, fact: "That’s not a stable molecule!" }
+        }
+      },
+      {
+        emoji: "🍃",
+        name: "Oxygen Gas (O₂)",
+        question: "Which atoms make up oxygen gas?",
+        options: {
+          A: { text: "2 Oxygen atoms", correct: true, fact: "Oxygen gas is made of two oxygen atoms bonded together." },
+          B: { text: "1 Oxygen + 1 Hydrogen", correct: false, fact: "That’s water, not oxygen gas!" }
+        }
+      }
+    ];
+
+    function loadMolecule(index) {
+      const mol = molecules[index];
+      const gameBox = document.getElementById("gameBox");
+      const feedback = document.getElementById("feedback");
+      feedback.innerHTML = "";
+
+      let html = `<div class="emoji">${mol.emoji}</div>`;
+      html += `<h2 class="text-2xl font-bold text-indigo-700 mt-2">${mol.name}</h2>`;
+      html += `<p class="mt-2 text-gray-700">${mol.question}</p>`;
+      html += `<div class="mt-4 space-y-2">`;
+
+      for (const key in mol.options) {
+        html += `<button class="btn" onclick="checkAnswer('${key}')">${key}. ${mol.options[key].text}</button><br>`;
+      }
+
+      html += `</div>`;
+      gameBox.innerHTML = html;
+    }
+
+    function checkAnswer(choiceKey) {
+      const mol = molecules[moleculeIndex];
+      const choice = mol.options[choiceKey];
+      const feedback = document.getElementById("feedback");
+
+      if (choice.correct) {
+        score += 10;
+        feedback.innerHTML = `✅ Correct! ${choice.fact}`;
+        feedback.className = "text-green-600";
+      } else {
+        score -= 5;
+        feedback.innerHTML = `❌ Incorrect. ${choice.fact}`;
+        feedback.className = "text-red-600";
+      }
+
+      document.getElementById("scoreDisplay").innerText = `Score: ${score}`;
+
+      moleculeIndex++;
+      if (moleculeIndex < molecules.length) {
+        setTimeout(() => loadMolecule(moleculeIndex), 2000);
+      } else {
+        setTimeout(() => {
+          document.getElementById("gameBox").innerHTML = `<h2 class="text-2xl font-bold text-green-600">🎉 Molecule Mission Complete!</h2><p class="mt-4 text-gray-700">Final Score: ${score} points. You’ve mastered atoms and molecules!</p>`;
+          document.getElementById("feedback").innerHTML = "";
+        }, 2000);
+      }
+    }
+
+    window.onload = () => loadMolecule(moleculeIndex);
+  </script>
+</body>
+</html>

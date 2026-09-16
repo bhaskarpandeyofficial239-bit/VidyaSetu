@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Body Part Match-Up - Class 2 Science</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 16px;
+      justify-items: center;
+      margin-top: 2rem;
+    }
+    .card {
+      width: 100px;
+      height: 120px;
+      perspective: 1000px;
+    }
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+      cursor: pointer;
+    }
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .card-front {
+      background-color: #fef9c3;
+      border: 2px solid #facc15;
+    }
+    .card-back {
+      background-color: #38bdf8;
+      color: white;
+      transform: rotateY(180deg);
+    }
+    .matched .card-inner {
+      background-color: #bbf7d0;
+      cursor: default;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-blue-50 via-white to-yellow-50 text-gray-800">
+
+  <!-- Header -->
+  <header class="fixed top-0 w-full bg-white/80 backdrop-blur-md shadow-md z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between p-4">
+      <h2 class="text-2xl font-bold text-blue-600">🧠 VidyaSetu <span class="text-gray-700">Body Part Match-Up</span></h2>
+      <nav class="space-x-6 hidden md:flex font-medium">
+        <a href="../lessons/class-2.html" class="hover:text-blue-500 transition">← Back to Chapters</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Game Section -->
+  <main class="pt-28 pb-20 text-center">
+    <h1 class="text-4xl font-bold text-blue-600 mb-4">🧩 Match Body Parts to Their Functions</h1>
+    <p class="text-gray-600 mb-6">Flip the cards and find the correct pairs!</p>
+
+    <div id="game" class="card-grid max-w-4xl mx-auto"></div>
+
+    <div id="score" class="mt-6 text-xl font-medium text-green-700 hidden"></div>
+    <button id="nextBtn" onclick="location.href='class-2-game-4.html'" class="hidden mt-6 bg-blue-500 text-white px-6 py-2 rounded-full">Next Chapter ➡️</button>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-blue-700 text-white py-8 text-center">
+    <p>Made with ❤️ for Nabha Students | Powered by SIH</p>
+    <p class="mt-2">Contact: support@nabhaedu.in | Helpline: +91-XXXX-XXXXXX</p>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    const pairs = [
+      { item: "👁️ Eye", match: "See" },
+      { item: "🦶 Foot", match: "Walk" },
+      { item: "🖐️ Hand", match: "Hold" },
+      { item: "👂 Ear", match: "Hear" },
+      { item: "👃 Nose", match: "Smell" },
+      { item: "🧠 Brain", match: "Think" }
+    ];
+
+    let cards = [];
+    let flippedCards = [];
+    let matchedCount = 0;
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function createCard(content, id) {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.dataset.id = id;
+
+      const inner = document.createElement("div");
+      inner.className = "card-inner";
+
+      const front = document.createElement("div");
+      front.className = "card-front";
+      front.textContent = "?";
+
+      const back = document.createElement("div");
+      back.className = "card-back";
+      back.textContent = content;
+
+      inner.appendChild(front);
+      inner.appendChild(back);
+      card.appendChild(inner);
+
+      card.addEventListener("click", () => flipCard(card, content));
+      return card;
+    }
+
+    function flipCard(card, content) {
+      if (card.classList.contains("flipped") || card.classList.contains("matched") || flippedCards.length === 2) return;
+
+      card.classList.add("flipped");
+      flippedCards.push({ card, content });
+
+      if (flippedCards.length === 2) {
+        const [first, second] = flippedCards;
+        if (isMatch(first.content, second.content)) {
+          first.card.classList.add("matched");
+          second.card.classList.add("matched");
+          matchedCount += 2;
+          flippedCards = [];
+
+          if (matchedCount === cards.length) {
+            document.getElementById("score").textContent = `🎉 You matched all pairs! Great job!`;
+            document.getElementById("score").classList.remove("hidden");
+            document.getElementById("nextBtn").classList.remove("hidden");
+          }
+        } else {
+          setTimeout(() => {
+            first.card.classList.remove("flipped");
+            second.card.classList.remove("flipped");
+            flippedCards = [];
+          }, 1000);
+        }
+      }
+    }
+
+    function isMatch(a, b) {
+      return pairs.some(p => (p.item === a && p.match === b) || (p.item === b && p.match === a));
+    }
+
+    function initGame() {
+      const game = document.getElementById("game");
+      const contents = pairs.flatMap(p => [p.item, p.match]);
+      shuffle(contents).forEach((content, i) => {
+        const card = createCard(content, i);
+        cards.push(card);
+        game.appendChild(card);
+      });
+    }
+
+    initGame();
+  </script>
+
+</body>
+</html>

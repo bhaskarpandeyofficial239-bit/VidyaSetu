@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Dashboard - VidyaSetu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+  <!-- Navbar -->
+  <header class="bg-sky-700 text-white flex justify-between items-center px-6 py-4 shadow-md">
+    <h1 class="text-2xl font-bold">📘 VIDYASETU</h1>
+    <div class="flex items-center space-x-4">
+      <span class="font-bold text-lg">HELLO, TEACHER1 👋</span>
+      <img src="https://i.pravatar.cc/40?img=12" class="w-10 h-10 rounded-full border-2 border-white">
+      <a href="../auth/login.html" class="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600">Logout</a>
+    </div>
+  </header>
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg min-h-screen p-6">
+      <nav class="space-y-4">
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📊 Attendance Management</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📝 Gradebook</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📅 Class Schedule</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📚 Assignments</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">🎥 Video Lectures</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">💬 Announcements</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📂 Resources</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">👥 Student List</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📈 Performance Reports</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">⚙️ Settings</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+      <!-- Welcome Banner -->
+      <div class="bg-gradient-to-r from-sky-500 to-sky-400 text-white rounded-2xl p-6 shadow-md mb-8">
+        <h2 class="text-2xl font-bold">WELCOME BACK, TEACHER1 🚀</h2>
+        <p class="mt-2">Here’s what’s happening in your classes today.</p>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow-md text-center">
+          <h3 class="font-semibold text-lg">📚 Courses</h3>
+          <p class="text-2xl font-bold text-sky-600">5</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md text-center">
+          <h3 class="font-semibold text-lg">👨‍🎓 Students</h3>
+          <p class="text-2xl font-bold text-green-500">120</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md text-center">
+          <h3 class="font-semibold text-lg">📝 Pending Reviews</h3>
+          <p class="text-2xl font-bold text-yellow-500">8</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md text-center">
+          <h3 class="font-semibold text-lg">📅 Classes Today</h3>
+          <p class="text-2xl font-bold text-purple-500">3</p>
+        </div>
+      </div>
+
+      <!-- Today's Schedule -->
+      <h2 class="text-xl font-bold mb-4">📅 Today’s Schedule</h2>
+      <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+        <ul class="space-y-3">
+          <li class="flex justify-between">
+            <span>09:00 AM - Mathematics (Class 10)</span>
+            <button class="bg-sky-500 text-white px-3 py-1 rounded-lg hover:bg-sky-600">Start Class</button>
+          </li>
+          <li class="flex justify-between">
+            <span>11:00 AM - Physics (Class 12)</span>
+            <button class="bg-sky-500 text-white px-3 py-1 rounded-lg hover:bg-sky-600">Start Class</button>
+          </li>
+          <li class="flex justify-between">
+            <span>02:00 PM - Chemistry (Class 11)</span>
+            <button class="bg-sky-500 text-white px-3 py-1 rounded-lg hover:bg-sky-600">Start Class</button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Pending Assignments -->
+      <h2 class="text-xl font-bold mb-4">📝 Pending Assignments</h2>
+      <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+        <ul class="space-y-3">
+          <li class="flex justify-between">
+            <span>Rahul Sharma - Physics Project</span>
+            <button class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600">Review</button>
+          </li>
+          <li class="flex justify-between">
+            <span>Ravya Kapoor - Maths Assignment</span>
+            <button class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600">Review</button>
+          </li>
+          <li class="flex justify-between">
+            <span>Amit Verma - Chemistry Lab Report</span>
+            <button class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600">Review</button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Recent Announcements -->
+      <h2 class="text-xl font-bold mb-4">💬 Recent Announcements</h2>
+      <div class="bg-white p-6 rounded-xl shadow-md">
+        <ul class="space-y-3">
+          <li>📢 Parent-Teacher meeting scheduled for 20th Sept.</li>
+          <li>📢 New syllabus updates for Class 12 Physics.</li>
+          <li>📢 Science fair registrations open till 25th Sept.</li>
+        </ul>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Access | VidyaSetu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-sky-100 via-white to-indigo-100 text-slate-800">
+  <main class="mx-auto grid min-h-screen max-w-5xl items-center gap-10 px-5 py-10 lg:grid-cols-2">
+    <section>
+      <a href="../../index.html" class="text-sm font-semibold text-sky-700">← Back to VidyaSetu</a>
+      <p class="mt-8 text-sm font-bold uppercase tracking-[0.2em] text-sky-600">Learn. Play. Grow.</p>
+      <h1 class="mt-3 text-4xl font-bold leading-tight text-slate-900">Your learning journey starts here.</h1>
+      <p class="mt-4 max-w-md text-slate-600">Create a student account to access lessons, activities, and quizzes. Your password is stored securely.</p>
+    </section>
+
+    <section class="rounded-3xl bg-white p-7 shadow-xl shadow-sky-100 sm:p-9">
+      <div class="mb-6 flex rounded-xl bg-slate-100 p-1" role="tablist">
+        <button id="login-tab" class="w-1/2 rounded-lg bg-white px-3 py-2 font-semibold text-sky-700 shadow" type="button">Sign in</button>
+        <button id="register-tab" class="w-1/2 rounded-lg px-3 py-2 font-semibold text-slate-600" type="button">Create account</button>
+      </div>
+      <p id="message" class="mb-4 hidden rounded-lg px-3 py-2 text-sm" role="status"></p>
+
+      <form id="login-form" novalidate>
+        <label class="mb-1 block text-sm font-medium" for="login-email">Email</label>
+        <input id="login-email" type="email" autocomplete="email" required class="mb-4 w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100" placeholder="you@example.com">
+        <label class="mb-1 block text-sm font-medium" for="login-password">Password</label>
+        <input id="login-password" type="password" autocomplete="current-password" required class="mb-5 w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100" placeholder="Your password">
+        <button class="w-full rounded-lg bg-sky-600 py-2.5 font-semibold text-white transition hover:bg-sky-700" type="submit">Sign in</button>
+      </form>
+
+      <form id="register-form" class="hidden" novalidate>
+        <label class="mb-1 block text-sm font-medium" for="register-name">Full name</label>
+        <input id="register-name" type="text" autocomplete="name" required maxlength="80" class="mb-3 w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100" placeholder="Your full name">
+        <label class="mb-1 block text-sm font-medium" for="register-email">Email</label>
+        <input id="register-email" type="email" autocomplete="email" required class="mb-3 w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100" placeholder="you@example.com">
+        <label class="mb-1 block text-sm font-medium" for="register-grade">Class</label>
+        <select id="register-grade" required class="mb-3 w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"><option value="">Select your class</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option><option>Class 6</option><option>Class 7</option><option>Class 8</option></select>
+        <label class="mb-1 block text-sm font-medium" for="register-password">Password</label>
+        <input id="register-password" type="password" autocomplete="new-password" required minlength="8" class="mb-5 w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100" placeholder="At least 8 characters">
+        <button class="w-full rounded-lg bg-green-600 py-2.5 font-semibold text-white transition hover:bg-green-700" type="submit">Create student account</button>
+      </form>
+      <p class="mt-5 text-center text-xs text-slate-500">Student accounts only. Teachers can continue using their existing dashboard pages.</p>
+    </section>
+  </main>
+  <script>
+    const loginTab = document.querySelector('#login-tab');
+    const registerTab = document.querySelector('#register-tab');
+    const loginForm = document.querySelector('#login-form');
+    const registerForm = document.querySelector('#register-form');
+    const message = document.querySelector('#message');
+    function setMode(mode) {
+      const login = mode === 'login';
+      loginForm.classList.toggle('hidden', !login); registerForm.classList.toggle('hidden', login);
+      loginTab.className = `w-1/2 rounded-lg px-3 py-2 font-semibold ${login ? 'bg-white text-sky-700 shadow' : 'text-slate-600'}`;
+      registerTab.className = `w-1/2 rounded-lg px-3 py-2 font-semibold ${!login ? 'bg-white text-sky-700 shadow' : 'text-slate-600'}`;
+      message.classList.add('hidden');
+    }
+    function showMessage(text, isError = true) { message.textContent = text; message.className = `mb-4 rounded-lg px-3 py-2 text-sm ${isError ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`; }
+    async function request(endpoint, body) { const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); const result = await response.json(); if (!response.ok) throw new Error(result.error || 'Request failed.'); return result; }
+    function finish(result) { localStorage.setItem('vidyaSetuToken', result.token); localStorage.setItem('vidyaSetuStudent', JSON.stringify(result.student)); window.location.href = '../dashboards/student-dashboard.html'; }
+    loginTab.addEventListener('click', () => setMode('login')); registerTab.addEventListener('click', () => setMode('register'));
+    loginForm.addEventListener('submit', async event => { event.preventDefault(); try { const result = await request('/api/auth/login', { email: document.querySelector('#login-email').value, password: document.querySelector('#login-password').value }); finish(result); } catch (error) { showMessage(error.message); } });
+    registerForm.addEventListener('submit', async event => { event.preventDefault(); try { const result = await request('/api/auth/register', { name: document.querySelector('#register-name').value, email: document.querySelector('#register-email').value, grade: document.querySelector('#register-grade').value, password: document.querySelector('#register-password').value }); showMessage(result.emailStatus || result.message, false); finish(result); } catch (error) { showMessage(error.message); } });
+  </script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Attendance - VidyaSetu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; }
+
+    .fade-in { opacity: 0; transform: translateY(10px); animation: fadeUp 0.6s ease-out forwards; }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+    .calendar-day {
+      height: 70px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-radius: 0.375rem;
+      background-color: #f9fafb;
+    }
+    .calendar-day.present { background-color: #e0f2fe; color: #0369a1; }
+    .calendar-day.absent { background-color: #fee2e2; color: #b91c1c; }
+    .calendar-day.halfday { background-color: #fef9c3; color: #92400e; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Header (same as dashboard) -->
+  <header class="bg-sky-700 text-white flex justify-between items-center px-6 py-4 shadow-md">
+    <h1 class="text-2xl font-bold">📘 VIDYASETU</h1>
+    <div class="flex items-center space-x-4">
+      <span class="font-bold text-lg">HELLO, RAHUL 👋</span>
+      <img src="https://i.pravatar.cc/40?img=23" class="w-10 h-10 rounded-full border-2 border-white">
+      <a href="../auth/login.html" class="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600">Logout</a>
+      <button onclick="openLangModal()" class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-medium hover-lift">🌐 Language</button>
+    </div>
+  </header>
+
+  <div class="flex">
+    <!-- Sidebar (same as dashboard) -->
+    <aside class="w-64 bg-white shadow-lg min-h-screen p-6">
+      <nav class="space-y-4 text-sm font-medium text-gray-700">
+        <a href="attendance.html" class="block p-3 rounded-lg bg-sky-100">📊 Attendance</a>
+        <a href="marks.html" class="block p-3 rounded-lg hover:bg-sky-100">📝 Marks</a>
+        <a href="date-sheet.html" class="block p-3 rounded-lg hover:bg-sky-100">📅 Date Sheet</a>
+        <a href="assignments1.html" class="block p-3 rounded-lg hover:bg-sky-100">📚 Assignments</a>
+        <a href="courses.html" class="block p-3 rounded-lg hover:bg-sky-100">📚 My Courses</a>
+        <a href="quizzes1.html" class="block p-3 rounded-lg hover:bg-sky-100">🎮 Quizzes</a>
+        <a href="videos1.html" class="block p-3 rounded-lg hover:bg-sky-100">🎥 Video Library</a>
+        <a href="achievements1.html" class="block p-3 rounded-lg hover:bg-sky-100">🏆 Achievements</a>
+        <a href="community1.html" class="block p-3 rounded-lg hover:bg-sky-100">👥 Community</a>
+        <a href="joinclass1.html" class="block p-3 rounded-lg hover:bg-sky-100">🖥️  Join class</a>
+        <a href="doubt1.html" class="block p-3 rounded-lg hover:bg-sky-100">🙋 Ask doubt</a>
+        <a href="settings1.html" class="block p-3 rounded-lg hover:bg-sky-100">⚙️ Settings</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8 fade-in">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Attendance Overview</h2>
+
+      <!-- Summary Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-4 rounded shadow hover-lift text-center">
+          <h3 class="text-sm text-gray-500">Present Days</h3>
+          <p class="text-xl font-semibold text-blue-600">18</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow hover-lift text-center">
+          <h3 class="text-sm text-gray-500">Absent Days</h3>
+          <p class="text-xl font-semibold text-red-500">2</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow hover-lift text-center">
+          <h3 class="text-sm text-gray-500">Total Working Days</h3>
+          <p class="text-xl font-semibold text-gray-700">20</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow hover-lift text-center">
+          <h3 class="text-sm text-gray-500">Attendance %</h3>
+          <p class="text-xl font-semibold text-green-600">90%</p>
+        </div>
+      </div>
+
+      <!-- Subject-wise Attendance -->
+      <h3 class="text-lg font-medium text-gray-700 mb-4">Subject-wise Attendance</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="bg-white p-4 rounded shadow hover-lift">
+          <h4 class="text-sm font-medium text-gray-600 mb-2">Mathematics</h4>
+          <div class="w-full bg-gray-200 rounded-full h-3 mb-1">
+            <div class="bg-blue-600 h-3 rounded-full" style="width: 90%;"></div>
+          </div>
+          <p class="text-xs text-gray-500">9 / 10 sessions</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow hover-lift">
+          <h4 class="text-sm font-medium text-gray-600 mb-2">Science</h4>
+          <div class="w-full bg-gray-200 rounded-full h-3 mb-1">
+            <div class="bg-yellow-500 h-3 rounded-full" style="width: 80%;"></div>
+          </div>
+          <p class="text-xs text-gray-500">8 / 10 sessions</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow hover-lift">
+          <h4 class="text-sm font-medium text-gray-600 mb-2">English</h4>
+          <div class="w-full bg-gray-200 rounded-full h-3 mb-1">
+            <div class="bg-green-600 h-3 rounded-full" style="width: 100%;"></div>
+          </div>
+          <p class="text-xs text-gray-500">10 / 10 sessions</p>
+        </div>
+      </div>
+
+      <!-- Calendar -->
+      <h3 class="text-lg font-medium text-gray-700 mb-2">September 2025 Attendance</h3>
+      <div class="grid grid-cols-7 gap-2 text-center text-sm text-gray-600 mb-6">
+        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+      </div>
+      <div class="grid grid-cols-7 gap-2 mb-10">
+        <div></div> <!-- Offset for Sept 1 (Monday) -->
+        <div class="calendar-day present">1<br>✅</div>
+        <div class="calendar-day present">2<br>✅</div>
+        <div class="calendar-day absent">3<br>❌</div>
+        <div class="calendar-day present">4<br>✅</div>
+        <div class="calendar-day halfday">5<br>🟡</div>
+        <div class="calendar-day present">6<br>✅</div>
+        <div class="calendar-day present">7<br>✅</div>
+        <

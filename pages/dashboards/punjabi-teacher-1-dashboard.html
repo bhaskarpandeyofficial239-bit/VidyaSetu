@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ਅਧਿਆਪਕ ਡੈਸ਼ਬੋਰਡ - ਵਿਦਿਆਸੇਤੂ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+  <!-- ਨੈਵੀਗੇਸ਼ਨ ਬਾਰ -->
+  <header class="bg-sky-700 text-white flex justify-between items-center px-6 py-4 shadow-md">
+    <h1 class="text-2xl font-bold">📘 ਵਿਦਿਆਸੇਤੂ</h1>
+    <div class="flex items-center space-x-4">
+      <span class="font-bold text-lg">ਸਤ ਸ੍ਰੀ ਅਕਾਲ, ਅਧਿਆਪਕ1 👋</span>
+      <img src="https://i.pravatar.cc/40?img=12" class="w-10 h-10 rounded-full border-2 border-white">
+      <!-- Language Selection -->
+      <select onchange="changeLanguage(this.value)" class="bg-white text-black px-2 py-1 rounded-lg">
+        <option value="p">ਪੰਜਾਬੀ</option>
+        <option value="e">English</option>
+      </select>
+      <a href="../auth/login.html" class="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600">ਲੌਗਆਉਟ</a>
+    </div>
+  </header>
+
+  <script>
+    function changeLanguage(lang) {
+      if(lang === 'e') {
+        window.location.href = "teacher-1-dashboard.html";
+      } else if(lang === 'p') {
+        window.location.href = "punjabi-teacher-1-dashboard.html";
+      }
+    }
+  </script>
+
+  <div class="flex">
+    <!-- ਸਾਈਡਬਾਰ -->
+    <aside class="w-64 bg-white shadow-lg min-h-screen p-6">
+      <nav class="space-y-4">
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📊 ਹਾਜ਼ਰੀ ਪ੍ਰਬੰਧਨ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📝 ਗਰੇਡਬੁੱਕ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📅 ਕਲਾਸ ਸੂਚੀ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📚 ਅਸਾਈਨਮੈਂਟਸ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">🎥 ਵੀਡੀਓ ਲੈਕਚਰ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">💬 ਘੋਸ਼ਣਾਵਾਂ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📂 ਸਾਧਨ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">👥 ਵਿਦਿਆਰਥੀ ਸੂਚੀ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📈 ਕਾਰਗੁਜ਼ਾਰੀ ਰਿਪੋਰਟ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">⚙️ ਸੈਟਿੰਗਜ਼</a>
+      </nav>
+    </aside>
+
+    <!-- ਮੁੱਖ ਸਮੱਗਰੀ -->
+    <main class="flex-1 p-8">
+      <!-- ਸੁਆਗਤ ਬੈਨਰ -->
+      <div class="bg-gradient-to-r from-sky-500 to-sky-400 text-white rounded-2xl p-6 shadow-md mb-8">
+        <h2 class="text-2xl font-bold">ਵਾਪਸ ਆਓ, ਅਧਿਆਪਕ1 🚀</h2>
+        <p class="mt-2">ਆਜ ਤੁਹਾਡੀਆਂ ਕਲਾਸਾਂ ਵਿੱਚ ਕੀ ਹੋ ਰਿਹਾ ਹੈ ਦੇਖੋ।</p>
+      </div>
+
+      <!-- ਤੁਰੰਤ ਅੰਕੜੇ -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow-md text-center">
+          <h3 class="font-semibold text-lg">📚 ਕੋਰਸ</h3>
+          <p class="text-2xl font-bold text-sky-600">5</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md text-center">
+          <h3 class="font-semibold text-lg">👨‍🎓 ਵਿਦਿਆਰਥੀ</h3>
+          <p class="text-2xl font-bold text-green-500">120</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md text-center">
+          <h3 class="font-semibold text-lg">📝 ਬਕਾਇਆ ਸਮੀਖਿਆ</h3>
+          <p class="text-2xl font-bold text-yellow-500">8</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md text-center">
+          <h3 class="font-semibold text-lg">📅 ਅੱਜ ਦੀਆਂ ਕਲਾਸਾਂ</h3>
+          <p class="text-2xl font-bold text-purple-500">3</p>
+        </div>
+      </div>
+
+      <!-- ਅੱਜ ਦੀ ਸੂਚੀ -->
+      <h2 class="text-xl font-bold mb-4">📅 ਅੱਜ ਦਾ ਸ਼ੈਡਿਊਲ</h2>
+      <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+        <ul class="space-y-3">
+          <li class="flex justify-between">
+            <span>09:00 ਵਜੇ - ਗਣਿਤ (ਕਲਾਸ 10)</span>
+            <button class="bg-sky-500 text-white px-3 py-1 rounded-lg hover:bg-sky-600">ਕਲਾਸ ਸ਼ੁਰੂ ਕਰੋ</button>
+          </li>
+          <li class="flex justify-between">
+            <span>11:00 ਵਜੇ - ਭੌਤਿਕ ਵਿਗਿਆਨ (ਕਲਾਸ 12)</span>
+            <button class="bg-sky-500 text-white px-3 py-1 rounded-lg hover:bg-sky-600">ਕਲਾਸ ਸ਼ੁਰੂ ਕਰੋ</button>
+          </li>
+          <li class="flex justify-between">
+            <span>02:00 ਵਜੇ - ਰਸਾਇਣ ਵਿਗਿਆਨ (ਕਲਾਸ 11)</span>
+            <button class="bg-sky-500 text-white px-3 py-1 rounded-lg hover:bg-sky-600">ਕਲਾਸ ਸ਼ੁਰੂ ਕਰੋ</button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ਬਕਾਇਆ ਅਸਾਈਨਮੈਂਟਸ -->
+      <h2 class="text-xl font-bold mb-4">📝 ਬਕਾਇਆ ਅਸਾਈਨਮੈਂਟਸ</h2>
+      <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+        <ul class="space-y-3">
+          <li class="flex justify-between">
+            <span>ਰਾਹੁਲ ਸ਼ਰਮਾ - ਭੌਤਿਕ ਪ੍ਰੋਜੈਕਟ</span>
+            <button class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600">ਸਮੀਖਿਆ ਕਰੋ</button>
+          </li>
+          <li class="flex justify-between">
+            <span>ਰਾਵਿਆ ਕਪੂਰ - ਗਣਿਤ ਅਸਾਈਨਮੈਂਟ</span>
+            <button class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600">ਸਮੀਖਿਆ ਕਰੋ</button>
+          </li>
+          <li class="flex justify-between">
+            <span>ਅਮਿਤ ਵਰਮਾ - ਰਸਾਇਣ ਲੈਬ ਰਿਪੋਰਟ</span>
+            <button class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600">ਸਮੀਖਿਆ ਕਰੋ</button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ਹਾਲੀਆ ਘੋਸ਼ਣਾਵਾਂ -->
+      <h2 class="text-xl font-bold mb-4">💬 ਹਾਲੀਆ ਘੋਸ਼ਣਾਵਾਂ</h2>
+      <div class="bg-white p-6 rounded-xl shadow-md">
+        <ul class="space-y-3">
+          <li>📢 ਮਾਪੇ-ਅਧਿਆਪਕ ਮੀਟਿੰਗ 20 ਸਤੰਬਰ ਨੂੰ ਨਿਰਧਾਰਿਤ ਹੈ।</li>
+          <li>📢 ਕਲਾਸ 12 ਭੌਤਿਕ ਵਿਗਿਆਨ ਲਈ ਨਵਾਂ ਸਿਲੇਬਸ ਅਪਡੇਟ।</li>
+          <li>📢 ਵਿਗਿਆਨ ਮੇਲਾ 25 ਸਤੰਬਰ ਤੱਕ ਦਰਜ ਕਰਨ ਲਈ ਖੁੱਲ੍ਹਾ ਹੈ।</li>
+        </ul>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

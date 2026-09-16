@@ -1,0 +1,148 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Water Quest - Class 2 Science</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .scene-box {
+      background-color: #e0f2fe;
+      border: 2px solid #3b82f6;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .option-btn {
+      background-color: #fef3c7;
+      border: 2px solid #fbbf24;
+      border-radius: 8px;
+      padding: 10px 16px;
+      margin: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .option-btn:hover {
+      background-color: #fde68a;
+    }
+    .correct { background-color: #bbf7d0 !important; border-color: #22c55e; }
+    .incorrect { background-color: #fecaca !important; border-color: #ef4444; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-blue-50 via-white to-cyan-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="fixed top-0 w-full bg-white/80 backdrop-blur-md shadow-md z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between p-4">
+      <h2 class="text-2xl font-bold text-blue-600">💧 VidyaSetu <span class="text-gray-700">Water Quest</span></h2>
+      <nav class="space-x-6 hidden md:flex font-medium">
+        <a href="../lessons/class-2.html" class="hover:text-blue-500 transition">← Back to Chapters</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Game Section -->
+  <main class="pt-28 pb-20 text-center">
+    <h1 class="text-4xl font-bold text-blue-600 mb-4">🚰 Choose the Right Water Source</h1>
+    <p class="text-gray-600 mb-6">Tap the clean water source for each use. Avoid polluted ones!</p>
+
+    <div id="game-container" class="max-w-3xl mx-auto"></div>
+
+    <div id="final-screen" class="hidden mt-10 text-center">
+      <h2 class="text-3xl font-bold text-blue-600">🎉 Game Complete!</h2>
+      <p id="final-score" class="mt-4 text-xl text-gray-700"></p>
+      <button onclick="location.href='../lessons/class-2.html'" class="mt-6 bg-blue-500 text-white px-6 py-2 rounded-full">🏁 Back to Chapters</button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-blue-700 text-white py-8 text-center">
+    <p>Made with ❤️ for Nabha Students | Powered by SIH</p>
+    <p class="mt-2">Contact: support@nabhaedu.in | Helpline: +91-XXXX-XXXXXX</p>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    const scenes = [
+      {
+        use: "Bathing 🚿",
+        options: ["💧 River", "🛢️ Polluted Drain", "🌊 Lake"],
+        answer: "🌊 Lake"
+      },
+      {
+        use: "Drinking 🥤",
+        options: ["🚰 Tap Water", "🌊 Sea", "🧪 Chemical Waste"],
+        answer: "🚰 Tap Water"
+      },
+      {
+        use: "Farming 🌾",
+        options: ["💧 Canal", "🧼 Soapy Water", "🌊 Ocean"],
+        answer: "💧 Canal"
+      },
+      {
+        use: "Cleaning Clothes 👕",
+        options: ["💧 Pond", "🛢️ Oil Spill", "🌊 River"],
+        answer: "🌊 River"
+      }
+    ];
+
+    let score = 0;
+    let current = 0;
+
+    function showScene(index) {
+      const s = scenes[index];
+      const container = document.getElementById("game-container");
+      container.innerHTML = "";
+
+      const box = document.createElement("div");
+      box.className = "scene-box";
+
+      const use = document.createElement("p");
+      use.className = "text-lg mb-4 font-medium";
+      use.textContent = `Use: ${s.use}`;
+      box.appendChild(use);
+
+      s.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.textContent = opt;
+        btn.onclick = () => handleAnswer(btn, opt, s.answer);
+        box.appendChild(btn);
+      });
+
+      container.appendChild(box);
+    }
+
+    function handleAnswer(button, selected, correct) {
+      const allButtons = document.querySelectorAll(".option-btn");
+      allButtons.forEach(btn => btn.disabled = true);
+
+      if (selected === correct) {
+        button.classList.add("correct");
+        score++;
+      } else {
+        button.classList.add("incorrect");
+        allButtons.forEach(btn => {
+          if (btn.textContent === correct) btn.classList.add("correct");
+        });
+      }
+
+      setTimeout(() => {
+        current++;
+        if (current < scenes.length) {
+          showScene(current);
+        } else {
+          document.getElementById("game-container").classList.add("hidden");
+          document.getElementById("final-screen").classList.remove("hidden");
+          document.getElementById("final-score").textContent = `🌟 You earned ${score} out of ${scenes.length} stars!`;
+        }
+      }, 1500);
+    }
+
+    showScene(current);
+  </script>
+
+</body>
+</html>

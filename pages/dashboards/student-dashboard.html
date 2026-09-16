@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>My Learning Dashboard | VidyaSetu</title><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="min-h-screen bg-slate-50 text-slate-800">
+  <header class="border-b bg-white"><div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4"><a href="../../index.html" class="text-xl font-bold text-sky-700">VidyaSetu</a><button id="logout" class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-100">Sign out</button></div></header>
+  <main class="mx-auto max-w-6xl px-5 py-10"><p class="font-semibold text-sky-600">Student dashboard</p><h1 id="welcome" class="mt-1 text-3xl font-bold">Welcome!</h1><p id="profile" class="mt-2 text-slate-600"></p><section class="mt-8 grid gap-5 md:grid-cols-3"><a href="../subjects/mathematics/index.html" class="rounded-2xl bg-white p-6 shadow-sm transition hover:-translate-y-1"><h2 class="text-xl font-bold">Mathematics</h2><p class="mt-2 text-slate-600">Practice numbers and puzzles.</p></a><a href="../subjects/science/index.html" class="rounded-2xl bg-white p-6 shadow-sm transition hover:-translate-y-1"><h2 class="text-xl font-bold">Science</h2><p class="mt-2 text-slate-600">Explore nature and experiments.</p></a><a href="../subjects/language/index.html" class="rounded-2xl bg-white p-6 shadow-sm transition hover:-translate-y-1"><h2 class="text-xl font-bold">Language</h2><p class="mt-2 text-slate-600">Read, learn, and play.</p></a></section><a href="../assessments/quiz.html" class="mt-5 inline-block rounded-lg bg-sky-600 px-5 py-3 font-semibold text-white hover:bg-sky-700">Take a quiz</a></main>
+  <script>
+    const token = localStorage.getItem('vidyaSetuToken');
+    if (!token) location.replace('../auth/login.html');
+    fetch('/api/auth/me', { headers: { Authorization: `Bearer ${token}` } }).then(async response => { if (!response.ok) throw new Error(); return response.json(); }).then(({ student }) => { document.querySelector('#welcome').textContent = `Welcome, ${student.name}!`; document.querySelector('#profile').textContent = `${student.grade} · ${student.email}`; }).catch(() => { localStorage.removeItem('vidyaSetuToken'); location.replace('../auth/login.html'); });
+    document.querySelector('#logout').addEventListener('click', () => { localStorage.removeItem('vidyaSetuToken'); localStorage.removeItem('vidyaSetuStudent'); location.replace('../auth/login.html'); });
+  </script>
+</body>
+</html>

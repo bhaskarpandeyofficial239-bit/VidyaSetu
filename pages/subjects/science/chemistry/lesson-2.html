@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Matter Master – States of Matter Game</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .btn {
+      background-color: #0ea5e9;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #0284c7;
+    }
+    .stage-box {
+      background-color: #e0f2fe;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #7dd3fc;
+    }
+    .animation {
+      font-size: 48px;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.6; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-blue-50 via-white to-blue-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
+      <h2 class="text-xl font-bold text-blue-600">🧪 Matter Master – States of Matter Game</h2>
+      <a href="../../../../index.html" class="text-blue-500 hover:underline">← Back to Chemistry Chapters</a>
+    </div>
+  </header>
+
+  <!-- Game Container -->
+  <main class="max-w-3xl mx-auto py-12 px-4 text-center">
+    <h1 class="text-3xl font-bold text-blue-700 mb-4">🌡️ Transform the Matter!</h1>
+    <p class="text-gray-600 mb-6">Help your character change states by choosing the right action!</p>
+
+    <div id="gameBox" class="stage-box">
+      <!-- Game content will be injected here -->
+    </div>
+
+    <div id="feedback" class="mt-6 text-lg font-semibold"></div>
+    <div id="scoreDisplay" class="mt-2 text-blue-700 font-medium">Score: 0</div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-blue-700 text-white py-6 text-center">
+    <p>Made with ❤️ for Nabha Students | Powered by SIH</p>
+  </footer>
+
+  <!-- Game Script -->
+  <script>
+    let score = 0;
+    let stage = 0;
+
+    const stages = [
+      {
+        title: "🧊 Meet Icey the Solid!",
+        animation: "❄️",
+        description: "Icey wants to become a liquid. What should you do?",
+        question: "How can you change Icey into water?",
+        options: {
+          A: { text: "Add heat", correct: true, fact: "Heating causes melting—solid to liquid!" },
+          B: { text: "Add pressure", correct: false, fact: "Pressure alone won’t melt solids." },
+          C: { text: "Cool it more", correct: false, fact: "Cooling keeps it solid." },
+          D: { text: "Shake it", correct: false, fact: "Shaking doesn’t change its state." }
+        }
+      },
+      {
+        title: "💧 Now meet Watty the Liquid!",
+        animation: "💧",
+        description: "Watty wants to become a gas. What should you do?",
+        question: "How can you change Watty into steam?",
+        options: {
+          A: { text: "Freeze it", correct: false, fact: "Freezing turns it into a solid." },
+          B: { text: "Boil it", correct: true, fact: "Boiling causes evaporation—liquid to gas!" },
+          C: { text: "Squeeze it", correct: false, fact: "Squeezing doesn’t cause evaporation." },
+          D: { text: "Dry it", correct: false, fact: "Drying removes water, not change its state." }
+        }
+      },
+      {
+        title: "🌬️ Meet Steamy the Gas!",
+        animation: "🌫️",
+        description: "Steamy wants to become a liquid again. What should you do?",
+        question: "How can you change Steamy into water?",
+        options: {
+          A: { text: "Cool it", correct: true, fact: "Cooling causes condensation—gas to liquid!" },
+          B: { text: "Heat it more", correct: false, fact: "Heating keeps it a gas." },
+          C: { text: "Add salt", correct: false, fact: "Salt doesn’t affect state change." },
+          D: { text: "Expose to light", correct: false, fact: "Light doesn’t cause condensation." }
+        }
+      }
+    ];
+
+    function loadStage(index) {
+      const stageData = stages[index];
+      const gameBox = document.getElementById("gameBox");
+      const feedback = document.getElementById("feedback");
+      feedback.innerHTML = "";
+
+      let html = `<div class="animation">${stageData.animation}</div>`;
+      html += `<h2 class="text-2xl font-bold text-blue-700 mt-2">${stageData.title}</h2>`;
+      html += `<p class="mt-2 text-gray-700">${stageData.description}</p>`;
+      html += `<p class="mt-4 font-semibold">${stageData.question}</p>`;
+      html += `<div class="mt-4 space-y-2">`;
+
+      for (const key in stageData.options) {
+        html += `<button class="btn" onclick="checkAnswer('${key}')">${key}. ${stageData.options[key].text}</button><br>`;
+      }
+
+      html += `</div>`;
+      gameBox.innerHTML = html;
+    }
+
+    function checkAnswer(choiceKey) {
+      const stageData = stages[stage];
+      const choice = stageData.options[choiceKey];
+      const feedback = document.getElementById("feedback");
+
+      if (choice.correct) {
+        score += 10;
+        feedback.innerHTML = `✅ Correct! ${choice.fact}`;
+        feedback.className = "text-green-600";
+      } else {
+        score -= 5;
+        feedback.innerHTML = `❌ Incorrect. ${choice.fact}`;
+        feedback.className = "text-red-600";
+      }
+
+      document.getElementById("scoreDisplay").innerText = `Score: ${score}`;
+
+      stage++;
+      if (stage < stages.length) {
+        setTimeout(() => loadStage(stage), 2000);
+      } else {
+        setTimeout(() => {
+          document.getElementById("gameBox").innerHTML = `<h2 class="text-2xl font-bold text-green-600">🎉 You’re a Matter Master!</h2><p class="mt-4 text-gray-700">Final Score: ${score} points. You’ve mastered the states of matter!</p>`;
+          document.getElementById("feedback").innerHTML = "";
+        }, 2000);
+      }
+    }
+
+    window.onload = () => loadStage(stage);
+  </script>
+</body>
+</html>

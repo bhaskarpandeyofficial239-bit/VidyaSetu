@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />.
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assignments - VidyaSetu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; }
+
+    .fade-in { opacity: 0; transform: translateY(10px); animation: fadeUp 0.6s ease-out forwards; }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+    .status-submitted { color: #059669; font-weight: 600; }
+    .status-pending { color: #dc2626; font-weight: 600; }
+    .status-upcoming { color: #f59e0b; font-weight: 600; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Header -->
+  <header class="bg-sky-700 text-white flex justify-between items-center px-6 py-4 shadow-md">
+    <h1 class="text-2xl font-bold">📘 VIDYASETU</h1>
+    <div class="flex items-center space-x-4">
+      <span class="font-bold text-lg">HELLO, RAHUL 👋</span>
+      <img src="https://i.pravatar.cc/40?img=23" class="w-10 h-10 rounded-full border-2 border-white">
+      <a href="../auth/login.html" class="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600">Logout</a>
+      <button onclick="openLangModal()" class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-medium hover-lift">🌐 Language</button>
+    </div>
+  </header>
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg min-h-screen p-6">
+      <nav class="space-y-4 text-sm font-medium text-gray-700">
+        <a href="attendance.html" class="block p-3 rounded-lg hover:bg-sky-100">📊 Attendance</a>
+        <a href="marks.html" class="block p-3 rounded-lg hover:bg-sky-100">📝 Marks</a>
+        <a href="date-sheet.html" class="block p-3 rounded-lg hover:bg-sky-100">📅 Date Sheet</a>
+        <a href="assignments.html" class="block p-3 rounded-lg bg-sky-100">📚 Assignments</a>
+        <a href="courses.html" class="block p-3 rounded-lg hover:bg-sky-100">📚 My Courses</a>
+        <a href="quizzes1.html" class="block p-3 rounded-lg hover:bg-sky-100">🎮 Quizzes</a>
+        <a href="videos1.html" class="block p-3 rounded-lg hover:bg-sky-100">🎥 Video Library</a>
+        <a href="achievements1.html" class="block p-3 rounded-lg hover:bg-sky-100">🏆 Achievements</a>
+        <a href="community1.html" class="block p-3 rounded-lg hover:bg-sky-100">👥 Community</a>
+        <a href="joinclass1.html" class="block p-3 rounded-lg hover:bg-sky-100">🖥️  Join class</a>
+        <a href="doubt1.html" class="block p-3 rounded-lg hover:bg-sky-100">🙋 Ask doubt</a>
+        <a href="settings1.html" class="block p-3 rounded-lg hover:bg-sky-100">⚙️ Settings</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8 fade-in">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Assignments</h2>
+
+      <!-- Summary Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-4 rounded shadow hover-lift text-center">
+          <h3 class="text-sm text-gray-500">Total Assignments</h3>
+          <p class="text-xl font-semibold text-blue-600">6</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow hover-lift text-center">
+          <h3 class="text-sm text-gray-500">Submitted</h3>
+          <p class="text-xl font-semibold text-green-600">4</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow hover-lift text-center">
+          <h3 class="text-sm text-gray-500">Pending</h3>
+          <p class="text-xl font-semibold text-red-500">2</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow hover-lift text-center">
+          <h3 class="text-sm text-gray-500">Next Deadline</h3>
+          <p class="text-xl font-semibold text-yellow-600">15 Sep</p>
+        </div>
+      </div>
+
+      <!-- Assignment Table -->
+      <h3 class="text-lg font-medium text-gray-700 mb-4">Assignment List</h3>
+      <div class="overflow-x-auto mb-10">
+        <table class="min-w-full bg-white rounded shadow text-sm">
+          <thead class="bg-gray-100 text-gray-600">
+            <tr>
+              <th class="text-left px-4 py-2">Subject</th>
+              <th class="text-left px-4 py-2">Title</th>
+              <th class="text-center px-4 py-2">Due Date</th>
+              <th class="text-center px-4 py-2">Status</th>
+              <th class="text-center px-4 py-2">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-t">
+              <td class="px-4 py-2">Mathematics</td>
+              <td class="px-4 py-2">Algebra Worksheet</td>
+              <td class="text-center px-4 py-2">15 Sep</td>
+              <td class="text-center px-4 py-2 status-submitted">Submitted</td>
+              <td class="text-center px-4 py-2"><a href="#" class="text-blue-600 hover:underline">View</a></td>
+            </tr>
+            <tr class="border-t">
+              <td class="px-4 py-2">Science</td>
+              <td class="px-4 py-2">Lab Report</td>
+              <td class="text-center px-4 py-2">17 Sep</td>
+              <td class="text-center px-4 py-2 status-pending">Pending</td>
+              <td class="text-center px-4 py-2"><a href="#" class="text-blue-600 hover:underline">Submit</a></td>
+            </tr>
+            <tr class="border-t">
+              <td class="px-4 py-2">English</td>
+              <td class="px-4 py-2">Essay on Nature</td>
+              <td class="text-center px-4 py-2">20 Sep</td>
+              <td class="text-center px-4 py-2 status-upcoming">Upcoming</td>
+              <td class="text-center px-4 py-2"><a href="#" class="text-blue-600 hover:underline">Details</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Upload Section -->
+      <div class="bg-white p-6 rounded shadow hover-lift mb-10">
+        <h3 class="text-sm font-medium text-gray-700 mb-2">Submit Assignment</h3>
+        <form class="space-y-4">
+          <input type="text" placeholder="Assignment Title" class="w-full border rounded px-4 py-2 text-sm" />
+          <textarea placeholder="Comments (optional)" class="w-full border rounded px-4 py-2 text-sm"></textarea>
+          <input type="file" class="w-full text-sm" />
+          <button type="submit" class="bg-sky-600 text-white px-6 py-2 rounded hover:bg-sky-700">Upload</button>
+        </form>
+      </div>
+
+      <!-- Download Section -->
+      <div class="bg-gray-100 p-6 rounded shadow text-center hover-lift mb-10">
+        <h3 class="text-sm font-medium text-gray-700">Download Assignment List</h3>
+        <p class="text-xs text
