@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Length Race Game</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .object {
+      background-color: #38bdf8;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .object:hover {
+      transform: scale(1.05);
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-yellow-100 to-yellow-200 text-center pt-20">
+
+  <h1 class="text-3xl font-bold text-yellow-700 mb-2">📏 Length Race</h1>
+  <p class="text-gray-700 mb-4">Click the longer object!</p>
+  <div class="text-lg text-yellow-800 font-semibold mb-6">Score: <span id="score">0</span> / 5</div>
+
+  <div id="question" class="text-2xl font-semibold text-yellow-800 mb-6"></div>
+
+  <div id="objectContainer" class="flex justify-center gap-10 flex-wrap mb-6"></div>
+
+  <div id="feedback" class="text-lg font-medium text-green-700 mb-4 hidden"></div>
+  <button id="nextBtn" class="hidden bg-gradient-to-r from-green-400 to-green-600 text-white px-6 py-2 rounded-full" onclick="nextQuestion()">Next</button>
+
+  <div id="result" class="text-xl font-bold text-green-700 hidden mt-10"></div>
+
+  <script>
+    const questions = [
+      { a: 'Pencil', b: 'Eraser', longer: 'Pencil' },
+      { a: 'Train', b: 'Car', longer: 'Train' },
+      { a: 'Rope', b: 'Stick', longer: 'Rope' },
+      { a: 'Table', b: 'Chair', longer: 'Table' },
+      { a: 'Banana', b: 'Grapes', longer: 'Banana' }
+    ];
+
+    const praise = ["Great choice! 🎉", "You're sharp! 🌟", "Well done! 👍", "Awesome! 💯", "Superb! 🥳"];
+
+    let current = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById('question');
+    const objectContainer = document.getElementById('objectContainer');
+    const scoreEl = document.getElementById('score');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+
+    function showQuestion() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      objectContainer.innerHTML = '';
+      const q = questions[current];
+      questionEl.textContent = `Which is longer?`;
+
+      [q.a, q.b].sort(() => Math.random() - 0.5).forEach(obj => {
+        const div = document.createElement('div');
+        div.className = 'object';
+        div.style.width = obj === q.longer ? '200px' : '120px';
+        div.style.height = '60px';
+        div.textContent = obj;
+        div.onclick = () => {
+          objectContainer.querySelectorAll('.object').forEach(o => o.onclick = null);
+          if (obj === q.longer) {
+            score++;
+            scoreEl.textContent = score;
+            feedbackEl.textContent = praise[Math.floor(Math.random() * praise.length)];
+          } else {
+            feedbackEl.textContent = `Oops! ❌ The longer object was ${q.longer}`;
+          }
+          feedbackEl.classList.remove('hidden');
+          nextBtn.classList.remove('hidden');
+        };
+        objectContainer.appendChild(div);
+      });
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      questionEl.textContent = '';
+      objectContainer.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🎯 Game Over! You got ${score} out of 5 correct`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>

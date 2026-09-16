@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>📐 Shape Builder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .box {
+      width: 40px;
+      height: 40px;
+      background-color: #facc15;
+      border-radius: 6px;
+      display: inline-block;
+      margin: 3px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .box:hover {
+      transform: scale(1.1);
+    }
+    .selected {
+      background-color: #10b981 !important;
+    }
+    .wrong {
+      background-color: #f87171 !important;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-yellow-50 to-green-100 text-center pt-20">
+
+  <h1 class="text-3xl font-bold text-yellow-700 mb-2">📐 Shape Builder</h1>
+  <p class="text-gray-600 mb-4">Tap boxes to build a shape with area <span id="areaText">24</span> cm²</p>
+  <div class="text-lg text-yellow-800 font-semibold mb-6">Score: <span id="score">0</span> / 5</div>
+
+  <div id="gridContainer" class="inline-block mb-6 max-w-xl"></div>
+
+  <div id="feedback" class="text-lg font-medium text-green-700 mb-4 hidden"></div>
+  <button id="nextBtn" class="hidden bg-gradient-to-r from-yellow-400 to-green-600 text-white px-6 py-2 rounded-full" onclick="nextQuestion()">👉 Next Shape</button>
+
+  <div id="result" class="text-xl font-bold text-green-700 hidden mt-10"></div>
+
+  <script>
+    const questions = [
+      { rows: 4, cols: 6 }, // area = 24
+      { rows: 3, cols: 5 }, // area = 15
+      { rows: 2, cols: 8 }, // area = 16
+      { rows: 5, cols: 4 }, // area = 20
+      { rows: 3, cols: 7 }  // area = 21
+    ];
+
+    const praise = [
+      "🎉 Shape matched!",
+      "🌟 Geometry genius!",
+      "👍 Well built!",
+      "💯 Area master!",
+      "🥳 You nailed it!"
+    ];
+
+    let current = 0;
+    let score = 0;
+    let selectedCount = 0;
+    let totalBoxes = 0;
+
+    const areaText = document.getElementById('areaText');
+    const gridContainer = document.getElementById('gridContainer');
+    const scoreEl = document.getElementById('score');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+
+    function showQuestion() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      gridContainer.innerHTML = '';
+      selectedCount = 0;
+
+      const q = questions[current];
+      totalBoxes = q.rows * q.cols;
+      areaText.textContent = totalBoxes;
+
+      for (let r = 0; r < 6; r++) {
+        const rowDiv = document.createElement('div');
+        for (let c = 0; c < 8; c++) {
+          const box = document.createElement('div');
+          box.className = 'box';
+          box.onclick = () => {
+            if (box.classList.contains('selected')) return;
+            box.classList.add('selected');
+            selectedCount++;
+            if (selectedCount === totalBoxes) {
+              validateSelection(q.rows, q.cols);
+            }
+          };
+          rowDiv.appendChild(box);
+        }
+        gridContainer.appendChild(rowDiv);
+      }
+    }
+
+    function validateSelection(rows, cols) {
+      const selectedBoxes = document.querySelectorAll('.selected');
+      if (selectedBoxes.length === rows * cols) {
+        score++;
+        scoreEl.textContent = score;
+        feedbackEl.textContent = praise[Math.floor(Math.random() * praise.length)];
+      } else {
+        feedbackEl.textContent = `❌ You needed ${rows * cols} boxes for ${rows} × ${cols} = ${rows * cols} cm²`;
+        selectedBoxes.forEach(box => box.classList.add('wrong'));
+      }
+      feedbackEl.classList.remove('hidden');
+      nextBtn.classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      gridContainer.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🏁 Game Over! You built ${score} out of 5 shapes correctly 📐`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>

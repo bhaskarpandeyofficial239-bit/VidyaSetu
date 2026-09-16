@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meal Maker – Balanced Diet Game</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .food-card {
+      cursor: grab;
+    }
+    .zone {
+      border: 2px dashed #facc15;
+      min-height: 80px;
+      padding: 10px;
+      background-color: #fffbea;
+      text-align: center;
+    }
+    .correct {
+      background-color: #d9f99d;
+    }
+    .incorrect {
+      background-color: #fecaca;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-yellow-50 via-white to-yellow-100 text-gray-800">
+
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
+      <h2 class="text-xl font-bold text-yellow-600">🍽️ Meal Maker – Balanced Diet Game</h2>
+      <a href="sbiology.html" class="text-yellow-500 hover:underline">← Back to Biology Chapters</a>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto py-12 px-4">
+    <h1 class="text-3xl font-bold text-yellow-700 mb-4 text-center">🥗 Build a Balanced Plate</h1>
+    <p class="text-gray-600 text-center mb-8">Drag the correct food into each nutrient zone!</p>
+
+    <!-- Plate Zones -->
+    <div class="grid grid-cols-2 gap-6 mb-8">
+      <div class="zone" data-type="Carbohydrates">🍞 Carbohydrates</div>
+      <div class="zone" data-type="Proteins">🍗 Proteins</div>
+      <div class="zone" data-type="Vitamins">🥦 Vitamins</div>
+      <div class="zone" data-type="Fats">🥑 Healthy Fats</div>
+    </div>
+
+    <!-- Food Cards -->
+    <div class="flex flex-wrap gap-4 justify-center mb-8">
+      <div class="food-card bg-yellow-300 px-4 py-2 rounded shadow" draggable="true" data-type="Carbohydrates">🍚 Rice</div>
+      <div class="food-card bg-yellow-300 px-4 py-2 rounded shadow" draggable="true" data-type="Proteins">🐟 Fish</div>
+      <div class="food-card bg-yellow-300 px-4 py-2 rounded shadow" draggable="true" data-type="Vitamins">🍊 Orange</div>
+      <div class="food-card bg-yellow-300 px-4 py-2 rounded shadow" draggable="true" data-type="Fats">🥑 Avocado</div>
+      <div class="food-card bg-yellow-300 px-4 py-2 rounded shadow" draggable="true" data-type="Carbohydrates">🍞 Bread</div>
+      <div class="food-card bg-yellow-300 px-4 py-2 rounded shadow" draggable="true" data-type="Proteins">🥚 Egg</div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="text-center">
+      <button onclick="checkMeal()" class="bg-yellow-600 text-white px-6 py-2 rounded hover:bg-yellow-700">Check Plate</button>
+    </div>
+
+    <!-- Result -->
+    <div id="result" class="text-center mt-6 text-xl font-semibold"></div>
+  </main>
+
+  <footer class="bg-yellow-700 text-white py-6 text-center">
+    <p>Made with ❤️ for Nabha Students | Powered by SIH</p>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.food-card').forEach(card => {
+      card.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('text/plain', card.dataset.type + "|" + card.innerHTML);
+      });
+    });
+
+    document.querySelectorAll('.zone').forEach(zone => {
+      zone.addEventListener('dragover', e => e.preventDefault());
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        const data = e.dataTransfer.getData('text/plain').split("|");
+        const type = data[0];
+        const label = data[1];
+        zone.innerHTML = `<div class="bg-yellow-200 px-4 py-2 rounded shadow">${label}</div>`;
+        zone.dataset.selected = type;
+      });
+    });
+
+    function checkMeal() {
+      let correct = 0;
+      document.querySelectorAll('.zone').forEach(zone => {
+        const expected = zone.dataset.type;
+        const selected = zone.dataset.selected;
+        if (selected === expected) {
+          zone.classList.add('correct');
+          zone.classList.remove('incorrect');
+          correct++;
+        } else {
+          zone.classList.add('incorrect');
+          zone.classList.remove('correct');
+        }
+      });
+
+      const result = document.getElementById('result');
+      if (correct === 4) {
+        result.innerHTML = "🎉 Perfect Plate! Enjoy your meal You built a balanced meal!";
+        result.className = "text-green-600";
+      } else {
+        result.innerHTML = `😬 You got ${correct} out of 4 correct. Try again!`;
+        result.className = "text-red-600";
+      }
+    }
+  </script>
+</body>
+</html>

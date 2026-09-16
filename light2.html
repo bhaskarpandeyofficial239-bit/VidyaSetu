@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Light & Shadow Learning Games</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      /* Physics theme gradient background */
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      color: #222;
+      text-align: center;
+      padding: 20px;
+      min-height: 100vh;
+      background-attachment: fixed;
+    }
+    h1 {
+      color: #2c3e50;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+    p {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    .game {
+      display: none;
+      margin-top: 20px;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+    .active {
+      display: block;
+    }
+    /* Buttons */
+    button {
+      margin: 8px;
+      padding: 10px 16px;
+      border: none;
+      background: #3498db;
+      color: white;
+      font-size: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #2980b9;
+      transform: scale(1.05);
+    }
+    /* Light Sorter */
+    .container {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+    .category {
+      border: 2px dashed #555;
+      border-radius: 10px;
+      width: 30%;
+      min-height: 200px;
+      padding: 10px;
+      background: rgba(255,255,255,0.8);
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    }
+    .category h2 {
+      margin-bottom: 10px;
+      color: #34495e;
+    }
+    .item {
+      background: #ecf0f1;
+      padding: 8px;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: grab;
+      transition: background 0.3s;
+    }
+    .correct {
+      background-color: #a5d6a7 !important;
+    }
+    .wrong {
+      background-color: #ef9a9a !important;
+    }
+    /* Shadow Quiz */
+    .quiz-box {
+      margin: 20px auto;
+      padding: 20px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 12px;
+      width: 320px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .image-box {
+      width: 100%;
+      height: 150px;
+      background: linear-gradient(to top, #d7e1ec, #ffffff);
+      margin-bottom: 10px;
+      position: relative;
+      border-radius: 8px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .sun {
+      width: 40px;
+      height: 40px;
+      background: radial-gradient(circle, #ffeb3b, #fbc02d);
+      border-radius: 50%;
+      position: absolute;
+      box-shadow: 0 0 15px #fff176;
+    }
+    .object {
+      width: 20px;
+      height: 60px;
+      background-color: #5d4037;
+      position: absolute;
+      bottom: 10px;
+      left: 130px;
+      border-radius: 4px;
+    }
+    .question {
+      margin: 10px 0;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+    #score {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #27ae60;
+    }
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<h1>🌟 Light & Shadow Learning Games</h1>
+<p>Play both games to learn about <b>light properties</b> and <b>shadows</b>.</p>
+
+<!-- Switch Buttons -->
+<button onclick="showGame('lightGame')">🔆 Play Light Sorter</button>
+<button onclick="showGame('shadowGame')">🌞 Play Shadow Quiz</button>
+
+<!-- Light Sorter Game -->
+<div id="lightGame" class="game active">
+  <h2>🧪 Sort the Materials by Light Property</h2>
+  <p>Drag each item into the correct category: Transparent, Translucent, or Opaque</p>
+  <div id="items">
+    <div class="item" draggable="true" data-type="transparent">Glass</div>
+    <div class="item" draggable="true" data-type="translucent">Frosted Glass</div>
+    <div class="item" draggable="true" data-type="opaque">Wood</div>
+    <div class="item" draggable="true" data-type="transparent">Clear Plastic</div>
+    <div class="item" draggable="true" data-type="translucent">Butter Paper</div>
+    <div class="item" draggable="true" data-type="opaque">Metal Sheet</div>
+  </div>
+  <div class="container">
+    <div class="category" data-accept="transparent"><h2>Transparent</h2></div>
+    <div class="category" data-accept="translucent"><h2>Translucent</h2></div>
+    <div class="category" data-accept="opaque"><h2>Opaque</h2></div>
+  </div>
+</div>
+
+<!-- Shadow Quiz -->
+<div id="shadowGame" class="game">
+  <h2>🌞 Shadow Time Quiz</h2>
+  <p>Where will the shadow fall based on the sun’s position?</p>
+  <div class="quiz-box">
+    <div class="image-box" id="imageBox">
+      <div class="sun" id="sun"></div>
+      <div class="object"></div>
+    </div>
+    <div class="question" id="questionText">Loading...</div>
+    <button onclick="checkAnswer('West')">West</button>
+    <button onclick="checkAnswer('East')">East</button>
+    <button onclick="checkAnswer('North')">North</button>
+    <button onclick="checkAnswer('South')">South</button>
+    <div id="score">Score: 0</div>
+  </div>
+</div>
+
+<script>
+  // Toggle between games
+  function showGame(id) {
+    document.querySelectorAll('.game').forEach(g => g.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  // Light Sorter Logic
+  const items = document.querySelectorAll('.item');
+  const categories = document.querySelectorAll('.category');
+
+  items.forEach(item => {
+    item.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', item.dataset.type);
+      e.dataTransfer.setData('text/id', item.innerText);
+    });
+  });
+
+  categories.forEach(category => {
+    category.addEventListener('dragover', e => e.preventDefault());
+    category.addEventListener('drop', e => {
+      e.preventDefault();
+      const type = e.dataTransfer.getData('text/plain');
+      const name = e.dataTransfer.getData('text/id');
+      const draggedItem = [...items].find(i => i.innerText === name);
+      if (type === category.dataset.accept) {
+        draggedItem.classList.add('correct');
+      } else {
+        draggedItem.classList.add('wrong');
+      }
+      category.appendChild(draggedItem);
+    });
+  });
+
+  // Shadow Quiz Logic
+  const sun = document.getElementById('sun');
+  const questionText = document.getElementById('questionText');
+  const scoreDisplay = document.getElementById('score');
+  let score = 0, current = 0;
+
+  const questions = [
+    { sunPos: { top: '10px', left: '10px' }, question: 'Sun is in the East. Where will the shadow fall?', answer: 'West' },
+    { sunPos: { top: '10px', right: '10px' }, question: 'Sun is in the West. Where will the shadow fall?', answer: 'East' },
+    { sunPos: { top: '10px', left: '130px' }, question: 'Sun is overhead. Where will the shadow fall?', answer: 'Under the object' },
+    { sunPos: { top: '10px', left: '200px' }, question: 'Sun is in the South. Where will the shadow fall?', answer: 'North' },
+    { sunPos: { top: '10px', left: '60px' }, question: 'Sun is in the North. Where will the shadow fall?', answer: 'South' }
+  ];
+
+  function loadQuestion() {
+    const q = questions[current];
+    questionText.textContent = q.question;
+    sun.style.top = q.sunPos.top;
+    sun.style.left = q.sunPos.left || '';
+    sun.style.right = q.sunPos.right || '';
+  }
+
+  function checkAnswer(selected) {
+    const correct = questions[current].answer;
+    if (selected === correct) {
+      score++;
+      scoreDisplay.textContent = ` yay! your Score: ${score}`;
+      alert('✅  WELL DONE!');
+    } else {
+      alert(`❌ OOPS ! Correct answer: ${correct}`);
+    }
+    current++;
+    if (current < questions.length) {
+      loadQuestion();
+    } else {
+      questionText.textContent = '🎉 Quiz Complete!';
+    }
+  }
+
+  loadQuestion();
+</script>
+
+</body>
+</html>

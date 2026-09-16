@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Magnet Lab Experience</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e3f2fd;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #1565c0;
+    }
+    .section {
+      margin: 30px 0;
+    }
+    .items, .zones {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .object {
+      width: 100px;
+      height: 100px;
+      background-color: #bbdefb;
+      border: 2px solid #0d47a1;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: grab;
+      transition: transform 0.3s ease;
+    }
+    .zone {
+      width: 150px;
+      height: 150px;
+      background-color: #f5f5f5;
+      border: 2px dashed #9e9e9e;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .correct {
+      background-color: #c8e6c9;
+      transform: scale(1.1);
+    }
+    .wrong {
+      background-color: #ffcdd2;
+      transform: rotate(-5deg);
+    }
+    .quiz-box {
+      background-color: #fff8e1;
+      border-radius: 10px;
+      padding: 20px;
+      width: 300px;
+      margin: auto;
+      box-shadow: 0 0 10px #ffe082;
+    }
+    .question {
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    .option {
+      display: block;
+      margin: 8px 0;
+      padding: 10px;
+      background-color: #ffe0b2;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .correct-answer {
+      background-color: #c8e6c9 !important;
+    }
+    .wrong-answer {
+      background-color: #ffcdd2 !important;
+    }
+    #score, #levelUp {
+      font-weight: bold;
+      margin-top: 15px;
+      font-size: 18px;
+    }
+    #levelUp {
+      color: #2e7d32;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🧲 Magnet Lab Experience</h1>
+
+<!-- Level 1 Sorting Game -->
+<div class="section" id="level1">
+  <h2>Level 1: Magnet Match Quest</h2>
+  <p>Drag each object into the correct zone: Magnetic or Non-Magnetic</p>
+
+  <div class="items">
+    <div class="object" draggable="true" data-type="magnetic">Iron Nail</div>
+    <div class="object" draggable="true" data-type="non-magnetic">Plastic Spoon</div>
+    <div class="object" draggable="true" data-type="magnetic">Steel Pin</div>
+    <div class="object" draggable="true" data-type="non-magnetic">Wooden Block</div>
+  </div>
+
+  <div class="zones">
+    <div class="zone" data-accept="magnetic"><strong>Magnetic</strong></div>
+    <div class="zone" data-accept="non-magnetic"><strong>Non-Magnetic</strong></div>
+  </div>
+
+  <div id="score">Score: 0</div>
+  <div id="levelUp"></div>
+</div>
+
+<!-- Quiz Mode -->
+<div class="section" id="quiz" style="display:none;">
+  <h2>Quiz Mode: Test Your Magnet Knowledge</h2>
+  <div class="quiz-box">
+    <div class="question" id="questionText">Loading question...</div>
+    <button class="option" onclick="checkAnswer(this)">Option A</button>
+    <button class="option" onclick="checkAnswer(this)">Option B</button>
+    <button class="option" onclick="checkAnswer(this)">Option C</button>
+    <button class="option" onclick="checkAnswer(this)">Option D</button>
+    <div id="quizScore">Score: 0</div>
+  </div>
+</div>
+
+<script>
+  // Level 1 Sorting Logic
+  const objects = document.querySelectorAll('.object');
+  const zones = document.querySelectorAll('.zone');
+  const scoreDisplay = document.getElementById('score');
+  const levelUp = document.getElementById('levelUp');
+  const quizSection = document.getElementById('quiz');
+  let score = 0;
+  let placed = 0;
+
+  objects.forEach(obj => {
+    obj.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('type', obj.dataset.type);
+      e.dataTransfer.setData('id', obj.innerText);
+    });
+  });
+
+  zones.forEach(zone => {
+    zone.addEventListener('dragover', e => e.preventDefault());
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      const type = e.dataTransfer.getData('type');
+      const id = e.dataTransfer.getData('id');
+      const accept = zone.dataset.accept;
+      const dragged = [...objects].find(o => o.innerText === id);
+
+      if (!dragged.classList.contains('correct') && !dragged.classList.contains('wrong')) {
+        if (type === accept) {
+          zone.appendChild(dragged);
+          dragged.classList.add('correct');
+          score += 5;
+        } else {
+          zone.appendChild(dragged);
+          dragged.classList.add('wrong');
+          score -= 2;
+        }
+        placed++;
+        scoreDisplay.textContent = `Score: ${score}`;
+        if (placed === objects.length) {
+          levelUp.textContent = '🎉 Level Complete! Starting Quiz Mode...';
+          setTimeout(() => {
+            document.getElementById('level1').style.display = 'none';
+            quizSection.style.display = 'block';
+            loadQuestion();
+          }, 2000);
+        }
+      }
+    });
+  });
+
+  // Quiz Mode Logic
+  const questions = [
+    {
+      question: "Which of these is magnetic?",
+      options: ["Wood", "Plastic", "Iron", "Rubber"],
+      answer: "Iron"
+    },
+    {
+      question: "Magnets have how many poles?",
+      options: ["One", "Two", "Three", "Four"],
+      answer: "Two"
+    },
+    {
+      question: "Which direction does a freely suspended magnet point?",
+      options: ["East-West", "North-South", "Up-Down", "Random"],
+      answer: "North-South"
+    },
+    {
+      question: "What happens when opposite poles of magnets meet?",
+      options: ["They repel", "They attract", "They vanish", "They rotate"],
+      answer: "They attract"
+    },
+    {
+      question: "Which of these is NOT a magnetic material?",
+      options: ["Steel", "Copper", "Iron", "Nickel"],
+      answer: "Copper"
+    }
+  ];
+
+  let current = 0;
+  let quizScore = 0;
+
+  const questionText = document.getElementById('questionText');
+  const optionButtons = document.querySelectorAll('.option');
+  const quizScoreDisplay = document.getElementById('quizScore');
+
+  function loadQuestion() {
+    const q = questions[current];
+    questionText.textContent = q.question;
+    optionButtons.forEach((btn, i) => {
+      btn.textContent = q.options[i];
+      btn.classList.remove('correct-answer', 'wrong-answer');
+      btn.style.display = 'block';
+    });
+  }
+
+  function checkAnswer(button) {
+    const correct = questions[current].answer;
+    if (button.textContent === correct) {
+      button.classList.add('correct-answer');
+      quizScore += 5;
+    } else {
+      button.classList.add('wrong-answer');
+      quizScore -= 2;
+    }
+    quizScoreDisplay.textContent = `Score: ${quizScore}`;
+    setTimeout(() => {
+      current++;
+      if (current < questions.length) {
+        loadQuestion();
+      } else {
+        questionText.textContent = "🎉 Quiz Complete!";
+        optionButtons.forEach(btn => btn.style.display = "none");
+      }
+    }, 1000);
+  }
+</script>
+
+</body>
+</html>

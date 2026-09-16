@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Dashboard - VidyaSetu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; }
+
+    .fade-in { opacity: 0; transform: translateY(20px); animation: fadeUp 0.8s ease-out forwards; }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+    .slide-in-left { transform: translateX(-100px); opacity: 0; animation: slideLeft 0.6s ease-out forwards; }
+    @keyframes slideLeft { to { transform: translateX(0); opacity: 1; } }
+
+    .pulse { animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+    .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .hover-lift:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+    .btn-animate { transition: all 0.3s ease; }
+    .btn-animate:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+  <!-- Navbar -->
+  <header class="bg-sky-700 text-white flex justify-between items-center px-6 py-4 shadow-md">
+    <h1 class="text-2xl font-bold">📘 VIDYASETU</h1>
+    <div class="flex items-center space-x-4">
+      <span class="font-bold text-lg">HELLO, RAHUL 👋</span>
+      <img src="https://i.pravatar.cc/40?img=23" class="w-10 h-10 rounded-full border-2 border-white">
+      <a href="login.html" class="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600">Logout</a>
+      <button onclick="openLangModal()" class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-medium btn-animate">🌐 Language</button>
+    </div>
+  </header>
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg min-h-screen p-6 slide-in-left">
+      <nav class="space-y-4">
+        <a href="attendance1.html" class="block p-3 rounded-lg hover:bg-sky-100">📊 Attendance</a>
+        <a href="marks1.html" class="block p-3 rounded-lg hover:bg-sky-100">📝 Marks</a>
+        <a href="datesheet1.html" class="block p-3 rounded-lg hover:bg-sky-100">📅 Date Sheet</a>
+        <a href="assignments1.html" class="block p-3 rounded-lg hover:bg-sky-100">📚 Assignments</a>
+        <a href="courses1.html" class="block p-3 rounded-lg hover:bg-sky-100">📚 My Courses</a>
+        <a href="quizzes1.html" class="block p-3 rounded-lg hover:bg-sky-100">🎮 Quizzes</a>
+        <a href="videos1.html" class="block p-3 rounded-lg hover:bg-sky-100">🎥 Video Library</a>
+        <a href="achievements1.html" class="block p-3 rounded-lg hover:bg-sky-100">🏆 Achievements</a>
+        <a href="community1.html" class="block p-3 rounded-lg hover:bg-sky-100">👥 Community</a>
+        <a href="joinclass1.html" class="block p-3 rounded-lg hover:bg-sky-100">🖥️  Join class</a>
+        <a href="doubt1.html" class="block p-3 rounded-lg hover:bg-sky-100">🙋 Ask doubt</a>
+        <a href="settings1.html" class="block p-3 rounded-lg hover:bg-sky-100">⚙️ Settings</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8 fade-in">
+      <!-- Welcome Banner -->
+      <div class="bg-gradient-to-r from-sky-500 to-sky-400 text-white rounded-2xl p-6 shadow-md mb-8 hover-lift">
+        <h2 class="text-2xl font-bold">WELCOME BACK, RAHUL 🚀</h2>
+        <p class="mt-2">Keep striving and growing every day.</p>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow-md text-center hover-lift">
+          <h3 class="font-semibold text-lg">Learning Streak 🔥</h3>
+          <p class="text-2xl font-bold text-sky-600 pulse">7 Days</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md text-center hover-lift">
+          <h3 class="font-semibold text-lg">Badges Earned 🎖️</h3>
+          <p class="text-2xl font-bold text-yellow-500 pulse">5</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md text-center hover-lift">
+          <h3 class="font-semibold text-lg">Courses Progress 📊</h3>
+          <div class="w-full bg-gray-200 rounded-full h-4 mt-2">
+            <div class="bg-sky-500 h-4 rounded-full" style="width: 75%;"></div>
+          </div>
+          <p class="text-sm mt-1">75% Completed</p>
+        </div>
+      </div>
+
+      <!-- Courses Section -->
+      <h2 class="text-xl font-bold mb-4">📚 Continue Learning</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow-md hover-lift">
+          <h3 class="text-lg font-semibold">📐 Mathematics</h3>
+          <p class="text-sm mt-2">Calculus & Trigonometry</p>
+          <button class="mt-4 w-full bg-sky-500 text-white py-2 rounded-lg hover:bg-sky-600 btn-animate">Continue</button>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md hover-lift">
+          <h3 class="text-lg font-semibold">🔬 Science</h3>
+          <p class="text-sm mt-2">Physics: Motion & Force</p>
+          <button class="mt-4 w-full bg-sky-500 text-white py-2 rounded-lg hover:bg-sky-600 btn-animate">Continue</button>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md hover-lift">
+          <h3 class="text-lg font-semibold">📚 English</h3>
+          <p class="text-sm mt-2">Poetry & Literature</p>
+          <button class="mt-4 w-full bg-sky-500 text-white py-2 rounded-lg hover:bg-sky-600 btn-animate">Continue</button>
+        </div>
+      </div>
+
+      <!-- Offline Download -->
+      <div class="mt-10 bg-green-100 p-6 rounded-xl shadow-md text-center hover-lift">
+        <h3 class="text-lg font-bold text-green-700">📥 Download Lessons for Offline Use</h3>
+        <p class="text-sm mt-2">No internet? No problem. Download your lessons and access anytime.</p>
+        <button class="mt-4 bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 btn-animate">Download</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- Language Modal -->
+  <div id="langModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 max-w-sm w-full text-center shadow-xl">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Please select your language</h3>
+      <div class="space-y-4">
+        <button onclick="setLanguage('english')" class="w-full bg-gradient-to-r from-sky-500 to-sky-600 text-white        <button onclick="setLanguage('english')" class="w-full bg-gradient-to-r from-sky-500 to-sky-600 text-white py-2 rounded-full btn-animate">English</button>
+        <button onclick="setLanguage('punjabi')" class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-2 rounded-full btn-animate">ਪੰਜਾਬੀ (Punjabi)</button>
+      </div>
+      <button onclick="closeLangModal()" class="mt-4 text-gray-500 underline">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Language Modal Script -->
+  <script>
+    function openLangModal() {
+      document.getElementById('langModal').classList.remove('hidden');
+    }
+    function closeLangModal() {
+      document.getElementById('langModal').classList.add('hidden');
+    }
+    function setLanguage(lang) {
+      if (lang === 'punjabi') {
+        window.location.href = 'prahul-dashboard.html';
+      } else {
+        closeLangModal(); // English stays on current page
+      }
+    }
+  </script>
+
+</body>
+</html>

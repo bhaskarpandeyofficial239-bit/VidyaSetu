@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Story Builder - VidyaSetu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .word-tile {
+      background-color: #60a5fa;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-weight: bold;
+      cursor: grab;
+      transition: transform 0.3s ease;
+    }
+    .word-tile:hover { transform: scale(1.1); }
+    .drop-zone {
+      border: 2px dashed #93c5fd;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      background-color: #fff;
+      font-weight: bold;
+      min-width: 120px;
+      text-align: center;
+    }
+    .drop-zone.hovered { background-color: #dbeafe; }
+    .drop-zone.filled { background-color: #bae6fd; border-color: #3b82f6; }
+    .hidden { display: none; }
+    .sentence-preview {
+      background: #f0f9ff;
+      border-radius: 1rem;
+      padding: 1.2rem;
+      margin: 1.5rem auto 0 auto;
+      max-width: 600px;
+      font-size: 1.2rem;
+      color: #2563eb;
+      min-height: 2.5rem;
+      box-shadow: 0 2px 8px #bae6fd;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-blue-50 via-white to-blue-100 text-center pt-20">
+
+  <h1 class="text-3xl font-bold text-blue-700 mb-2">📖 Story Builder</h1>
+  <p class="text-gray-600 mb-4">Drag the correct words to complete the story!</p>
+  <div class="text-lg text-blue-800 font-semibold mb-6">Score: <span id="score">0</span> / 3</div>
+
+  <div id="roundText" class="text-xl font-semibold text-blue-800 mb-6"></div>
+  <div id="storyContainer" class="flex flex-wrap justify-center gap-4 mb-6 px-4"></div>
+  <div id="wordBank" class="flex flex-wrap justify-center gap-4 mb-6 px-4"></div>
+
+  <div id="feedback" class="text-lg font-medium text-blue-700 mb-4 hidden"></div>
+  <button id="nextBtn" class="hidden bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-2 rounded-full" onclick="nextRound()">Next</button>
+  <div id="result" class="text-xl font-bold text-blue-700 hidden mt-10"></div>
+  <div id="preview" class="sentence-preview"></div>
+
+  <script>
+    // Each round: story with blanks and correct words
+    const rounds = [
+      {
+        story: ["Once", "upon", "a", "__", ",", "there", "was", "a", "__", "who", "loved", "to", "__", "."],
+        blanks: [3, 8, 12],
+        answers: ["time", "cat", "sing"],
+        options: ["cat", "dog", "time", "sing", "jump", "fish"]
+      },
+      {
+        story: ["The", "__", "jumped", "over", "the", "__", "and", "found", "a", "__", "."],
+        blanks: [1, 5, 8],
+        answers: ["frog", "log", "hat"],
+        options: ["frog", "log", "hat", "bat", "mat", "run"]
+      },
+      {
+        story: ["My", "__", "likes", "to", "__", "in", "the", "__", "."],
+        blanks: [1, 4, 7],
+        answers: ["friend", "play", "park"],
+        options: ["friend", "play", "park", "school", "read", "cake"]
+      }
+    ];
+
+    const praise = ["Wonderful! 🎉", "Great story! 🌟", "Awesome! 👍", "Superb! 🥳", "You did it! 💯"];
+    let currentRound = 0;
+    let score = 0;
+    let filled = 0;
+    let userAnswers = [];
+
+    const scoreEl = document.getElementById('score');
+    const roundText = document.getElementById('roundText');
+    const storyContainer = document.getElementById('storyContainer');
+    const wordBank = document.getElementById('wordBank');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+    const previewEl = document.getElementById('preview');
+
+    function loadRound() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      storyContainer.innerHTML = '';
+      wordBank.innerHTML = '';
+      previewEl.textContent = '';
+      filled = 0;
+      userAnswers = Array(rounds[currentRound].blanks.length).fill(null);
+
+      const round = rounds[currentRound];
+      roundText.textContent = `Round ${currentRound + 1} of ${rounds.length}`;
+
+      // Build story with drop zones
+      let blankIdx = 0;
+      round.story.forEach((word, idx) => {
+        if (round.blanks.includes(idx)) {
+          const zone = document.createElement('div');
+          zone.className = 'drop-zone inline-block align-middle mx-1';
+          zone.dataset.blank = blankIdx;
+          zone.textContent = "______";
+          zone.addEventListener('dragover', e => {
+            e.preventDefault();
+            zone.classList.add('hovered');
+          });
+          zone.addEventListener('dragleave', () => {
+            zone.classList.remove('hovered');
+          });
+          zone.addEventListener('drop', e => {
+            e.preventDefault();
+            const word = e.dataTransfer.getData('text/plain');
+            if (!zone.classList.contains('filled')) {
+              zone.textContent = word;
+              zone.classList.add('filled');
+              zone.classList.remove('hovered');
+              userAnswers[blankIdx] = word;
+              document.querySelector(`[data-word="${word}"]`).remove();
+              filled++;
+              updatePreview();
+              if (filled === round.blanks.length) {
+                checkStory();
+              }
+            }
+          });
+          storyContainer.appendChild(zone);
+          blankIdx++;
+        } else {
+          const span = document.createElement('span');
+          span.textContent = word + " ";
+          storyContainer.appendChild(span);
+        }
+      });
+
+      // Word bank
+      round.options.sort(() => Math.random() - 0.5).forEach(word => {
+        const tile = document.createElement('div');
+        tile.className = 'word-tile';
+        tile.draggable = true;
+        tile.dataset.word = word;
+        tile.textContent = word.charAt(0).toUpperCase() + word.slice(1);
+        wordBank.appendChild(tile);
+
+        tile.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/plain', word);
+        });
+      });
+    }
+
+    function updatePreview() {
+      const round = rounds[currentRound];
+      let preview = "";
+      let blankIdx = 0;
+      round.story.forEach((word, idx) => {
+        if (round.blanks.includes(idx)) {
+          preview += (userAnswers[blankIdx] ? userAnswers[blankIdx] : "______") + " ";
+          blankIdx++;
+        } else {
+          preview += word + " ";
+        }
+      });
+      previewEl.textContent = preview.trim();
+    }
+
+    function checkStory() {
+      const round = rounds[currentRound];
+      let correct = true;
+      for (let i = 0; i < round.answers.length; i++) {
+        if (userAnswers[i] !== round.answers[i]) {
+          correct = false;
+          break;
+        }
+      }
+      if (correct) {
+        score++;
+        scoreEl.textContent = score;
+        feedbackEl.textContent = praise[Math.floor(Math.random() * praise.length)];
+        feedbackEl.classList.remove('hidden');
+        nextBtn.classList.remove('hidden');
+      } else {
+        feedbackEl.textContent = `Oops! ❌ Try again.`;
+        feedbackEl.classList.remove('hidden');
+      }
+    }
+
+    function nextRound() {
+      currentRound++;
+      if (currentRound < rounds.length) {
+        loadRound();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      roundText.textContent = '';
+      storyContainer.innerHTML = '';
+      wordBank.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      previewEl.textContent = '';
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🎯 Game Over! You completed ${score} out of ${rounds.length} stories!`;
+    }
+
+    loadRound();
+  </script>
+</body>
+</html>

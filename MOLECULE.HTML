@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Animated Molecule Builder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .atom {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 5px;
+      transition: transform 0.3s ease;
+    }
+    .atom:hover {
+      transform: scale(1.1);
+    }
+    .H { background-color: #3b82f6; }
+    .O { background-color: #ef4444; }
+    .C { background-color: #10b981; }
+    .N { background-color: #8b5cf6; }
+    .S { background-color: #f59e0b; }
+    .molecule {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 20px;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-yellow-50 via-white to-yellow-100 text-gray-800 min-h-screen flex flex-col items-center py-10 px-4">
+
+  <h1 class="text-4xl font-bold text-yellow-700 mb-4">🔬 Animated Molecule Builder</h1>
+  <p class="text-gray-600 mb-6 text-center max-w-xl">Click atoms to add them to the reaction zone. When a valid molecule is formed, you'll see an animated diagram!</p>
+
+  <div class="grid grid-cols-3 sm:grid-cols-5 gap-4 mb-6">
+    <button class="atom H" onclick="addAtom('H')">H</button>
+    <button class="atom O" onclick="addAtom('O')">O</button>
+    <button class="atom C" onclick="addAtom('C')">C</button>
+    <button class="atom N" onclick="addAtom('N')">N</button>
+    <button class="atom S" onclick="addAtom('S')">S</button>
+  </div>
+
+  <div class="bg-yellow-100 border-2 border-yellow-400 rounded-lg p-4 text-lg font-medium text-center mb-4 w-full max-w-xl" id="reactionZone">
+    Reaction Zone: —
+  </div>
+
+  <div class="text-xl font-bold text-green-700 text-center mb-4" id="result">
+    Result: —
+  </div>
+
+  <div id="diagram" class="molecule"></div>
+
+  <button class="bg-red-500 text-white px-6 py-2 rounded-full text-lg font-semibold hover:bg-red-600 mt-4" onclick="clearReaction()">Clear</button>
+
+  <script>
+    let atoms = [];
+
+    function addAtom(atom) {
+      atoms.push(atom);
+      document.getElementById("reactionZone").textContent = "Reaction Zone: " + atoms.join(" ");
+      checkReaction();
+    }
+
+    function checkReaction() {
+      const count = t => atoms.filter(x => x === t).length;
+      const result = document.getElementById("result");
+      const diagram = document.getElementById("diagram");
+      diagram.innerHTML = "";
+
+      if (count("H") === 2 && count("O") === 1 && atoms.length === 3) {
+        result.textContent = "🎉WELL DONE ALCHEMIST YOU MADE : 💧 Water (H₂O)";
+        diagram.innerHTML = `
+          <div class="atom H">H</div>
+          <div class="atom O">O</div>
+          <div class="atom H">H</div>
+        `;
+      } else if (count("C") === 1 && count("O") === 2 && atoms.length === 3) {
+        result.textContent = "🎉WELL DONE ALCHEMIST YOU MADE: 🌫️ Carbon Dioxide (CO₂)";
+        diagram.innerHTML = `
+          <div class="atom O">O</div>
+          <div class="atom C">C</div>
+          <div class="atom O">O</div>
+        `;
+      } else if (count("C") === 1 && count("H") === 4 && atoms.length === 5) {
+        result.textContent = "🎉WELL DONE ALCHEMIST YOU MADE: 🔥 Methane (CH₄)";
+        diagram.innerHTML = `
+          <div class="atom H">H</div>
+          <div class="atom H">H</div>
+          <div class="atom C">C</div>
+          <div class="atom H">H</div>
+          <div class="atom H">H</div>
+        `;
+      } else if (count("N") === 1 && count("H") === 3 && atoms.length === 4) {
+        result.textContent = "🎉WELL DONE ALCHEMIST YOU MADE: 💨 Ammonia (NH₃)";
+        diagram.innerHTML = `
+          <div class="atom H">H</div>
+          <div class="atom N">N</div>
+          <div class="atom H">H</div>
+          <div class="atom H">H</div>
+        `;
+      } else if (count("S") === 1 && count("O") === 2 && atoms.length === 3) {
+        result.textContent = "🎉WELLDONE ALCHEMIST YOU MADE: 🌋 Sulfur Dioxide (SO₂)";
+        diagram.innerHTML = `
+          <div class="atom O">O</div>
+          <div class="atom S">S</div>
+          <div class="atom O">O</div>
+        `;
+      } else if (count("N") === 1 && count("O") === 1 && atoms.length === 2) {
+        result.textContent = "Result: ⚡ Nitric Oxide (NO)";
+        diagram.innerHTML = `
+          <div class="atom N">N</div>
+          <div class="atom O">O</div>
+        `;
+      } else {
+        result.textContent = "🎉WELL DONE ALCHEMIST YOU MADE: —";
+      }
+    }
+
+    function clearReaction() {
+      atoms = [];
+      document.getElementById("reactionZone").textContent = "Reaction Zone: —";
+      document.getElementById("result").textContent = "Result: —";
+      document.getElementById("diagram").innerHTML = "";
+    }
+  </script>
+</body>
+</html>

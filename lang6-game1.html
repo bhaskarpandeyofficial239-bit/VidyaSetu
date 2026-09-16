@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sentence Surgeon - VidyaSetu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .word-tile {
+      background-color: #f472b6;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-weight: bold;
+      cursor: grab;
+      transition: transform 0.3s ease;
+    }
+    .word-tile:hover { transform: scale(1.1); }
+    .drop-zone {
+      border: 2px dashed #f9a8d4;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      min-width: 100px;
+      background-color: #fff;
+      font-weight: bold;
+    }
+    .drop-zone.hovered { background-color: #ffe4f0; }
+    .drop-zone.matched { background-color: #bbf7d0; border-color: #22c55e; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-pink-50 via-purple-50 to-blue-50 text-center pt-20">
+
+  <h1 class="text-3xl font-bold text-pink-700 mb-2">✂️ Sentence Surgeon</h1>
+  <p class="text-gray-600 mb-4">Drag the correct word into the blank to fix the sentence!</p>
+  <div class="text-lg text-pink-800 font-semibold mb-6">Score: <span id="score">0</span> / 5</div>
+
+  <div id="sentenceArea" class="text-xl font-semibold text-pink-800 mb-6"></div>
+  <div id="dropZone" class="drop-zone mx-auto mb-6"></div>
+  <div id="wordBank" class="flex flex-wrap justify-center gap-4 mb-6 px-4"></div>
+
+  <div id="feedback" class="text-lg font-medium text-green-700 mb-4 hidden"></div>
+  <button id="nextBtn" class="hidden bg-gradient-to-r from-pink-500 to-pink-600 text-white px-6 py-2 rounded-full" onclick="nextRound()">Next</button>
+  <div id="result" class="text-xl font-bold text-green-700 hidden mt-10"></div>
+
+  <script>
+    const rounds = [
+      { sentence: "She ___ going to the market.", correct: "is", options: ["are", "is", "am"] },
+      { sentence: "The dogs ___ loudly at night.", correct: "bark", options: ["bark", "barks", "barked"] },
+      { sentence: "I ___ my homework yesterday.", correct: "did", options: ["do", "does", "did"] },
+      { sentence: "He ___ a book every week.", correct: "reads", options: ["read", "reads", "reading"] },
+      { sentence: "They ___ playing in the park.", correct: "are", options: ["is", "are", "was"] }
+    ];
+
+    let currentRound = 0;
+    let score = 0;
+
+    const scoreEl = document.getElementById('score');
+    const sentenceArea = document.getElementById('sentenceArea');
+    const dropZone = document.getElementById('dropZone');
+    const wordBank = document.getElementById('wordBank');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+
+    function loadRound() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      dropZone.className = 'drop-zone mx-auto mb-6';
+      dropZone.textContent = "Drop here";
+      wordBank.innerHTML = '';
+
+      const round = rounds[currentRound];
+      sentenceArea.textContent = round.sentence;
+
+      round.options.sort(() => Math.random() - 0.5).forEach(word => {
+        const tile = document.createElement('div');
+        tile.className = 'word-tile';
+        tile.draggable = true;
+        tile.textContent = word;
+        tile.dataset.word = word;
+        wordBank.appendChild(tile);
+
+        tile.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/plain', word);
+        });
+      });
+
+      dropZone.addEventListener('dragover', e => {
+        e.preventDefault();
+        dropZone.classList.add('hovered');
+      });
+
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('hovered');
+      });
+
+      dropZone.addEventListener('drop', e => {
+        e.preventDefault();
+        const word = e.dataTransfer.getData('text/plain');
+        dropZone.classList.remove('hovered');
+        dropZone.textContent = word;
+        if (word === rounds[currentRound].correct) {
+          score++;
+          scoreEl.textContent = score;
+          dropZone.classList.add('matched');
+          feedbackEl.textContent = "Correct! 🎉";
+        } else {
+          feedbackEl.textContent = "Oops! ❌ Try again";
+        }
+        feedbackEl.classList.remove('hidden');
+        nextBtn.classList.remove('hidden');
+        wordBank.querySelectorAll('.word-tile').forEach(tile => tile.draggable = false);
+      });
+    }
+
+    function nextRound() {
+      currentRound++;
+      if (currentRound < rounds.length) {
+        loadRound();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      sentenceArea.textContent = '';
+      dropZone.classList.add('hidden');
+      wordBank.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🎯 Game Over! You scored ${score} out of ${rounds.length}`;
+    }
+
+    loadRound();
+  </script>
+</body>
+</html>

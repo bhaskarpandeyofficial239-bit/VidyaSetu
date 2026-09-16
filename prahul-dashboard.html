@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ਵਿਦਿਆਰਥੀ ਡੈਸ਼ਬੋਰਡ - ਵਿਦਿਆਸੇਤੂ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .btn-animate { transition: all 0.3s ease; }
+    .btn-animate:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+  <!-- Navbar -->
+  <header class="bg-sky-700 text-white flex justify-between items-center px-6 py-4 shadow-md">
+    <h1 class="text-2xl font-bold">📘 ਵਿਦਿਆਸੇਤੂ</h1>
+    <div class="flex items-center space-x-4">
+      <span class="font-bold text-lg">ਸਤ ਸ੍ਰੀ ਅਕਾਲ, ਰਾਹੁਲ 👋</span>
+      <img src="https://i.pravatar.cc/40?img=23" class="w-10 h-10 rounded-full border-2 border-white">
+      <a href="plogin.html" class="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600">ਲੌਗਆਊਟ</a>
+      <button onclick="openLangModal()" class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-medium btn-animate">🌐 ਭਾਸ਼ਾ</button>
+    </div>
+  </header>
+
+  <div class="flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg min-h-screen p-6">
+      <nav class="space-y-4">
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📊 ਹਾਜ਼ਰੀ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📝 ਅੰਕ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📅 ਡੇਟ ਸ਼ੀਟ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📚 ਅਸਾਈਨਮੈਂਟ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📚 ਮੇਰੇ ਕੋਰਸ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">🎮 ਕਵਿਜ਼</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">🎥 ਵੀਡੀਓ ਲਾਇਬ੍ਰੇਰੀ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">🏆 ਉਪਲਬਧੀਆਂ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">👥 ਕਮਿਊਨਿਟੀ</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">⚙️ ਸੈਟਿੰਗਜ਼</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+
+      <!-- Welcome Banner -->
+      <div class="bg-gradient-to-r from-sky-500 to-sky-400 text-white rounded-2xl p-6 shadow-md mb-8">
+        <h2 class="text-2xl font-bold">ਵਾਪਸੀ ਤੇ ਸਵਾਗਤ ਹੈ, ਰਾਹੁਲ 🚀</h2>
+        <p class="mt-2">ਹਰ ਰੋਜ਼ ਮਿਹਨਤ ਅਤੇ ਵਧਣ ਜਾਰੀ ਰੱਖੋ।</p>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow-md text-center">
+          <h3 class="font-semibold text-lg">ਸਿਖਣ ਦੀ ਲੜੀ 🔥</h3>
+          <p class="text-2xl font-bold text-sky-600">7 ਦਿਨ</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md text-center">
+          <h3 class="font-semibold text-lg">ਮਿਲੇ ਬੈਜ 🎖️</h3>
+          <p class="text-2xl font-bold text-yellow-500">5</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md text-center">
+          <h3 class="font-semibold text-lg">ਕੋਰਸ ਪ੍ਰਗਟਿਸ 📊</h3>
+          <div class="w-full bg-gray-200 rounded-full h-4 mt-2">
+            <div class="bg-sky-500 h-4 rounded-full" style="width: 75%;"></div>
+          </div>
+          <p class="text-sm mt-1">75% ਮੁਕੰਮਲ</p>
+        </div>
+      </div>
+
+      <!-- Courses Section -->
+      <h2 class="text-xl font-bold mb-4">📚 ਸਿਖਾਈ ਜਾਰੀ ਰੱਖੋ</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-lg font-semibold">📐 ਗਣਿਤ</h3>
+          <p class="text-sm mt-2">ਕੈਲਕੁਲਸ ਅਤੇ ਤ੍ਰਿਕੋਣਮਿਤੀ</p>
+          <button class="mt-4 w-full bg-sky-500 text-white py-2 rounded-lg hover:bg-sky-600">ਜਾਰੀ ਰੱਖੋ</button>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-lg font-semibold">🔬 ਵਿਗਿਆਨ</h3>
+          <p class="text-sm mt-2">ਫਿਜ਼ਿਕਸ: ਗਤੀ ਅਤੇ ਬਲ</p>
+          <button class="mt-4 w-full bg-sky-500 text-white py-2 rounded-lg hover:bg-sky-600">ਜਾਰੀ ਰੱਖੋ</button>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-lg font-semibold">📚 ਅੰਗਰੇਜ਼ੀ</h3>
+          <p class="text-sm mt-2">ਕਵਿਤਾ ਅਤੇ ਸਾਹਿਤ</p>
+          <button class="mt-4 w-full bg-sky-500 text-white py-2 rounded-lg hover:bg-sky-600">ਜਾਰੀ ਰੱਖੋ</button>
+        </div>
+      </div>
+
+      <!-- Offline Download -->
+      <div class="mt-10 bg-green-100 p-6 rounded-xl shadow-md text-center">
+        <h3 class="text-lg font-bold text-green-700">📥 ਅਪਾਖੀ ਸਿੱਖਿਆ ਲਈ ਡਾਊਨਲੋਡ ਕਰੋ</h3>
+        <p class="text-sm mt-2">ਇੰਟਰਨੈੱਟ ਨਹੀਂ? ਕੋਈ ਗੱਲ ਨਹੀਂ। ਆਪਣੀਆਂ ਪਾਠਾਂ ਡਾਊਨਲੋਡ ਕਰੋ ਅਤੇ ਕਦੇ ਵੀ ਪਹੁੰਚ ਕਰੋ।</p>
+        <button class="mt-4 bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600">ਡਾਊਨਲੋਡ ਕਰੋ</button>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Language Modal -->
+  <div id="langModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 max-w-sm w-full text-center shadow-xl">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਭਾਸ਼ਾ ਚੁਣੋ</h3>
+      <div class="space-y-4">
+        <button onclick="setLanguage('english')" class="w-full bg-gradient-to-r from-sky-500 to-sky-600 text-white py-2 rounded-full btn-animate">English</button>
+        <button onclick="setLanguage('punjabi')" class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-2 rounded-full btn-animate">ਪੰਜਾਬੀ (Punjabi)</button>
+      </div>
+      <button onclick="closeLangModal()" class="mt-4 text-gray-500 underline">ਰੱਦ ਕਰੋ</button>
+    </div>
+  </div>
+
+  <script>
+    function openLangModal() { document.getElementById('langModal').classList.remove('hidden'); }
+    function closeLangModal() { document.getElementById('langModal').classList.add('hidden'); }
+    function setLanguage(lang) {
+      if(lang === 'english') window.location.href = 'rahul-dashboard.html';
+      else closeLangModal(); // Punjabi stays
+    }
+  </script>
+
+</body>
+</html>

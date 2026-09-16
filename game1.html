@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Balloon Quiz - Addition Fun</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .balloon {
+      width: 80px;
+      height: 100px;
+      background-color: #60a5fa;
+      border-radius: 50% 50% 45% 45%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+    .balloon:hover {
+      transform: scale(1.1);
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-sky-100 to-sky-200 text-center pt-20">
+
+  <h1 class="text-3xl font-bold text-sky-700 mb-2">🎈 Balloon Quiz: Addition</h1>
+  <p class="text-gray-600 mb-4">Click the correct answer to pop the balloon!</p>
+  <div class="text-lg text-sky-800 font-semibold mb-6">Score: <span id="score">0</span> / 5</div>
+
+  <div id="question" class="text-2xl font-semibold text-sky-800 mb-6"></div>
+
+  <div id="balloonContainer" class="flex justify-center gap-6 flex-wrap mb-6"></div>
+
+  <div id="feedback" class="text-lg font-medium text-green-700 mb-4 hidden"></div>
+  <button id="nextBtn" class="hidden bg-gradient-to-r from-green-400 to-green-600 text-white px-6 py-2 rounded-full" onclick="nextQuestion()">Next</button>
+
+  <div id="result" class="text-xl font-bold text-green-700 hidden mt-10"></div>
+
+  <script>
+    const questions = [
+      { a: 3, b: 4 },
+      { a: 6, b: 2 },
+      { a: 5, b: 5 },
+      { a: 7, b: 3 },
+      { a: 2, b: 9 }
+    ];
+
+    const praise = ["Well done! 🎉", "You’re a star! 🌟", "Great job! 👍", "Awesome! 💯", "Superb! 🥳"];
+
+    let current = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById('question');
+    const balloonContainer = document.getElementById('balloonContainer');
+    const scoreEl = document.getElementById('score');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+
+    function showQuestion() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      balloonContainer.innerHTML = '';
+      const q = questions[current];
+      const correct = q.a + q.b;
+      questionEl.textContent = `What is ${q.a} + ${q.b}?`;
+
+      let options = [correct];
+      while (options.length < 4) {
+        let wrong = correct + Math.floor(Math.random() * 5) - 2;
+        if (wrong !== correct && !options.includes(wrong) && wrong > 0) {
+          options.push(wrong);
+        }
+      }
+
+      options.sort(() => Math.random() - 0.5);
+
+      options.forEach(num => {
+        const balloon = document.createElement('div');
+        balloon.className = 'balloon';
+        balloon.textContent = num;
+        balloon.onclick = () => {
+          balloonContainer.querySelectorAll('.balloon').forEach(b => b.onclick = null); // disable further clicks
+          if (num === correct) {
+            score++;
+            scoreEl.textContent = score;
+            feedbackEl.textContent = praise[Math.floor(Math.random() * praise.length)];
+          } else {
+            feedbackEl.textContent = `Oops! ❌ The correct answer was ${correct}`;
+          }
+          feedbackEl.classList.remove('hidden');
+          nextBtn.classList.remove('hidden');
+        };
+        balloonContainer.appendChild(balloon);
+      });
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      questionEl.textContent = '';
+      balloonContainer.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🎯 Game Over! You scored ${score} out of 5`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>

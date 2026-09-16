@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nature Explorer Game - Class 1 Science</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body { font-family: 'Open Sans', sans-serif; }
+    h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+    .drag-item {
+      cursor: grab;
+      padding: 10px 16px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin: 8px;
+      display: inline-block;
+    }
+    .drop-zone {
+      min-height: 150px;
+      border: 2px dashed #38bdf8;
+      border-radius: 12px;
+      padding: 16px;
+      background-color: #f0f9ff;
+    }
+    .correct { background-color: #d1fae5; }
+    .incorrect { background-color: #fee2e2; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-green-50 via-white to-green-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="fixed top-0 w-full bg-white/80 backdrop-blur-md shadow-md z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between p-4">
+      <h2 class="text-2xl font-bold text-green-600">🌍 VidyaSetu <span class="text-gray-700">Nature Explorer</span></h2>
+      <nav class="space-x-6 hidden md:flex font-medium">
+        <a href="sclass1.html" class="hover:text-green-500 transition">← Back to Chapters</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Game Section -->
+  <main class="pt-28 pb-20">
+    <div class="max-w-6xl mx-auto text-center">
+      <h1 class="text-4xl font-bold text-green-700 mb-4">🌿 Natural vs Man-Made</h1>
+      <p class="text-gray-600 mb-6">Drag each item into the correct box. Then click "Submit" to check your answers.</p>
+
+      <!-- Game Container -->
+      <div id="game-container"></div>
+
+      <!-- Final Score -->
+      <div id="final-screen" class="hidden mt-10 text-center">
+        <h2 class="text-3xl font-bold text-green-600">🎉 Game Complete!</h2>
+        <p id="final-score" class="mt-4 text-xl text-gray-700"></p>
+        <button onclick="location.href='sgame3.html'" class="mt-6 bg-green-500 text-white px-6 py-2 rounded-full">Next Chapter ➡️</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-green-700 text-white py-8 text-center">
+    <p>Made with ❤️ for Nabha Students | Powered by SIH</p>
+    <p class="mt-2">Contact: support@nabhaedu.in | Helpline: +91-XXXX-XXXXXX</p>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    let score = 0;
+
+    const levels = [
+      {
+        title: "Level 1",
+        items: [
+          { emoji: "🌳 Tree", type: "natural" },
+          { emoji: "🏠 House", type: "manmade" },
+          { emoji: "🐦 Bird", type: "natural" },
+          { emoji: "🚗 Car", type: "manmade" }
+        ]
+      },
+      {
+        title: "Level 2",
+        items: [
+          { emoji: "🐠 Fish", type: "natural" },
+          { emoji: "🧱 Brick", type: "manmade" },
+          { emoji: "🌊 River", type: "natural" },
+          { emoji: "🧪 Test Tube", type: "manmade" },
+          { emoji: "🪨 Rock", type: "natural" },
+          { emoji: "🧸 Teddy", type: "manmade" }
+        ]
+      },
+      {
+        title: "Level 3",
+        items: [
+          { emoji: "🦋 Butterfly", type: "natural" },
+          { emoji: "🏢 Building", type: "manmade" },
+          { emoji: "🌻 Sunflower", type: "natural" },
+          { emoji: "🛵 Scooter", type: "manmade" },
+          { emoji: "🌧️ Rain", type: "natural" },
+          { emoji: "🖼️ Painting", type: "manmade" }
+        ]
+      },
+      {
+        title: "Level 4",
+        items: [
+          { emoji: "🐘 Elephant", type: "natural" },
+          { emoji: "🧵 Thread", type: "manmade" },
+          { emoji: "🏞️ Forest", type: "natural" },
+          { emoji: "🧴 Bottle", type: "manmade" },
+          { emoji: "🪵 Log", type: "natural" },
+          { emoji: "🧯 Fire Extinguisher", type: "manmade" }
+        ]
+      }
+    ];
+
+    function drop(ev) {
+      ev.preventDefault();
+      const data = ev.dataTransfer.getData("text");
+      const dragged = document.getElementById(data);
+      ev.target.appendChild(dragged);
+    }
+
+    function createLevel(levelData, index) {
+      const container = document.createElement("div");
+      container.id = `level${index}`;
+      container.className = index === 0 ? "" : "hidden";
+
+      const title = document.createElement("h2");
+      title.className = "text-xl font-semibold text-green-600 mb-4";
+      title.textContent = levelData.title;
+      container.appendChild(title);
+
+      const itemsWrap = document.createElement("div");
+      itemsWrap.className = "flex flex-wrap justify-center mb-6";
+      levelData.items.forEach((item, i) => {
+        const div = document.createElement("div");
+        div.className = "drag-item";
+        div.draggable = true;
+        div.textContent = item.emoji;
+        div.setAttribute("data-type", item.type);
+        div.id = `item-${index}-${i}`;
+        div.addEventListener("dragstart", ev => {
+          ev.dataTransfer.setData("text", ev.target.id);
+        });
+        itemsWrap.appendChild(div);
+      });
+      container.appendChild(itemsWrap);
+
+      const zonesWrap = document.createElement("div");
+      zonesWrap.className = "grid grid-cols-1 md:grid-cols-2 gap-8 px-4 mb-6";
+      ["natural", "manmade"].forEach(zone => {
+        const zoneDiv = document.createElement("div");
+        zoneDiv.className = "drop-zone";
+        zoneDiv.setAttribute("data-zone", zone);
+        zoneDiv.ondrop = drop;
+        zoneDiv.ondragover = ev => ev.preventDefault();
+        const label = document.createElement("h3");
+        label.className = `text-lg font-semibold mb-2 ${zone === "natural" ? "text-green-600" : "text-blue-600"}`;
+        label.textContent = zone === "natural" ? "🟢 Natural Things" : "🔵 Man-Made Things";
+        zoneDiv.appendChild(label);
+        zonesWrap.appendChild(zoneDiv);
+      });
+      container.appendChild(zonesWrap);
+
+      const submitBtn = document.createElement("button");
+      submitBtn.className = "bg-yellow-500 text-white px-6 py-2 rounded-full";
+      submitBtn.textContent = "✅ Submit";
+      submitBtn.onclick = () => checkAnswers(index, levelData.items.length);
+      container.appendChild(submitBtn);
+
+      const feedback = document.createElement("div");
+      feedback.id = `feedback-${index}`;
+      feedback.className = "mt-4 text-lg font-medium";
+      container.appendChild(feedback);
+
+      const nextBtn = document.createElement("button");
+      nextBtn.id = `next-${index}`;
+      nextBtn.className = "hidden mt-4 bg-green-500 text-white px-6 py-2 rounded-full";
+      nextBtn.textContent = index < levels.length - 1 ? "➡️ Next Level" : "🎉 Show Score";
+      nextBtn.onclick = () => {
+        document.getElementById(`level${index}`).classList.add("hidden");
+        if (index < levels.length - 1) {          document.getElementById(`level${index + 1}`).classList.remove("hidden");
+        } else {
+          document.getElementById("final-screen").classList.remove("hidden");
+          document.getElementById("final-score").textContent =
+            `You scored ${score} out of ${levels.reduce((sum, lvl) => sum + lvl.items.length, 0)}. Well done! 🎉`;
+        }
+      };
+      container.appendChild(nextBtn);
+
+      document.getElementById("game-container").appendChild(container);
+    }
+
+    function checkAnswers(levelIndex, totalItems) {
+      const levelDiv = document.getElementById(`level${levelIndex}`);
+      const dropZones = levelDiv.querySelectorAll(".drop-zone");
+      let correctCount = 0;
+
+      dropZones.forEach(zone => {
+        const expectedType = zone.getAttribute("data-zone");
+        const items = zone.querySelectorAll(".drag-item");
+        items.forEach(item => {
+          const actualType = item.getAttribute("data-type");
+          if (actualType === expectedType) {
+            item.classList.add("correct");
+            correctCount++;
+          } else {
+            item.classList.add("incorrect");
+          }
+        });
+      });
+
+      score += correctCount;
+
+      const feedback = document.getElementById(`feedback-${levelIndex}`);
+      const nextBtn = document.getElementById(`next-${levelIndex}`);
+      if (correctCount === totalItems) {
+        feedback.textContent = "🎉 Great job! You sorted everything correctly.";
+      } else {
+        feedback.textContent = `✅ You got ${correctCount} out of ${totalItems} correct. Check the colors to see which ones were right.`;
+      }
+      nextBtn.classList.remove("hidden");
+    }
+
+    // Initialize all levels
+    levels.forEach((levelData, index) => createLevel(levelData, index));
+  </script>
+
+</body>
+</html>

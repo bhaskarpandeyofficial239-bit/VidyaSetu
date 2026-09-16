@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🧠 Equation Architect</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .piece {
+      background-color: #6366f1;
+      color: white;
+      font-weight: bold;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 6px;
+      transition: transform 0.2s ease;
+    }
+    .piece:hover {
+      transform: scale(1.05);
+    }
+    .builder {
+      min-height: 60px;
+      background-color: #e0e7ff;
+      border: 2px dashed #6366f1;
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-indigo-50 to-blue-100 text-center pt-20">
+
+  <h1 class="text-3xl font-bold text-indigo-700 mb-2">🧠 Equation Architect</h1>
+  <p class="text-gray-600 mb-4">Build an expression that equals <span id="target">12</span> when <strong>x = <span id="xValue">3</span></strong></p>
+  <div class="text-lg text-indigo-800 font-semibold mb-6">Score: <span id="score">0</span> / 5</div>
+
+  <div id="builder" class="builder"></div>
+
+  <div id="piecesContainer" class="flex flex-wrap justify-center mb-6"></div>
+
+  <button onclick="evaluateExpression()" class="bg-gradient-to-r from-indigo-500 to-indigo-700 text-white px-6 py-2 rounded-full mb-4">✅ Evaluate</button>
+
+  <div id="feedback" class="text-lg font-medium text-green-700 mb-4 hidden"></div>
+  <button id="nextBtn" class="hidden bg-gradient-to-r from-indigo-400 to-indigo-600 text-white px-6 py-2 rounded-full" onclick="nextChallenge()">👉 Next Challenge</button>
+
+  <div id="result" class="text-xl font-bold text-green-700 hidden mt-10"></div>
+
+  <script>
+    const challenges = [
+      { target: 12, x: 3, pieces: ["2*x", "+3", "-x", "+6"] },
+      { target: 20, x: 4, pieces: ["3*x", "+8", "-2", "+4"] },
+      { target: 15, x: 5, pieces: ["x", "+10", "2*x", "-5"] },
+      { target: 9, x: 2, pieces: ["x*x", "+5", "-x", "+2"] },
+      { target: 18, x: 3, pieces: ["4*x", "+6", "-x", "+3"] }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    const targetEl = document.getElementById('target');
+    const xValueEl = document.getElementById('xValue');
+    const scoreEl = document.getElementById('score');
+    const builderEl = document.getElementById('builder');
+    const piecesContainer = document.getElementById('piecesContainer');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+
+    function showChallenge() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      builderEl.innerHTML = '';
+      piecesContainer.innerHTML = '';
+
+      const q = challenges[current];
+      targetEl.textContent = q.target;
+      xValueEl.textContent = q.x;
+
+      q.pieces.forEach(piece => {
+        const btn = document.createElement('div');
+        btn.className = 'piece';
+        btn.textContent = piece;
+        btn.onclick = () => {
+          const clone = btn.cloneNode(true);
+          clone.onclick = null;
+          builderEl.appendChild(clone);
+        };
+        piecesContainer.appendChild(btn);
+      });
+    }
+
+    function evaluateExpression() {
+      const q = challenges[current];
+      const expression = Array.from(builderEl.children).map(el => el.textContent).join('');
+      try {
+        const x = q.x;
+        const result = eval(expression);
+        if (result === q.target) {
+          score++;
+          scoreEl.textContent = score;
+          feedbackEl.textContent = "🎯 Equation Balanced!";
+        } else {
+          feedbackEl.textContent = `❌ Incorrect. Your expression = ${result}`;
+        }
+      } catch {
+        feedbackEl.textContent = "⚠️ Invalid expression.";
+      }
+      feedbackEl.classList.remove('hidden');
+      nextBtn.classList.remove('hidden');
+    }
+
+    function nextChallenge() {
+      current++;
+      if (current < challenges.length) {
+        showChallenge();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      builderEl.innerHTML = '';
+      piecesContainer.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🏁 Game Over! You solved ${score} out of 5 equations correctly 🧠`;
+    }
+
+    showChallenge();
+  </script>
+</body>
+</html>

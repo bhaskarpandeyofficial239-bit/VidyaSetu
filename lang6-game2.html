@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Word Detective - VidyaSetu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .word-tile {
+      background-color: #c4b5fd;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-weight: bold;
+      cursor: grab;
+      transition: transform 0.3s ease;
+    }
+    .word-tile:hover { transform: scale(1.1); }
+    .drop-zone {
+      border: 2px dashed #ddd6fe;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      background-color: #fff;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    .drop-zone.hovered { background-color: #ede9fe; }
+    .drop-zone.matched { background-color: #bbf7d0; border-color: #22c55e; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-purple-50 via-pink-50 to-blue-50 text-center pt-20">
+
+  <h1 class="text-3xl font-bold text-purple-700 mb-2">🕵️‍♂️ Word Detective</h1>
+  <p class="text-gray-600 mb-4">Drag the correct word to match the clue!</p>
+  <div class="text-lg text-purple-800 font-semibold mb-6">Score: <span id="score">0</span> / 5</div>
+
+  <div id="roundText" class="text-xl font-semibold text-purple-800 mb-6"></div>
+  <div id="dropContainer" class="flex justify-center mb-6 px-4"></div>
+  <div id="wordBank" class="flex flex-wrap justify-center gap-4 mb-6 px-4"></div>
+
+  <div id="feedback" class="text-lg font-medium text-green-700 mb-4 hidden"></div>
+  <button id="nextBtn" class="hidden bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-2 rounded-full" onclick="nextRound()">Next</button>
+  <div id="result" class="text-xl font-bold text-green-700 hidden mt-10"></div>
+
+  <script>
+    const rounds = [
+      { clue: "Synonym of 'happy'", answer: "joyful", options: ["sad", "angry", "joyful", "tired"] },
+      { clue: "Antonym of 'cold'", answer: "hot", options: ["warm", "hot", "cool", "chilly"] },
+      { clue: "Means 'to speak loudly'", answer: "shout", options: ["whisper", "shout", "murmur", "talk"] },
+      { clue: "Synonym of 'fast'", answer: "quick", options: ["slow", "quick", "lazy", "late"] },
+      { clue: "Antonym of 'begin'", answer: "end", options: ["start", "open", "end", "launch"] }
+    ];
+
+    let currentRound = 0;
+    let score = 0;
+
+    const scoreEl = document.getElementById('score');
+    const roundText = document.getElementById('roundText');
+    const dropContainer = document.getElementById('dropContainer');
+    const wordBank = document.getElementById('wordBank');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+
+    function loadRound() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      dropContainer.innerHTML = '';
+      wordBank.innerHTML = '';
+
+      const round = rounds[currentRound];
+      roundText.textContent = `Round ${currentRound + 1} of ${rounds.length}`;
+
+      const zone = document.createElement('div');
+      zone.className = 'drop-zone';
+      zone.dataset.match = round.answer;
+      zone.textContent = round.clue;
+      dropContainer.appendChild(zone);
+
+      round.options.sort(() => Math.random() - 0.5).forEach(word => {
+        const tile = document.createElement('div');
+        tile.className = 'word-tile';
+        tile.draggable = true;
+        tile.textContent = word;
+        tile.dataset.word = word;
+        wordBank.appendChild(tile);
+
+        tile.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/plain', word);
+        });
+      });
+
+      zone.addEventListener('dragover', e => {
+        e.preventDefault();
+        zone.classList.add('hovered');
+      });
+
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('hovered');
+      });
+
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        const word = e.dataTransfer.getData('text/plain');
+        zone.classList.remove('hovered');
+        if (word === round.answer) {
+          score++;
+          scoreEl.textContent = score;
+          zone.classList.add('matched');
+          zone.innerHTML += `<div class="mt-2 text-green-600 font-bold">${word} ✅</div>`;
+          document.querySelector(`[data-word="${word}"]`).remove();
+          feedbackEl.textContent = "Correct! 🎉";
+        } else {
+          feedbackEl.textContent = `Oops! ❌ "${word}" is not the right match`;
+        }
+        feedbackEl.classList.remove('hidden');
+        nextBtn.classList.remove('hidden');
+        wordBank.querySelectorAll('.word-tile').forEach(tile => tile.draggable = false);
+      });
+    }
+
+    function nextRound() {
+      currentRound++;
+      if (currentRound < rounds.length) {
+        loadRound();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      roundText.textContent = '';
+      dropContainer.innerHTML = '';
+      wordBank.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🎯 Game Over! You scored ${score} out of ${rounds.length}`;
+    }
+
+    loadRound();
+  </script>
+</body>
+</html>

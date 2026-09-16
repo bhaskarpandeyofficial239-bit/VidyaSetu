@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verb Action - VidyaSetu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .word-tile {
+      background-color: #34d399;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-weight: bold;
+      cursor: grab;
+      transition: transform 0.3s ease;
+    }
+    .word-tile:hover { transform: scale(1.1); }
+    .drop-zone {
+      border: 2px dashed #6ee7b7;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      min-height: 100px;
+      background-color: #fff;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem; /* big emoji */
+    }
+    .drop-zone.hovered { background-color: #d1fae5; }
+    .drop-zone.matched { background-color: #bbf7d0; border-color: #22c55e; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-green-50 via-white to-green-100 text-center pt-20">
+
+  <h1 class="text-3xl font-bold text-green-700 mb-2">🏃‍♂️ Verb Action</h1>
+  <p class="text-gray-600 mb-4">Drag the action word to match the correct emoji!</p>
+  <div class="text-lg text-green-800 font-semibold mb-6">Score: <span id="score">0</span> / 5</div>
+
+  <div id="roundText" class="text-xl font-semibold text-green-800 mb-6"></div>
+  <div id="dropContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center mb-6 px-4"></div>
+  <div id="wordBank" class="flex flex-wrap justify-center gap-4 mb-6 px-4"></div>
+
+  <div id="feedback" class="text-lg font-medium text-green-700 mb-4 hidden"></div>
+  <button id="nextBtn" class="hidden bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-2 rounded-full" onclick="nextRound()">Next</button>
+  <div id="result" class="text-xl font-bold text-green-700 hidden mt-10"></div>
+
+  <script>
+    const rounds = [
+      { words: { run: "🏃", eat: "🍽️" } },
+      { words: { jump: "🤸", read: "📖" } },
+      { words: { sing: "🎤", swim: "🏊" } },
+      { words: { dance: "💃", write: "✍️" } },
+      { words: { clap: "👏", sleep: "😴" } }
+    ];
+
+    const praise = ["Great job! 🎉", "Well done! 🌟", "Awesome! 👍", "Superb! 🥳", "You nailed it! 💯"];
+    let currentRound = 0;
+    let score = 0;
+    let matched = 0;
+
+    const scoreEl = document.getElementById('score');
+    const roundText = document.getElementById('roundText');
+    const dropContainer = document.getElementById('dropContainer');
+    const wordBank = document.getElementById('wordBank');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+
+    function loadRound() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      dropContainer.innerHTML = '';
+      wordBank.innerHTML = '';
+      matched = 0;
+
+      const round = rounds[currentRound];
+      roundText.textContent = `Round ${currentRound + 1} of ${rounds.length}`;
+
+      // Create emoji drop zones
+      Object.entries(round.words).forEach(([word, emoji]) => {
+        const zone = document.createElement('div');
+        zone.className = 'drop-zone';
+        zone.dataset.match = word;
+        zone.textContent = emoji;
+        dropContainer.appendChild(zone);
+      });
+
+      // Create draggable word tiles
+      Object.keys(round.words).sort(() => Math.random() - 0.5).forEach(word => {
+        const tile = document.createElement('div');
+        tile.className = 'word-tile';
+        tile.draggable = true;
+        tile.dataset.word = word;
+        tile.textContent = word.charAt(0).toUpperCase() + word.slice(1);
+        wordBank.appendChild(tile);
+
+        tile.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/plain', word);
+        });
+      });
+
+      // Drop handling
+      document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.addEventListener('dragover', e => {
+          e.preventDefault();
+          zone.classList.add('hovered');
+        });
+        zone.addEventListener('dragleave', () => {
+          zone.classList.remove('hovered');
+        });
+        zone.addEventListener('drop', e => {
+          e.preventDefault();
+          const word = e.dataTransfer.getData('text/plain');
+          if (word === zone.dataset.match) {
+            zone.classList.add('matched');
+            zone.innerHTML += `<div class="mt-2 text-green-600 font-bold text-lg">${word} ✅</div>`;
+            document.querySelector(`[data-word="${word}"]`).remove();
+            matched++;
+            zone.classList.remove('hovered');
+            if (matched === Object.keys(round.words).length) {
+              score++;
+              scoreEl.textContent = score;
+              feedbackEl.textContent = praise[Math.floor(Math.random() * praise.length)];
+              feedbackEl.classList.remove('hidden');
+              nextBtn.classList.remove('hidden');
+            }
+          } else {
+            feedbackEl.textContent = `Oops! ❌ Try again`;
+            feedbackEl.classList.remove('hidden');
+            zone.classList.remove('hovered');
+          }
+        });
+      });
+    }
+
+    function nextRound() {
+      currentRound++;
+      if (currentRound < rounds.length) {
+        loadRound();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      roundText.textContent = '';
+      dropContainer.innerHTML = '';
+      wordBank.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🎯 Game Over! You scored ${score} out of ${rounds.length}`;
+    }
+
+    loadRound();
+  </script>
+</body>
+</html>

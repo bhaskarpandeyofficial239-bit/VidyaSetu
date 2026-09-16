@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>📐 Angle Quest</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .option {
+      background-color: #3b82f6;
+      color: white;
+      font-weight: bold;
+      padding: 12px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      margin: 8px;
+      transition: transform 0.2s ease;
+    }
+    .option:hover {
+      transform: scale(1.05);
+    }
+    .hidden { display: none; }
+    canvas { margin: 20px auto; display: block; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-blue-50 to-indigo-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="text-center pt-10">
+    <h1 class="text-3xl font-bold text-indigo-700 mb-2">📐 Angle Quest</h1>
+    <p class="text-gray-600 mb-4">Identify the type of angle shown below</p>
+    <div class="text-lg text-indigo-800 font-semibold mb-6">Score: <span id="score">0</span> / 5</div>
+  </header>
+
+  <!-- Main Game Area -->
+  <main class="max-w-xl mx-auto px-4 text-center">
+    <canvas id="angleCanvas" width="300" height="300" class="mx-auto mb-6"></canvas>
+
+    <div id="question" class="text-xl font-medium text-indigo-800 mb-6">What type of angle is this?</div>
+
+    <div id="optionsContainer" class="flex flex-wrap justify-center gap-4 mb-6"></div>
+
+    <div id="feedback" class="text-lg font-medium text-green-700 mb-4 hidden"></div>
+
+    <button id="nextBtn" class="hidden bg-gradient-to-r from-indigo-400 to-indigo-600 text-white px-6 py-2 rounded-full mb-10">👉 Next Angle</button>
+
+    <div id="result" class="text-xl font-bold text-green-700 hidden mt-10"></div>
+  </main>
+
+  <!-- Script -->
+  <script>
+    const questions = [
+      { angle: 45, type: "Acute" },
+      { angle: 90, type: "Right" },
+      { angle: 135, type: "Obtuse" },
+      { angle: 180, type: "Straight" },
+      { angle: 75, type: "Acute" }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    const canvas = document.getElementById('angleCanvas');
+    const ctx = canvas.getContext('2d');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const scoreEl = document.getElementById('score');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+
+    function drawAngle(degrees) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const centerX = 150;
+      const centerY = 150;
+      const radius = 100;
+
+      // Base line
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(centerX + radius, centerY);
+      ctx.strokeStyle = "#6366f1";
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      // Angle line
+      const radians = degrees * Math.PI / 180;
+      const x = centerX + radius * Math.cos(radians);
+      const y = centerY - radius * Math.sin(radians);
+
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+
+      // Arc
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 20, 0, radians, false);
+      ctx.strokeStyle = "#f59e0b";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    function showQuestion() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      optionsContainer.innerHTML = '';
+      const q = questions[current];
+      drawAngle(q.angle);
+
+      ["Acute", "Right", "Obtuse", "Straight"].forEach(opt => {
+        const btn = document.createElement('div');
+        btn.className = 'option';
+        btn.textContent = opt;
+        btn.onclick = () => {
+          optionsContainer.querySelectorAll('.option').forEach(o => o.onclick = null);
+          if (opt === q.type) {
+            score++;
+            scoreEl.textContent = score;
+            feedbackEl.textContent = "🎯 Correct!";
+          } else {
+            feedbackEl.textContent = `❌ Incorrect. This is a ${q.type} angle.`;
+          }
+          feedbackEl.classList.remove('hidden');
+          nextBtn.classList.remove('hidden');
+        };
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      canvas.style.display = 'none';
+      optionsContainer.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🏁 Game Over! You identified ${score} out of 5 angles correctly 📐`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>

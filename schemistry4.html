@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Acid vs Base Showdown – Chemistry Game</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .btn {
+      background-color: #f43f5e;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #be123c;
+    }
+    .game-box {
+      background-color: #ffe4e6;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #fda4af;
+    }
+    .emoji {
+      font-size: 48px;
+      animation: wiggle 1.5s infinite;
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(10deg); }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-rose-50 via-white to-rose-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
+      <h2 class="text-xl font-bold text-rose-600">🧪 Acid vs Base Showdown</h2>
+      <a href="schemistry.html" class="text-rose-500 hover:underline">← Back to Chemistry Chapters</a>
+    </div>
+  </header>
+
+  <!-- Game Container -->
+  <main class="max-w-3xl mx-auto py-12 px-4 text-center">
+    <h1 class="text-3xl font-bold text-rose-700 mb-4">⚔️ Identify the Substance!</h1>
+    <p class="text-gray-600 mb-6">Is it an acid or a base? Tap the right answer to win points!</p>
+
+    <div id="gameBox" class="game-box">
+      <!-- Game content will be injected here -->
+    </div>
+
+    <div id="feedback" class="mt-6 text-lg font-semibold"></div>
+    <div id="scoreDisplay" class="mt-2 text-rose-700 font-medium">Score: 0</div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-rose-700 text-white py-6 text-center">
+    <p>Made with ❤️ for Nabha Students | Powered by SIH</p>
+  </footer>
+
+  <!-- Game Script -->
+  <script>
+    let score = 0;
+    let questionIndex = 0;
+
+    const questions = [
+      {
+        emoji: "🍋",
+        title: "Lemon Juice",
+        question: "Is lemon juice an acid or a base?",
+        options: {
+          A: { text: "Acid", correct: true, fact: "Lemon juice contains citric acid." },
+          B: { text: "Base", correct: false, fact: "Bases are usually bitter and slippery." }
+        }
+      },
+      {
+        emoji: "🧼",
+        title: "Soap",
+        question: "Is soap an acid or a base?",
+        options: {
+          A: { text: "Acid", correct: false, fact: "Soap is a base—it feels slippery and reacts with acids." },
+          B: { text: "Base", correct: true, fact: "Soap is made from alkaline substances." }
+        }
+      },
+      {
+        emoji: "🥤",
+        title: "Soft Drink",
+        question: "Is a soft drink acidic or basic?",
+        options: {
+          A: { text: "Acid", correct: true, fact: "Soft drinks contain carbonic and phosphoric acids." },
+          B: { text: "Base", correct: false, fact: "Bases are not fizzy or sour." }
+        }
+      }
+    ];
+
+    function loadQuestion(index) {
+      const q = questions[index];
+      const gameBox = document.getElementById("gameBox");
+      const feedback = document.getElementById("feedback");
+      feedback.innerHTML = "";
+
+      let html = `<div class="emoji">${q.emoji}</div>`;
+      html += `<h2 class="text-2xl font-bold text-rose-700 mt-2">${q.title}</h2>`;
+      html += `<p class="mt-2 text-gray-700">${q.question}</p>`;
+      html += `<div class="mt-4 space-y-2">`;
+
+      for (const key in q.options) {
+        html += `<button class="btn" onclick="checkAnswer('${key}')">${key}. ${q.options[key].text}</button><br>`;
+      }
+
+      html += `</div>`;
+      gameBox.innerHTML = html;
+    }
+
+    function checkAnswer(choiceKey) {
+      const q = questions[questionIndex];
+      const choice = q.options[choiceKey];
+      const feedback = document.getElementById("feedback");
+
+      if (choice.correct) {
+        score += 10;
+        feedback.innerHTML = `✅ Correct! ${choice.fact}`;
+        feedback.className = "text-green-600";
+      } else {
+        score -= 5;
+        feedback.innerHTML = `❌ Incorrect. ${choice.fact}`;
+        feedback.className = "text-red-600";
+      }
+
+      document.getElementById("scoreDisplay").innerText = `Score: ${score}`;
+
+      questionIndex++;
+      if (questionIndex < questions.length) {
+        setTimeout(() => loadQuestion(questionIndex), 2000);
+      } else {
+        setTimeout(() => {
+          document.getElementById("gameBox").innerHTML = `<h2 class="text-2xl font-bold text-green-600">🎉 Showdown Complete!</h2><p class="mt-4 text-gray-700">Final Score: ${score} points. You’ve mastered acids and bases!</p>`;
+          document.getElementById("feedback").innerHTML = "";
+        }, 2000);
+      }
+    }
+
+    window.onload = () => loadQuestion(questionIndex);
+  </script>
+</body>
+</html>

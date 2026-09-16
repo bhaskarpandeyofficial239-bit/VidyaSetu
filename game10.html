@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🔤 Expression Explorer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .option {
+      background-color: #6366f1;
+      color: white;
+      font-weight: bold;
+      padding: 12px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      margin: 8px;
+      transition: transform 0.2s ease;
+    }
+    .option:hover {
+      transform: scale(1.05);
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-indigo-50 to-blue-100 text-center pt-20">
+
+  <h1 class="text-3xl font-bold text-indigo-700 mb-2">🔤 Expression Explorer</h1>
+  <p class="text-gray-600 mb-4">Simplify and match the correct algebraic expression</p>
+  <div class="text-lg text-indigo-800 font-semibold mb-6">Score: <span id="score">0</span> / 5</div>
+
+  <div id="question" class="text-xl font-medium text-indigo-800 mb-6 max-w-2xl mx-auto"></div>
+  <div id="optionsContainer" class="flex flex-wrap justify-center mb-6"></div>
+
+  <div id="feedback" class="text-lg font-medium text-green-700 mb-4 hidden"></div>
+  <button id="nextBtn" class="hidden bg-gradient-to-r from-indigo-400 to-indigo-600 text-white px-6 py-2 rounded-full" onclick="nextQuestion()">👉 Next Expression</button>
+
+  <div id="result" class="text-xl font-bold text-green-700 hidden mt-10"></div>
+
+  <script>
+    const questions = [
+      {
+        expression: "Which expression is equivalent to 2x + 3x?",
+        options: ["5x", "6x", "2x + 3", "x²"],
+        answer: "5x"
+      },
+      {
+        expression: "Simplify: x + x + x",
+        options: ["3x", "x³", "x²", "2x"],
+        answer: "3x"
+      },
+      {
+        expression: "Which is same as 4(x + 2)?",
+        options: ["4x + 8", "x + 8", "4x + 2", "x² + 2"],
+        answer: "4x + 8"
+      },
+      {
+        expression: "Simplify: 2a + 3b + 4a",
+        options: ["6a + 3b", "5a + 3b", "2a + 7b", "7a + b"],
+        answer: "6a + 3b"
+      },
+      {
+        expression: "Which is equivalent to (x + 2)(x)?",
+        options: ["x² + 2x", "x² + 2", "x + 2x", "x² + x"],
+        answer: "x² + 2x"
+      }
+    ];
+
+    const praise = [
+      "🎉 Well simplified!",
+      "🌟 Algebra ace!",
+      "👍 Great logic!",
+      "💯 Expression master!",
+      "🥳 You nailed it!"
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById('question');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const scoreEl = document.getElementById('score');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+
+    function showQuestion() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      optionsContainer.innerHTML = '';
+      const q = questions[current];
+      questionEl.textContent = q.expression;
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('div');
+        btn.className = 'option';
+        btn.textContent = opt;
+        btn.onclick = () => {
+          optionsContainer.querySelectorAll('.option').forEach(o => o.onclick = null);
+          if (opt === q.answer) {
+            score++;
+            scoreEl.textContent = score;
+            feedbackEl.textContent = praise[Math.floor(Math.random() * praise.length)];
+          } else {
+            feedbackEl.textContent = `❌ Incorrect. Correct answer: ${q.answer}`;
+          }
+          feedbackEl.classList.remove('hidden');
+          nextBtn.classList.remove('hidden');
+        };
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      questionEl.textContent = '';
+      optionsContainer.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🏁 Game Over! You solved ${score} out of 5 expressions correctly 🔤`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>

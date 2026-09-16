@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ਡਿਜ਼ਿਟਲ ਲਰਨਿੰਗ ਪਲੇਟਫਾਰਮ - ਨਾਬਾ</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body { font-family: 'Open Sans', sans-serif; }
+    h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+    .btn-animate { transition: all 0.3s ease; }
+    .btn-animate:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+    .card { transition: transform 0.3s, box-shadow 0.3s; }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 12px 25px rgba(0,0,0,0.15); }
+    .fade-up { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+    .fade-up.show { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body class="bg-white text-gray-800">
+
+  <!-- Header -->
+  <header class="fixed top-0 w-full bg-white/80 backdrop-blur-md shadow-md z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between p-4">
+      <h2 class="text-2xl font-bold text-sky-600">📘 ਵਿਦਿਆਸੇਤੂ <span class="text-gray-700"> ਗਿਆਨ ਦਾ ਪੁਲ</span></h2>
+      
+      <div class="flex items-center gap-3">
+        <!-- Language Button -->
+        <button onclick="openLangModal()" class="bg-gradient-to-r from-gray-200 to-gray-300 text-gray-800 px-4 py-2 rounded-full font-medium btn-animate">🌐 ਭਾਸ਼ਾ</button>
+
+        <!-- Login Button -->
+        <button onclick="location.href='plogin.html'" class="bg-gradient-to-r from-sky-500 to-sky-600 text-white px-5 py-2 rounded-full btn-animate">ਲੌਗਇਨ</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="pt-28 bg-gradient-to-r from-sky-100 via-white to-sky-50 fade-up show">
+    <div class="max-w-7xl mx-auto text-center py-20">
+      <h1 class="text-4xl md:text-5xl font-bold text-sky-700 leading-tight">ਹਰ ਬੱਚੇ ਲਈ ਡਿਜ਼ਿਟਲ ਲਰਨਿੰਗ</h1>
+      <p class="mt-4 text-lg text-gray-600">ਸੁਗਮ • ਇੰਟਰੈਕਟਿਵ • ਮਨੋਰੰਜਕ</p>
+      <div class="mt-6 space-x-4">
+        <button class="bg-gradient-to-r from-sky-500 to-sky-600 text-white px-6 py-3 rounded-full btn-animate">ਲਰਨਿੰਗ ਸ਼ੁਰੂ ਕਰੋ</button>
+        <button class="border border-sky-500 text-sky-500 px-6 py-3 rounded-full btn-animate">ਡੈਮੋ ਵੇਖੋ</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Courses -->
+  <section id="courses" class="py-16 bg-gradient-to-b from-sky-50 to-white fade-up show">
+    <div class="max-w-6xl mx-auto text-center">
+      <h2 class="text-3xl font-bold text-sky-700">ਕੋਰਸ ਦੀ ਜਾਂਚ ਕਰੋ</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
+        <div class="card bg-white p-6 rounded-2xl">
+          <h3 class="text-xl font-semibold">📐 ਗਣਿਤ</h3>
+          <p class="mt-2 text-gray-600">ਸੰਖਿਆਵਾਂ ਅਤੇ ਪਜ਼ਲ ਨਾਲ ਮਜ਼ਾ</p>
+          <a href="maths.html" class="mt-4 inline-block bg-gradient-to-r from-sky-500 to-sky-600 text-white px-4 py-2 rounded-full btn-animate">ਜਾਰੀ ਰੱਖੋ</a>
+        </div>
+        <div class="card bg-white p-6 rounded-2xl">
+          <h3 class="text-xl font-semibold">🔬 ਵਿਗਿਆਨ</h3>
+          <p class="mt-2 text-gray-600">ਪ੍ਰਯੋਗ ਅਤੇ ਕੁਦਰਤ ਦੀ ਖੋਜ ਕਰੋ</p>
+          <a href="science.html" class="mt-4 inline-block bg-gradient-to-r from-sky-500 to-sky-600 text-white px-4 py-2 rounded-full btn-animate">ਜਾਰੀ ਰੱਖੋ</a>
+        </div>
+        <div class="card bg-white p-6 rounded-2xl">
+          <h3 class="text-xl font-semibold">📚 ਭਾਸ਼ਾ</h3>
+          <p class="mt-2 text-gray-600">ਪਾਠ ਅਤੇ ਕਹਾਣੀਆਂ ਸੁਧਾਰੋ</p>
+          <a href="language.html" class="mt-4 inline-block bg-gradient-to-r from-sky-500 to-sky-600 text-white px-4 py-2 rounded-full btn-animate">ਜਾਰੀ ਰੱਖੋ</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quizzes -->
+  <section id="quizzes" class="py-16 bg-gradient-to-r from-yellow-50 to-yellow-100 fade-up show">
+    <div class="max-w-6xl mx-auto text-center">
+      <h2 class="text-3xl font-bold text-yellow-700">ਖੇਡੋ ਅਤੇ ਸਿੱਖੋ</h2>
+      <p class="mt-4 text-gray-600">ਦੈਨਿਕ ਕੁਇਜ਼ ਅਤੇ ਪਜ਼ਲ ਨਾਲ ਬੈਜ ਜੀਤੋ 🎖️</p>
+      <button class="mt-6 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-6 py-3 rounded-full btn-animate">ਕੁਇਜ਼ ਲਵੋ</button>
+    </div>
+  </section>
+
+  <!-- Video Library -->
+  <section id="videos" class="py-16 bg-white fade-up show">
+    <div class="max-w-6xl mx-auto text-center">
+      <h2 class="text-3xl font-bold text-sky-700">ਵੀਡੀਓ ਪਾਠ</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
+        <div class="card p-4 bg-gray-50 rounded-2xl">
+          <img src="https://img.youtube.com/vi/1/0.jpg" class="rounded-xl w-full h-48 object-cover">
+          <p class="mt-2 text-gray-600">ਕਹਾਣੀਆਂ ਨਾਲ ਭਾਗਾਂ ਸਿੱਖੋ</p>
+        </div>
+        <div class="card p-4 bg-gray-50 rounded-2xl">
+          <img src="https://img.youtube.com/vi/2/0.jpg" class="rounded-xl w-full h-48 object-cover">
+          <p class="mt-2 text-gray-600">ਪੌਦੇ ਅਤੇ ਫੋਟੋਸਿੰਥੇਸਿਸ</p>
+        </div>
+        <div class="card p-4 bg-gray-50 rounded-2xl">
+          <img src="https://img.youtube.com/vi/3/0.jpg" class="rounded-xl w-full h-48 object-cover">
+          <p class="mt-2 text-gray-600">ਵਿਆਕਰਣ ਨਾਲ ਮਨੋਰੰਜਕ ਮਜ਼ਾ</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community -->
+  <section id="community" class="py-16 bg-green-50 fade-up show">
+    <div class="max-w-6xl mx-auto text-center">
+      <h2 class="text-3xl font-bold text-green-700">ਪੂਛੋ • ਸਾਂਝਾ ਕਰੋ • ਸਿੱਖੋ</h2>
+      <p class="mt-4 text-gray-600">ਚਰਚਾ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ, ਸਵਾਲ ਪੁੱਛੋ ਅਤੇ ਇਕੱਠੇ ਸਿੱਖੋ 🤝</p>
+      <button class="mt-6 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-full btn-animate">ਕਮਿਊਨਿਟੀ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-sky-700 text-white py-8 text-center">
+    <p>ਨਾਬਾ ਦੇ ਵਿਦਿਆਰਥੀਆਂ ਲਈ ❤️ ਨਾਲ ਬਣਾਇਆ | SIH ਦੁਆਰਾ ਸਪੋਰਟ ਕੀਤਾ ਗਿਆ</p>
+    <p class="mt-2">ਸੰਪਰਕ: support@nabhaedu.in | ਹੈਲਪਲਾਈਨ: +91-XXXX-XXXXXX</p>
+  </footer>
+
+  <!-- Language Modal -->
+  <div id="langModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 max-w-sm w-full text-center shadow-xl">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਭਾਸ਼ਾ ਚੁਣੋ</h3>
+      <div class="space-y-4">
+        <button onclick="setLanguage('english')" class="w-full bg-gradient-to-r from-sky-500 to-sky-600 text-white py-2 rounded-full btn-animate">English</button>
+        <button onclick="setLanguage('punjabi')" class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-2 rounded-full btn-animate">ਪੰਜਾਬੀ (Punjabi)</button>
+      </div>
+      <button onclick="closeLangModal()" class="mt-4 text-gray-500 underline">ਰੱਦ ਕਰੋ</button>
+    </div>
+  </div>
+
+  <script>
+    function openLangModal() { document.getElementById('langModal').classList.remove('hidden'); }
+    function closeLangModal() { document.getElementById('langModal').classList.add('hidden'); }
+    function setLanguage(lang) {
+      if(lang === 'english') window.location.href = 'index.html';
+      else closeLangModal(); // Punjabi pe same page
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>⚔️ Number Duel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .card {
+      width: 120px;
+      height: 120px;
+      background-color: #60a5fa;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      font-size: 32px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+    .card:hover {
+      transform: scale(1.1);
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-blue-50 to-indigo-100 text-center pt-20">
+
+  <h1 class="text-3xl font-bold text-indigo-700 mb-2">⚔️ Number Duel</h1>
+  <p class="text-gray-600 mb-4">Tap the greater number to win the duel! 🛡️</p>
+  <div class="text-lg text-indigo-800 font-semibold mb-6">Score: <span id="score">0</span> / 5</div>
+
+  <div id="question" class="text-xl font-medium text-indigo-800 mb-6">Who is stronger?</div>
+
+  <div id="duelContainer" class="flex justify-center gap-10 mb-6"></div>
+
+  <div id="feedback" class="text-lg font-medium text-green-700 mb-4 hidden"></div>
+  <button id="nextBtn" class="hidden bg-gradient-to-r from-indigo-400 to-indigo-600 text-white px-6 py-2 rounded-full" onclick="nextQuestion()">👉 Next Duel</button>
+
+  <div id="result" class="text-xl font-bold text-green-700 hidden mt-10"></div>
+
+  <script>
+    const questions = [
+      { a: 12, b: 9 },
+      { a: 25, b: 30 },
+      { a: 18, b: 18 },
+      { a: 7, b: 14 },
+      { a: 50, b: 45 }
+    ];
+
+    const praise = [
+      "🎉 Victory!",
+      "🌟 You won the duel!",
+      "👍 Great choice!",
+      "💯 Math warrior!",
+      "🥳 Champion!"
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    const duelContainer = document.getElementById('duelContainer');
+    const scoreEl = document.getElementById('score');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+
+    function showQuestion() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      duelContainer.innerHTML = '';
+      const q = questions[current];
+      const correct = q.a > q.b ? q.a : q.b;
+
+      [q.a, q.b].sort(() => Math.random() - 0.5).forEach(num => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.textContent = num;
+        card.onclick = () => {
+          duelContainer.querySelectorAll('.card').forEach(c => c.onclick = null);
+          if (num === correct) {
+            score++;
+            scoreEl.textContent = score;
+            feedbackEl.textContent = praise[Math.floor(Math.random() * praise.length)];
+          } else {
+            feedbackEl.textContent = `❌ Oops! ${correct} is stronger!`;
+          }
+          feedbackEl.classList.remove('hidden');
+          nextBtn.classList.remove('hidden');
+        };
+        duelContainer.appendChild(card);
+      });
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      duelContainer.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🏁 Game Over! You won ${score} out of 5 duels 🏆`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>

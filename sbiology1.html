@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Plants Growth Game — Class 6 Biology</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: linear-gradient(180deg,#f0fdf4,#ecfeff 40%); }
+    .plant-stage { transition: transform 600ms ease, opacity 600ms ease; transform-origin: 50% 80%; }
+    .resource { position:absolute; pointer-events:none; width:48px; height:48px; transform: translate(-50%,-50%); transition: transform 800ms cubic-bezier(.2,.9,.3,1), opacity 600ms; }
+    .fly { transition: transform 900ms cubic-bezier(.2,.9,.3,1), opacity 900ms; }
+    .sparkle { animation: sparkle 900ms ease; }
+    @keyframes sparkle {
+      from { transform: scale(0.6); opacity: 0; }
+      50% { transform: scale(1.12); opacity: 1; }
+      to { transform: scale(1); opacity: 0; }
+    }
+    .hidden { display:none; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <h1 class="text-lg font-bold text-green-700">🌱 Plants Growth Game — Photosynthesis Fun</h1>
+      <div class="text-sm text-green-600">Answer correctly — feed the plant with Sun, Water & CO₂</div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-1 max-w-5xl mx-auto w-full px-4 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <!-- Left: Plant area -->
+      <section class="col-span-1 md:col-span-1 bg-white rounded-xl shadow p-6 relative overflow-hidden">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="text-sm text-gray-500">Growth Stage</div>
+            <div id="stageLabel" class="text-xl font-semibold text-green-700">Seed</div>
+          </div>
+          <div class="text-right">
+            <div class="text-sm text-gray-500">Score</div>
+            <div id="score" class="text-xl font-bold text-green-700">0</div>
+          </div>
+        </div>
+
+        <!-- Plant canvas -->
+        <div id="plantCanvas" class="relative h-72 flex items-end justify-center">
+          <!-- Soil -->
+          <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-amber-700 to-amber-400 rounded-t-lg"></div>
+
+          <!-- Resource icons (will fly) -->
+          <div id="resourceLayer" class="absolute inset-0 pointer-events-none"></div>
+
+          <!-- Plant SVG stages (only one visible at a time) -->
+          <!-- Stage 0: Seed -->
+          <svg id="stage0" class="plant-stage" width="220" height="220" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(110,110)">
+              <ellipse cx="0" cy="60" rx="60" ry="22" fill="#6b4a2a" opacity="0.85"/>
+              <g>
+                <circle cx="0" cy="24" r="18" fill="#8b5e34" stroke="#6b4a2a" stroke-width="2"/>
+                <ellipse cx="4" cy="18" rx="6" ry="10" fill="#a06b3b" opacity="0.9"/>
+              </g>
+            </g>
+          </svg>
+
+          <!-- Stage 1: Sprout -->
+          <svg id="stage1" class="plant-stage hidden" width="260" height="260" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(130,130)">
+              <ellipse cx="0" cy="70" rx="80" ry="24" fill="#6b4a2a" opacity="0.9"/>
+              <!-- stem -->
+              <path d="M0,20 C-2,10 -3,5 0,-30" stroke="#3b7a3b" stroke-width="6" stroke-linecap="round" fill="none"/>
+              <!-- leaves -->
+              <path d="M0,-18 C40,-28 58,-12 32,-6 C12,-2 2,2 0,-6" fill="#3bb94a" />
+              <path d="M-2,-6 C-40,-6 -58,8 -34,18 C-14,26 -4,12 -2,-6" fill="#2fae3c" />
+            </g>
+          </svg>
+
+          <!-- Stage 2: Small plant -->
+          <svg id="stage2" class="plant-stage hidden" width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(150,145)">
+              <ellipse cx="0" cy="95" rx="95" ry="28" fill="#6b4a2a" opacity="0.95"/>
+              <!-- main stem -->
+              <path d="M0,40 C0,0 8,-40 2,-110" stroke="#25632a" stroke-width="8" stroke-linecap="round" fill="none"/>
+              <!-- leaves set -->
+              <g transform="translate(2,-50)">
+                <path d="M0,0 C60,-30 80,10 10,30 C-8,34 -22,18 0,0" fill="#39b54a"/>
+                <path d="M-4,10 C-60,20 -82,50 -26,60 C0,64 6,50 -4,10" fill="#2fa04a"/>
+              </g>
+              <g transform="translate(24,-90) rotate(12)">
+                <path d="M0,0 C36,-30 46,-6 12,18 C4,24 -6,20 0,0" fill="#47c256"/>
+              </g>
+            </g>
+          </svg>
+
+          <!-- Stage 3: Mature plant -->
+          <svg id="stage3" class="plant-stage hidden" width="340" height="340" viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(170,160)">
+              <ellipse cx="0" cy="120" rx="120" ry="36" fill="#6b4a2a" opacity="0.95"/>
+              <!-- trunk -->
+              <path d="M0,40 C2,10 6,-40 6,-120" stroke="#2f4b2e" stroke-width="12" stroke-linecap="round" fill="none"/>
+              <!-- branches and leaves -->
+              <g transform="translate(6,-100)">
+                <path d="M0,0 C-18,-40 -70,-80 -20,-120 C20,-140 60,-110 28,-78 C10,-60 0,-32 0,0" fill="#2aa84b"/>
+                <path d="M0,0 C22,-42 72,-88 28,-128 C-12,-148 -60,-118 -24,-88 C-4,-70 0,-36 0,0" fill="#3ec155" transform="translate(40,-30) rotate(-14)"/>
+                <circle cx="-30" cy="-72" r="8" fill="#ffe078" opacity="0.95"/>
+                <circle cx="22" cy="-90" r="8" fill="#ffe078" opacity="0.95"/>
+              </g>
+            </g>
+          </svg>
+
+          <!-- Confetti container -->
+          <div id="confetti" class="absolute inset-0 pointer-events-none hidden"></div>
+        </div>
+
+        <!-- legend -->
+        <div class="mt-4 flex items-center gap-3 text-sm text-gray-600">
+          <div class="flex items-center gap-2">
+            <div class="w-4 h-4 bg-yellow-300 rounded-full shadow-inner"></div> Sun
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-4 h-4 bg-cyan-300 rounded-full shadow-inner"></div> Water
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-4 h-4 bg-gray-300 rounded-full shadow-inner"></div> CO₂
+          </div>
+        </div>
+
+        <div class="mt-4 text-xs text-gray-500">Tip: each correct answer feeds the plant with a resource and advances growth.</div>
+      </section>
+
+      <!-- Middle: Quiz area -->
+      <section class="col-span-1 md:col-span-2 bg-white rounded-xl shadow p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="text-sm text-gray-500">Question</div>
+            <div id="questionText" class="text-xl font-semibold text-gray-800">Press <span class="font-bold text-green-600">Start</span> to play!</div>
+          </div>
+          <div class="text-right">
+            <div class="text-sm text-gray-500">Lives</div>
+            <div id="lives" class="text-xl font-bold text-amber-600">3</div>
+          </div>
+        </div>
+
+        <!-- options -->
+        <div id="options" class="space-y-3"></div>
+
+        <!-- feedback -->
+        <div id="feedback" class="mt-4 h-8 text-sm font-medium"></div>
+
+        <!-- controls -->
+        <div class="mt-6 flex items-center gap-3">
+          <button id="startBtn" class="bg-green-600 text-white px-4 py-2 rounded shadow">▶ Start</button>
+          <button id="nextBtn" class="bg-blue-600 text-white px-4 py-2 rounded shadow hidden">➡ Next</button>
+          <button id="restartBtn" class="ml-auto bg-gray-200 text-gray-700 px-3 py-2 rounded hidden">Restart</button>
+        </div>
+
+        <!-- progress -->
+        <div class="mt-6">
+          <div class="text-sm text-gray-500 mb-1">Progress</div>
+          <div class="w-full bg-gray-200 h-3 rounded">
+            <div id="progress" class="bg-green-500 h-3 rounded" style="width:0%"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-green-700 text-white py-4 text-center">
+    <div class="max-w-5xl mx-auto">Made with ❤️ for Nabha Students | Powered by SIH</div>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    // Questions (same content, can be extended)
+    const questions = [
+      {
+        text: "Which part of the plant contains the highest concentration of chloroplasts for photosynthesis?",
+        options: ["Root cortex", "Leaf mesophyll", "Stem epidermis", "Flower petals"],
+        correct: 1
+      },
+      {
+        text: "What is the function of the roots in a plant?",
+        options: ["To perform photosynthesis", "To absorb water and nutrients", "To attract pollinators", "To produce seeds"],
+        correct: 1
+      },
+      {
+        text: "Which process allows plants to make their own food?",
+        options: ["Respiration", "Photosynthesis", "Transpiration", "Germination"],
+        correct: 1
+      }
+    ];
+
+    // Resource icons as small SVG strings for DOM injection
+    const resourceSvgs = {
+      sun: `<svg class="resource" viewBox="0 0 24 24" width="48" height="48" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="4" fill="#FFD166"/>
+              <g stroke="#FFD166" stroke-width="1.6">
+                <line x1="12" y1="1.5" x2="12" y2="5.5"/>
+                <line x1="12" y1="18.5" x2="12" y2="22.5"/>
+                <line x1="1.5" y1="12" x2="5.5" y2="12"/>
+                <line x1="18.5" y1="12" x2="22.5" y2="12"/>
+                <line x1="4" y1="4" x2="7" y2="7"/>
+                <line x1="17" y1="17" x2="20" y2="20"/>
+                <line x1="4" y1="20" x2="7" y2="17"/>
+                <line x1="17" y1="7" x2="20" y2="4"/>
+              </g>
+            </svg>`,
+      water: `<svg class="resource" viewBox="0 0 24 24" width="48" height="48" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2s6 6.5 6 10a6 6 0 11-12 0c0-3.5 6-10 6-10z" fill="#6EE7F2" stroke="#34d3e5" stroke-width="0.6"/>
+              </svg>`,
+      co2: `<svg class="resource" viewBox="0 0 24 24" width="48" height="48" xmlns="http://www.w3.org/2000/svg">
+             <text x="50%" y="58%" text-anchor="middle" font-size="12" font-weight="700" fill="#94a3b8">CO₂</text>
+           </svg>`
+    };
+
+    // Game state
+    let score = 0;
+    let lives = 3;
+    let current = -1;         // index of current question
+    let growthStage = 0;      // 0..3
+    const maxStage = 3;
+
+    // DOM refs
+    const startBtn = document.getElementById('startBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const questionText = document.getElementById('questionText');
+    const optionsDiv = document.getElementById('options');
+    const feedback = document.getElementById('feedback');
+    const scoreEl = document.getElementById('score');
+    const livesEl = document.getElementById('lives');
+    const progressEl = document.getElementById('progress');
+    const stageLabel = document.getElementById('stageLabel');
+    const resourceLayer = document.getElementById('resourceLayer');
+    const confetti = document.getElementById('confetti');
+
+    // Plant stage elements
+    const stages = [
+      document.getElementById('stage0'),
+      document.getElementById('stage1'),
+      document.getElementById('stage2'),
+      document.getElementById('stage3'),
+    ];
+
+    // Helpers
+    function updateUI() {
+      scoreEl.textContent = score;
+      livesEl.textContent = lives;
+      const progressPct = Math.round(( (score) / (questions.length) ) * 100);
+      progressEl.style.width = `${progressPct}%`;
+      const labels = ["Seed", "Sprout", "Small Plant", "Mature Plant"];
+      stageLabel.textContent = labels[growthStage];
+      // show current plant stage
+      stages.forEach((el, i) => {
+        if (i === growthStage) {
+          el.classList.remove('hidden');
+          el.style.opacity = 1;
+          el.style.transform = `scale(${0.95 + 0.12*i})`;
+        } else {
+          el.classList.add('hidden');
+          el.style.opacity = 0;
+        }
+      });
+    }
+
+    function playConfetti() {
+      confetti.innerHTML = '';
+      confetti.classList.remove('hidden');
+      const colors = ['#9be15d','#00c2a8','#ffd166','#7ee3f7','#a78bfa'];
+      for (let i=0;i<18;i++){
+        const dot = document.createElement('div');
+        dot.style.position = 'absolute';
+        dot.style.left = (50 + (Math.random()*160-80)) + '%';
+        dot.style.top = (10 + Math.random()*40) + '%';
+        dot.style.width = (6 + Math.random()*8) + 'px';
+        dot.style.height = dot.style.width;
+        dot.style.borderRadius = '3px';
+        dot.style.background = colors[Math.floor(Math.random()*colors.length)];
+        dot.style.transform = `translateY(-20px) rotate(${Math.random()*360}deg)`;
+        dot.style.opacity = '0';
+        dot.style.transition = 'transform 900ms cubic-bezier(.2,.9,.3,1), opacity 900ms';
+        confetti.appendChild(dot);
+        // animate slightly delayed
+        setTimeout(()=> {
+          dot.style.opacity = '1';
+          dot.style.transform = `translateY(${120 + Math.random()*120}px) rotate(${Math.random()*720}deg)`;
+        }, 60*i);
+      }
+      setTimeout(()=> confetti.classList.add('hidden'), 1600);
+    }
+
+    function flyResource(type) {
+      // create a resource node at random starting point near top-left of quiz area and fly to plant center
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = resourceSvgs[type];
+      const icon = wrapper.firstElementChild;
+      icon.classList.add('fly');
+      resourceLayer.appendChild(icon);
+
+      // starting pos (place near options area)
+      const startX = 60 + Math.random()*180;
+      const startY = 40 + Math.random()*40;
+      icon.style.left = startX + 'px';
+      icon.style.top = startY + 'px';
+      icon.style.opacity = '1';
+
+      // compute destination (center of plantCanvas)
+      const plantCanvas = document.getElementById('plantCanvas');
+      const rect = plantCanvas.getBoundingClientRect();
+      // destination roughly middle of plant area
+      const destX = rect.width * 0.52 + (Math.random()*18-9);
+      const destY = rect.height * 0.55 + (Math.random()*22-11);
+
+      // animate using transform
+      const dx = destX - startX;
+      const dy = destY - startY;
+      // apply transform translate
+      requestAnimationFrame(() => {
+        icon.style.transform = `translate(${dx}px, ${dy}px) scale(0.6)`;
+        icon.style.opacity = '0.95';
+      });
+
+      // after animation, make a sparkle then remove
+      setTimeout(()=> {
+        icon.style.opacity = '0';
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.position = 'absolute';
+        sparkle.style.left = (destX) + 'px';
+        sparkle.style.top = (destY) + 'px';
+        sparkle.innerHTML = `<svg width="34" height="34" viewBox="0 0 24 24">
+          <path d="M12 2l1.9 4.3L18 8l-4 2.5L14 16l-2-1.5L10 16l0-5.5L6 8l4.1-1.7L12 2z" fill="#ffec99" opacity="0.95"/>
+        </svg>`;
+        resourceLayer.appendChild(sparkle);
+        setTimeout(()=> sparkle.remove(), 700);
+        setTimeout(()=> icon.remove(), 400);
+      }, 950);
+    }
+
+    // Load next question
+    function loadNextQuestion() {
+      current++;
+      feedback.textContent = '';
+      optionsDiv.innerHTML = '';
+      nextBtn.classList.add('hidden');
+
+      if (current >= questions.length || lives <= 0) {
+        // game end
+        endGame();
+        return;
+      }
+
+      const q = questions[current];
+      questionText.textContent = q.text;
+
+      // build options
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'w-full text-left border rounded px-4 py-3 hover:bg-green-50';
+        btn.textContent = opt;
+        btn.onclick = () => selectAnswer(idx);
+        optionsDiv.appendChild(btn);
+      });
+
+      // small scroll into view
+      questionText.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+
+    // when an option is selected
+    function selectAnswer(idx) {
+      const q = questions[current];
+      // disable buttons
+      Array.from(optionsDiv.children).forEach(b => b.disabled = true);
+
+      if (idx === q.correct) {
+        score += 1;
+        // randomly pick resource (sun/water/co2)
+        const resources = ['sun','water','co2'];
+        const res = resources[Math.floor(Math.random()*resources.length)];
+        flyResource(res);
+
+        // grow plant stage (max out at maxStage)
+        if (growthStage < maxStage) growthStage++;
+
+        feedback.textContent = "✅ Correct! The plant got " + (res === 'sun' ? 'Sun' : res === 'water' ? 'Water' : 'CO₂') + ".";
+        feedback.className = 'text-green-600';
+        updateUI();
+
+        // if reached final stage, show confetti
+        if (growthStage === maxStage) {
+          setTimeout(()=> {
+            playConfetti();
+          }, 650);
+        }
+
+        // auto show next after short delay
+        setTimeout(()=> {
+          nextBtn.classList.remove('hidden');
+        }, 850);
+      } else {
+        lives -= 1;
+        feedback.textContent = "❌ Wrong! Try the next one.";
+        feedback.className = 'text-red-600';
+        updateUI();
+        // show next button (or end if no lives)
+        if (lives <= 0) {
+          setTimeout(() => endGame(), 700);
+        } else {
+          setTimeout(()=> nextBtn.classList.remove('hidden'), 500);
+        }
+      }
+    }
+
+    function startGame() {
+      score = 0; lives = 3; current = -1; growthStage = 0;
+      updateUI();
+      document.getElementById('plantCanvas').scrollIntoView({behavior:'smooth'});
+      startBtn.classList.add('hidden');
+      restartBtn.classList.remove('hidden');
+      loadNextQuestion();
+    }
+
+    function nextQuestion() {
+      loadNextQuestion();
+    }
+
+    function endGame() {
+      // show summary dialog inside options area
+      optionsDiv.innerHTML = '';
+      questionText.textContent = (lives <= 0) ? "Game Over — the plant couldn't survive." : "🎉 All questions done!";
+      feedback.innerHTML = `<div class="text-sm">Final Score: <strong class="text-green-700">${score}</strong> &nbsp; • &nbsp; Growth: <strong>${stageLabel.textContent}</strong></div>`;
+      nextBtn.classList.add('hidden');
+      startBtn.classList.remove('hidden');
+      restartBtn.classList.remove('hidden');
+
+      // celebration for good score
+      if (growthStage === maxStage) {
+        playConfetti();
+      }
+    }
+
+    function restartGame() {
+      score = 0; lives = 3; current = -1; growthStage = 0;
+      updateUI();
+      optionsDiv.innerHTML = '';
+      feedback.textContent = '';
+      questionText.textContent = 'Press Start to play!';
+      startBtn.classList.remove('hidden');
+      nextBtn.classList.add('hidden');
+      restartBtn.classList.add('hidden');
+      resourceLayer.innerHTML = '';
+      confetti.innerHTML = '';
+    }
+
+    // initialize
+    document.getElementById('score').textContent = score;
+    document.getElementById('lives').textContent = lives;
+    updateUI();
+
+    // wire events
+    startBtn.addEventListener('click', startGame);
+    nextBtn.addEventListener('click', nextQuestion);
+    restartBtn.addEventListener('click', restartGame);
+
+    // auto-update small UI values when changed
+    function updateUIRefs() {
+      document.getElementById('score').textContent = score;
+      document.getElementById('lives').textContent = lives;
+    }
+    setInterval(updateUIRefs, 300);
+  </script>
+</body>
+</html>
+

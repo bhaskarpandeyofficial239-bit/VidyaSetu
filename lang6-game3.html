@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Paragraph Puzzle - VidyaSetu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .sentence-tile {
+      background-color: #2dd4bf;
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      font-weight: 500;
+      cursor: grab;
+      transition: transform 0.3s ease;
+    }
+    .sentence-tile:hover { transform: scale(1.05); }
+    .drop-slot {
+      border: 2px dashed #99f6e4;
+      border-radius: 0.5rem;
+      min-height: 50px;
+      padding: 0.5rem;
+      margin: 0.25rem;
+      background-color: #fff;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-teal-50 via-purple-50 to-blue-50 text-center pt-20">
+
+  <h1 class="text-3xl font-bold text-teal-700 mb-2">🧩 Paragraph Puzzle</h1>
+  <p class="text-gray-600 mb-4">Drag the sentences into the correct order to form a paragraph!</p>
+  <div class="text-lg text-teal-800 font-semibold mb-6">Score: <span id="score">0</span> / 5</div>
+
+  <div id="roundText" class="text-xl font-semibold text-teal-800 mb-6"></div>
+  <div id="dropContainer" class="flex flex-wrap justify-center mb-6 px-4"></div>
+  <div id="sentenceBank" class="flex flex-wrap justify-center gap-4 mb-6 px-4"></div>
+
+  <div id="feedback" class="text-lg font-medium text-green-700 mb-4 hidden"></div>
+  <button id="nextBtn" class="hidden bg-gradient-to-r from-teal-500 to-teal-600 text-white px-6 py-2 rounded-full" onclick="nextRound()">Next</button>
+  <div id="result" class="text-xl font-bold text-green-700 hidden mt-10"></div>
+
+  <script>
+    const rounds = [
+      ["The sun was shining brightly.", "We packed our picnic basket.", "Everyone was excited for the trip.", "We headed to the park together."],
+      ["The library was quiet.", "I searched for my favorite book.", "I found it on the top shelf.", "I sat down and began to read."],
+      ["The bell rang loudly.", "Students rushed to their classrooms.", "The teacher greeted everyone.", "The lesson began with a fun quiz."],
+      ["It was raining heavily.", "We stayed indoors and played board games.", "Mom made hot chocolate.", "We watched a movie together."],
+      ["The science fair was today.", "I set up my volcano experiment.", "Many students came to see it.", "It erupted perfectly during the demonstration."]
+    ];
+
+    const praise = ["Great job! 🎉", "Perfect sequence! 🌟", "Awesome! 👍", "Superb! 🥳", "You nailed it! 💯"];
+    let currentRound = 0;
+    let score = 0;
+
+    const scoreEl = document.getElementById('score');
+    const roundText = document.getElementById('roundText');
+    const dropContainer = document.getElementById('dropContainer');
+    const sentenceBank = document.getElementById('sentenceBank');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+
+    function loadRound() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      dropContainer.innerHTML = '';
+      sentenceBank.innerHTML = '';
+
+      const paragraph = rounds[currentRound];
+      const shuffled = [...paragraph].sort(() => Math.random() - 0.5);
+      roundText.textContent = `Round ${currentRound + 1} of ${rounds.length}`;
+
+      paragraph.forEach(() => {
+        const slot = document.createElement('div');
+        slot.className = 'drop-slot';
+        dropContainer.appendChild(slot);
+      });
+
+      shuffled.forEach(sentence => {
+        const tile = document.createElement('div');
+        tile.className = 'sentence-tile';
+        tile.draggable = true;
+        tile.dataset.sentence = sentence;
+        tile.textContent = sentence;
+        sentenceBank.appendChild(tile);
+
+        tile.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/plain', sentence);
+        });
+      });
+
+      document.querySelectorAll('.drop-slot').forEach(slot => {
+        slot.addEventListener('dragover', e => e.preventDefault());
+        slot.addEventListener('drop', e => {
+          e.preventDefault();
+          const sentence = e.dataTransfer.getData('text/plain');
+          if (!slot.textContent) {
+            slot.textContent = sentence;
+            document.querySelector(`[data-sentence="${sentence}"]`).remove();
+            checkParagraph();
+          }
+        });
+      });
+    }
+
+    function checkParagraph() {
+      const slots = Array.from(document.querySelectorAll('.drop-slot'));
+      if (slots.every(slot => slot.textContent)) {
+        const userSequence = slots.map(slot => slot.textContent);
+        const correct = rounds[currentRound];
+        const isCorrect = userSequence.every((line, i) => line === correct[i]);
+        if (isCorrect) {
+          score++;
+          scoreEl.textContent = score;
+          feedbackEl.textContent = praise[Math.floor(Math.random() * praise.length)];
+        } else {
+          feedbackEl.textContent = "Oops! ❌ Try again";
+        }
+        feedbackEl.classList.remove('hidden');
+        nextBtn.classList.remove('hidden');
+      }
+    }
+
+    function nextRound() {
+      currentRound++;
+      if (currentRound < rounds.length) {
+        loadRound();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      roundText.textContent = '';
+      dropContainer.innerHTML = '';
+      sentenceBank.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🎯 Game Over! You scored ${score} out of ${rounds.length}`;
+    }
+
+    loadRound();
+  </script>
+</body>
+</html>

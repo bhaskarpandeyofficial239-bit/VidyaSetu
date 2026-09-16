@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎮 Fun Kids Quiz (Class 1–6)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .fade-in { animation: fadeIn 0.6s ease-in-out; }
+    @keyframes fadeIn { from {opacity:0; transform:scale(0.9);} to {opacity:1; transform:scale(1);} }
+    .bounce { animation: bounce 1.5s infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);} }
+    .shake { animation: shake 0.4s ease-in-out; }
+    @keyframes shake {
+      0% { transform: translateX(-5px); }
+      25% { transform: translateX(5px); }
+      50% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+      100% { transform: translateX(0); }
+    }
+    .progress { height: 12px; background:#e5e7eb; border-radius:6px; overflow:hidden; }
+    .progress-bar { height:100%; background:#16a34a; width:0%; transition: width 0.4s ease; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-green-50 via-white to-green-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
+      <h2 class="text-xl font-bold text-green-600">🎓 Class 1–6 Fun Quiz 🌈</h2>
+      <div class="font-bold text-blue-600">⭐ Score: <span id="score">0</span></div>
+    </div>
+  </header>
+
+  <!-- Progress Bar -->
+  <div class="max-w-3xl mx-auto px-4 mt-4">
+    <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
+  </div>
+
+  <!-- Main Quiz Container -->
+  <main class="max-w-3xl mx-auto py-10 px-4 text-center">
+    <div id="quizBox" class="fade-in"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-green-700 text-white py-4 text-center">
+    <p>Made with ❤️ for  Nabha Kids | 🎉 Fun Learning</p>
+  </footer>
+
+  <script>
+    const quizData = [
+      // Class 1
+      { class:"Class 1",emoji:"📅",q:"How many days are there in a week?",options:["5","6","7","8"],correct:2 },
+      { class:"Class 1",emoji:"🔺",q:"Which shape has 3 sides?",options:["Circle","Triangle","Square","Rectangle"],correct:1 },
+      { class:"Class 1",emoji:"1️⃣",q:"Which is the smallest number?",options:["1","5","9","7"],correct:0 },
+      { class:"Class 1",emoji:"☀️",q:"What is the color of the sun?",options:["Yellow","Blue","Green","Red"],correct:0 },
+      { class:"Class 1",emoji:"🔤",q:"How many alphabets are in English?",options:["20","24","26","30"],correct:2 },
+      // Class 2
+      { class:"Class 2",emoji:"💨",q:"Which gas do humans need to breathe?",options:["Oxygen","Carbon dioxide","Nitrogen","Hydrogen"],correct:0 },
+      { class:"Class 2",emoji:"🦁",q:"Which animal is called the king of the jungle?",options:["Elephant","Tiger","Lion","Deer"],correct:2 },
+      { class:"Class 2",emoji:"➖",q:"What is 10 - 6?",options:["5","6","4","3"],correct:2 },
+      { class:"Class 2",emoji:"☀️",q:"Which planet is closest to the Sun?",options:["Earth","Mercury","Mars","Venus"],correct:1 },
+      { class:"Class 2",emoji:"❄️",q:"What is frozen water called?",options:["Ice","Snow","Rain","Steam"],correct:0 },
+      // Class 3
+      { class:"Class 3",emoji:"🇮🇳",q:"How many states are there in India?",options:["28","27","29","30"],correct:0 },
+      { class:"Class 3",emoji:"🧑‍🦳",q:"Who is known as the Father of India?",options:["Gandhi Ji","Nehru","Tagore","Patel"],correct:0 },
+      { class:"Class 3",emoji:"🍃",q:"Which part of the plant makes food?",options:["Root","Stem","Leaf","Flower"],correct:2 },
+      { class:"Class 3",emoji:"⏰",q:"How many hours are there in a day?",options:["12","24","36","48"],correct:1 },
+      { class:"Class 3",emoji:"❤️",q:"Which organ pumps blood?",options:["Brain","Heart","Lungs","Kidney"],correct:1 },
+      // Class 4
+      { class:"Class 4",emoji:"🐆",q:"Which is the fastest land animal?",options:["Tiger","Cheetah","Horse","Dog"],correct:1 },
+      { class:"Class 4",emoji:"🌸",q:"Which is the national flower of India?",options:["Rose","Lotus","Lily","Sunflower"],correct:1 },
+      { class:"Class 4",emoji:"💧",q:"What is H2O commonly known as?",options:["Water","Oxygen","Salt","Hydrogen"],correct:0 },
+      { class:"Class 4",emoji:"⬜",q:"Which shape has 4 equal sides?",options:["Rectangle","Square","Triangle","Circle"],correct:1 },
+      { class:"Class 4",emoji:"💡",q:"Who invented the bulb?",options:["Newton","Edison","Tesla","Einstein"],correct:1 },
+      // Class 5
+      { class:"Class 5",emoji:"🌊",q:"Which is the largest ocean?",options:["Indian","Atlantic","Pacific","Arctic"],correct:2 },
+      { class:"Class 5",emoji:"🔢",q:"Which is the smallest prime number?",options:["0","1","2","3"],correct:2 },
+      { class:"Class 5",emoji:"🌱",q:"Which gas do plants release during photosynthesis?",options:["Oxygen","CO2","Nitrogen","Hydrogen"],correct:0 },
+      { class:"Class 5",emoji:"🪐",q:"Which is the largest planet?",options:["Earth","Mars","Jupiter","Saturn"],correct:2 },
+      { class:"Class 5",emoji:"🦴",q:"How many bones are in an adult human body?",options:["206","210","205","208"],correct:0 },
+      // Class 6
+      { class:"Class 6",emoji:"🧠",q:"Which organ controls the body?",options:["Heart","Brain","Liver","Lungs"],correct:1 },
+      { class:"Class 6",emoji:"⚡",q:"What is the speed of light?",options:["3x10^8 m/s","3x10^6 m/s","3x10^5 km/s","300 m/s"],correct:0 },
+      { class:"Class 6",emoji:"🔋",q:"Which is called the powerhouse of the cell?",options:["Nucleus","Mitochondria","Ribosome","Chloroplast"],correct:1 },
+      { class:"Class 6",emoji:"🔴",q:"Which planet is known as the Red Planet?",options:["Mars","Venus","Saturn","Jupiter"],correct:0 },
+      { class:"Class 6",emoji:"🏋️",q:"What is the SI unit of force?",options:["Newton","Joule","Pascal","Watt"],correct:0 },
+    ];
+
+    let current=0, score=0;
+
+    function renderQuestion() {
+      const q=quizData[current];
+      const quizBox=document.getElementById("quizBox");
+      document.getElementById("progressBar").style.width=`${(current/quizData.length)*100}%`;
+      quizBox.innerHTML=`
+        <div class="fade-in">
+          <h2 class="text-2xl font-bold text-green-700 mb-4">${q.class} – Question ${(current%5)+1}</h2>
+          <div class="text-6xl mb-4 bounce">${q.emoji}</div>
+          <p class="text-lg font-semibold mb-4">${q.q}</p>
+          <div class="space-y-2 text-left max-w-xs mx-auto">
+            ${q.options.map((opt,i)=>`
+              <label class="block">
+                <input type="radio" name="q" value="${i}" class="mr-2"> ${opt}
+              </label>`).join("")}
+          </div>
+          <div id="feedback" class="mt-4 font-bold"></div>
+          <button onclick="checkAnswer()" class="mt-6 bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">Submit ➡️</button>
+        </div>`;
+    }
+
+    function checkAnswer() {
+      const q=quizData[current];
+      const selected=document.querySelector("input[name='q']:checked");
+      const feedback=document.getElementById("feedback");
+      if(!selected){feedback.innerHTML="⚠️ Please select an option!";feedback.className="text-yellow-600 font-bold";return;}
+      const val=parseInt(selected.value);
+      if(val===q.correct){
+        score+=10;
+        document.getElementById("score").innerText=score;
+        feedback.innerHTML="✅ Correct! 🎉 +10 points";
+        feedback.className="text-green-600 font-bold";
+      }else{
+        feedback.innerHTML=`❌ Wrong! 😢 Correct: <span class="text-blue-600">${q.options[q.correct]}</span>`;
+        feedback.className="text-red-600 font-bold shake";
+      }
+      setTimeout(()=>{
+        current++;
+        if(current%5===0 && current<quizData.length){ showClassEnd();}
+        else if(current<quizData.length){ renderQuestion();}
+        else{ showEnd();}
+      },1200);
+    }
+
+    function showClassEnd(){
+      document.getElementById("progressBar").style.width=`${(current/quizData.length)*100}%`;
+      document.getElementById("quizBox").innerHTML=`
+        <div class="fade-in">
+          <h2 class="text-2xl font-bold text-green-700 mb-4">🎉 Level Up! You finished ${quizData[current-1].class}</h2>
+          <div class="text-6xl mb-4 bounce">🚀</div>
+          <p class="mb-4">Great job! Get ready for the next class! 🌟</p>
+          <button onclick="renderQuestion()" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">➡️ Continue</button>
+        </div>`;
+    }
+
+    function showEnd(){
+      document.getElementById("progressBar").style.width="100%";
+      document.getElementById("quizBox").innerHTML=`
+        <div class="fade-in">
+          <h2 class="text-3xl font-bold text-green-700 mb-4">🏆 Quiz Completed! 🎇</h2>
+          <div class="text-6xl mb-4 bounce">🎉🥳👏</div>
+          <p class="text-lg mb-4">Well done! You answered all questions from Class 1–6!</p>
+          <p class="text-2xl font-bold text-blue-600">Final Score: ${score}</p>
+        </div>`;
+    }
+
+    renderQuestion();
+  </script>
+</body>
+</html>
+

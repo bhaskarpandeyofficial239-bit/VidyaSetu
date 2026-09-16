@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ਲੌਗਇਨ - ਵਿਦਿਆਸੇਤੂ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .btn-animate { transition: all 0.3s ease; }
+    .btn-animate:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-sky-100 to-white flex items-center justify-center h-screen">
+
+  <!-- Language Button Top Right -->
+  <div class="absolute top-4 right-4">
+    <button onclick="openLangModal()" class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-medium btn-animate">🌐 ਭਾਸ਼ਾ</button>
+  </div>
+
+  <div class="bg-white shadow-lg rounded-2xl p-8 w-96 text-center">
+    <h2 class="text-2xl font-bold text-sky-700 mb-6">ਵਿਦਿਆਸੇਤੂ ਵਿੱਚ ਲੌਗਇਨ ਕਰੋ</h2>
+
+    <!-- Role Selection -->
+    <div id="role-selection">
+      <button onclick="showForm('teacher')" class="w-full bg-sky-500 text-white py-2 rounded-lg mb-3 hover:bg-sky-600">ਮੈਂ ਅਧਿਆਪਕ ਹਾਂ</button>
+      <button onclick="showForm('student')" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">ਮੈਂ ਵਿਦਿਆਰਥੀ ਹਾਂ</button>
+    </div>
+
+    <!-- Teacher Login Form -->
+    <form id="teacher-form" class="hidden mt-4">
+      <h3 class="text-lg font-semibold mb-2">ਅਧਿਆਪਕ ਲੌਗਇਨ</h3>
+      <input id="teacher-email" type="email" placeholder="ਈਮੇਲ ਦਰਜ ਕਰੋ" class="w-full border rounded-lg px-3 py-2 mb-3" required>
+      <input id="teacher-password" type="password" placeholder="ਪਾਸਵਰਡ ਦਰਜ ਕਰੋ" class="w-full border rounded-lg px-3 py-2 mb-3" required>
+      <button type="submit" class="w-full bg-sky-500 text-white py-2 rounded-lg hover:bg-sky-600">ਲੌਗਇਨ</button>
+    </form>
+
+    <!-- Student Login Form -->
+    <form id="student-form" class="hidden mt-4">
+      <h3 class="text-lg font-semibold mb-2">ਵਿਦਿਆਰਥੀ ਲੌਗਇਨ</h3>
+      <input id="student-email" type="email" placeholder="ਈਮੇਲ ਦਰਜ ਕਰੋ" class="w-full border rounded-lg px-3 py-2 mb-3" required>
+      <input id="student-password" type="password" placeholder="ਪਾਸਵਰਡ ਦਰਜ ਕਰੋ" class="w-full border rounded-lg px-3 py-2 mb-3" required>
+      <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">ਲੌਗਇਨ</button>
+    </form>
+  </div>
+
+  <!-- Language Modal -->
+  <div id="langModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 max-w-sm w-full text-center shadow-xl">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਭਾਸ਼ਾ ਚੁਣੋ</h3>
+      <div class="space-y-4">
+        <button onclick="setLanguage('english')" class="w-full bg-gradient-to-r from-sky-500 to-sky-600 text-white py-2 rounded-full btn-animate">English</button>
+        <button onclick="setLanguage('punjabi')" class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-2 rounded-full btn-animate">ਪੰਜਾਬੀ</button>
+      </div>
+      <button onclick="closeLangModal()" class="mt-4 text-gray-500 underline">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    function showForm(role) {
+      document.getElementById("role-selection").style.display = "none";
+      if(role === "teacher") {
+        document.getElementById("teacher-form").classList.remove("hidden");
+      } else {
+        document.getElementById("student-form").classList.remove("hidden");
+      }
+    }
+
+    // Teacher login check
+    document.getElementById("teacher-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      let email = document.getElementById("teacher-email").value.trim();
+      let password = document.getElementById("teacher-password").value.trim();
+
+      if(password === "2397") {
+        if(email === "teacher1@gmail.com") {
+          window.location.href = "pteacher1-dashboard.html"; 
+        } else if(email === "teacher2@gmail.com") {
+          window.location.href = "pteacher2-dashboard.html"; 
+        } else {
+          alert("ਅਮਾਨਯੋਗ ਅਧਿਆਪਕ ਈਮੇਲ");
+        }
+      } else {
+        alert("ਗਲਤ ਪਾਸਵਰਡ");
+      }
+    });
+
+    // Student login check
+    document.getElementById("student-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      let email = document.getElementById("student-email").value.trim();
+      let password = document.getElementById("student-password").value.trim();
+
+      if(password === "2397") {
+        if(email === "rahul@gmail.com") {
+          window.location.href = "prahul-dashboard.html"; 
+        } else if(email === "ravya@gmail.com") {
+          window.location.href = "pravya-dashboard.html"; 
+        } else {
+          alert("ਅਮਾਨਯੋਗ ਵਿਦਿਆਰਥੀ ਈਮੇਲ");
+        }
+      } else {
+        alert("ਗਲਤ ਪਾਸਵਰਡ");
+      }
+    });
+
+    // Language modal functions
+    function openLangModal() { document.getElementById('langModal').classList.remove('hidden'); }
+    function closeLangModal() { document.getElementById('langModal').classList.add('hidden'); }
+    function setLanguage(lang) {
+      if(lang === 'english') window.location.href = 'login.html';
+      else closeLangModal(); // Punjabi stays
+    }
+  </script>
+
+</body>
+</html>

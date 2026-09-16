@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🚀 Math Comet Shooter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+      color: white;
+      overflow: hidden;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 2rem;
+    }
+    #score {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    #gameArea {
+      position: relative;
+      width: 100%;
+      height: 70vh;
+      overflow: hidden;
+    }
+    .comet {
+      position: absolute;
+      background: orange;
+      padding: 10px 20px;
+      border-radius: 50%;
+      font-weight: bold;
+      box-shadow: 0 0 10px yellow;
+      top: 0;
+      animation: fall 5s linear forwards;
+    }
+    @keyframes fall {
+      to { top: 90%; opacity: 0; }
+    }
+    .blast {
+      animation: explode 0.4s ease-out forwards;
+      background: red !important;
+      box-shadow: 0 0 30px white;
+    }
+    @keyframes explode {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(2); opacity: 0.8; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+    #inputArea {
+      text-align: center;
+      margin-top: 20px;
+    }
+    input {
+      padding: 10px;
+      font-size: 1.2rem;
+      width: 220px;
+      border-radius: 8px;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🚀 Math Comet Shooter</h1>
+<div id="score">Score: 0</div>
+<div id="gameArea"></div>
+
+<div id="inputArea">
+  <input type="text" id="answerInput" placeholder="Type answer & press Enter" autocomplete="off" />
+</div>
+
+<script>
+  let score = 0;
+  let currentAnswer = null;
+  let activeComet = null;
+  const gameArea = document.getElementById("gameArea");
+  const input = document.getElementById("answerInput");
+  const scoreDisplay = document.getElementById("score");
+
+  function generateQuestion() {
+    const a = Math.floor(Math.random() * 10 + 1);
+    const b = Math.floor(Math.random() * 10 + 1);
+    const ops = ["+", "-", "×"];
+    const op = ops[Math.floor(Math.random() * ops.length)];
+    let question = `${a} ${op} ${b}`;
+    if (op === "+") currentAnswer = a + b;
+    if (op === "-") currentAnswer = a - b;
+    if (op === "×") currentAnswer = a * b;
+
+    const comet = document.createElement("div");
+    comet.className = "comet";
+    comet.textContent = question;
+    comet.style.left = Math.random() * 80 + "%";
+    comet.id = "comet";
+    gameArea.appendChild(comet);
+    activeComet = comet;
+
+    // Remove comet after 5 seconds
+    setTimeout(() => {
+      if (activeComet === comet) {
+        gameArea.removeChild(comet);
+        activeComet = null;
+        generateQuestion();
+      }
+    }, 5000);
+  }
+
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      const userAnswer = parseInt(input.value.trim());
+      if (!isNaN(userAnswer) && userAnswer === currentAnswer && activeComet) {
+        score++;
+        scoreDisplay.textContent = "Score: " + score;
+
+        // Blast effect
+        activeComet.classList.add("blast");
+        setTimeout(() => {
+          if (activeComet) {
+            gameArea.removeChild(activeComet);
+            activeComet = null;
+            generateQuestion();
+          }
+        }, 400);
+
+        input.value = "";
+      } else {
+        input.value = "";
+      }
+    }
+  });
+
+  input.focus();
+  generateQuestion();
+</script>
+</body>
+</html>
+

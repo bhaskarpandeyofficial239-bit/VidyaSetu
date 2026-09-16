@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard - VidyaSetu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+  <!-- Navbar -->
+  <header class="bg-sky-700 text-white flex justify-between items-center px-6 py-4 shadow-md">
+    <h1 class="text-2xl font-bold">📘 VIDYASETU</h1>
+    <div class="flex items-center space-x-4">
+      <span class="font-bold text-lg">HELLO, RAVYA 👋</span>
+      <img src="https://i.pravatar.cc/40?img=47" class="w-10 h-10 rounded-full border-2 border-white">
+      <a href="login.html" class="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600">Logout</a>
+    </div>
+  </header>
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg min-h-screen p-6">
+      <nav class="space-y-4">
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📊 Attendance</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📝 Marks</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📅 Date Sheet</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📚 Assignments</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">📚 My Courses</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">🎮 Quizzes</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">🎥 Video Library</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">🏆 Achievements</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">👥 Community</a>
+        <a href="#" class="block p-3 rounded-lg hover:bg-sky-100">⚙️ Settings</a>
+      </nav>
+    </aside>
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+      <!-- Welcome Banner -->
+      <div class="bg-gradient-to-r from-sky-500 to-sky-400 text-white rounded-2xl p-6 shadow-md mb-8">
+        <h2 class="text-2xl font-bold">WELCOME BACK, RAVYA 🌟</h2>
+        <p class="mt-2">Your learning journey continues — keep shining!</p>
+      </div>
+      <!-- Stats Section -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow-md text-center">
+          <h3 class="font-semibold text-lg">Learning Streak 🔥</h3>
+          <p class="text-2xl font-bold text-sky-600">10 Days</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md text-center">
+          <h3 class="font-semibold text-lg">Badges Earned 🎖️</h3>
+          <p class="text-2xl font-bold text-yellow-500">8</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md text-center">
+          <h3 class="font-semibold text-lg">Courses Progress 📊</h3>
+          <div class="w-full bg-gray-200 rounded-full h-4 mt-2">
+            <div class="bg-sky-500 h-4 rounded-full" style="width: 82%;"></div>
+          </div>
+          <p class="text-sm mt-1">82% Completed</p>
+        </div>
+      </div>
+      <!-- Courses Section -->
+      <h2 class="text-xl font-bold mb-4">📚 Continue Learning</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-lg font-semibold">💻 Computer Science</h3>
+          <p class="text-sm mt-2">Web Development Basics</p>
+          <button class="mt-4 w-full bg-sky-500 text-white py-2 rounded-lg hover:bg-sky-600">Continue</button>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-lg font-semibold">🧪 Chemistry</h3>
+          <p class="text-sm mt-2">Organic Chemistry Fundamentals</p>
+          <button class="mt-4 w-full bg-sky-500 text-white py-2 rounded-lg hover:bg-sky-600">Continue</button>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-lg font-semibold">📖 History</h3>
+          <p class="text-sm mt-2">Ancient Civilizations</p>
+          <button class="mt-4 w-full bg-sky-500 text-white py-2 rounded-lg hover:bg-sky-600">Continue</button>
+        </div>
+      </div>
+      <!-- Offline Download -->
+      <div class="mt-10 bg-green-100 p-6 rounded-xl shadow-md text-center">
+        <h3 class="text-lg font-bold text-green-700">📥 Download Lessons for Offline Use</h3>
+        <p class="text-sm mt-2">Study anywhere, anytime — even without internet.</p>
+        <button class="mt-4 bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600">Download</button>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

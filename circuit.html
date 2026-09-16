@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>⚡ Circuit Builder + Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(to right, #e0f7fa, #e3f2fd);
+      color: #0d47a1;
+      text-align: center;
+    }
+    h1 {
+      color: #0d47a1;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #37474f;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    .components, .board {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .item {
+      width: 90px;
+      height: 90px;
+      background: linear-gradient(to bottom right, #90caf9, #42a5f5);
+      border: 2px solid #1565c0;
+      border-radius: 15px;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .item:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .slot {
+      width: 90px;
+      height: 90px;
+      background-color: #ffffffb3;
+      border: 2px dashed #90a4ae;
+      border-radius: 15px;
+      position: relative;
+      transition: background 0.3s ease;
+    }
+    .glow {
+      animation: glow 1s infinite alternate;
+    }
+    @keyframes glow {
+      from { box-shadow: 0 0 15px #ffeb3b; }
+      to { box-shadow: 0 0 25px #fbc02d; }
+    }
+    #message {
+      font-weight: bold;
+      margin-top: 20px;
+      font-size: 20px;
+      color: #2e7d32;
+    }
+    #score {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #0d47a1;
+    }
+    /* Quiz Section */
+    #quizSection {
+      display: none;
+      margin-top: 40px;
+    }
+    .quiz-box {
+      background: #ffffffcc;
+      border-radius: 15px;
+      padding: 25px;
+      width: 350px;
+      margin: auto;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .question {
+      margin-bottom: 15px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #1565c0;
+    }
+    .option {
+      display: block;
+      margin: 10px 0;
+      padding: 12px;
+      background: linear-gradient(to right, #bbdefb, #90caf9);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .option:hover {
+      transform: scale(1.05);
+      background: linear-gradient(to right, #64b5f6, #42a5f5);
+      color: white;
+    }
+    .correct-answer {
+      background-color: #c8e6c9 !important;
+      color: #2e7d32 !important;
+    }
+    .wrong-answer {
+      background-color: #ffcdd2 !important;
+      color: #b71c1c !important;
+    }
+    #quizScore {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #ef6c00;
+    }
+  </style>
+</head>
+<body>
+
+<h1>⚡ Circuit Builder Challenge</h1>
+<p>Drag the battery, wire, and bulb into the correct slots to complete the circuit!</p>
+
+<div class="components">
+  <div class="item" draggable="true" data-type="battery">🔋</div>
+  <div class="item" draggable="true" data-type="wire">🔌</div>
+  <div class="item" draggable="true" data-type="bulb">💡</div>
+</div>
+
+<div class="board">
+  <div class="slot" data-accept="battery"></div>
+  <div class="slot" data-accept="wire"></div>
+  <div class="slot" data-accept="bulb" id="bulbSlot"></div>
+</div>
+
+<div id="message"></div>
+<div id="score">Score: 0</div>
+
+<!-- Quiz Section -->
+<div id="quizSection">
+  <h2>🔍 Electricity Quiz</h2>
+  <div class="quiz-box">
+    <div class="question" id="questionText">Loading question...</div>
+    <button class="option" onclick="checkAnswer(this)">Option A</button>
+    <button class="option" onclick="checkAnswer(this)">Option B</button>
+    <button class="option" onclick="checkAnswer(this)">Option C</button>
+    <button class="option" onclick="checkAnswer(this)">Option D</button>
+    <div id="quizScore">Quiz Score: 0</div>
+  </div>
+</div>
+
+<script>
+  // Circuit Builder Logic
+  const items = document.querySelectorAll('.item');
+  const slots = document.querySelectorAll('.slot');
+  const message = document.getElementById('message');
+  const scoreDisplay = document.getElementById('score');
+  const bulbSlot = document.getElementById('bulbSlot');
+  const quizSection = document.getElementById('quizSection');
+
+  let score = 0;
+  let placed = 0;
+
+  items.forEach(item => {
+    item.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('type', item.dataset.type);
+      e.dataTransfer.setData('id', item.innerText);
+    });
+  });
+
+  slots.forEach(slot => {
+    slot.addEventListener('dragover', e => e.preventDefault());
+    slot.addEventListener('drop', e => {
+      e.preventDefault();
+      const type = e.dataTransfer.getData('type');
+      const id = e.dataTransfer.getData('id');
+      const accept = slot.dataset.accept;
+
+      if (type === accept) {
+        slot.textContent = id;
+        slot.style.backgroundColor = '#c8e6c9';
+        placed++;
+        score += 10;
+        scoreDisplay.textContent = `Score: ${score}`;
+        if (placed === items.length) {
+          message.textContent = '✅ Circuit Complete! Bulb Glows!';
+          bulbSlot.classList.add('glow');
+          setTimeout(() => {
+            quizSection.style.display = 'block';
+            loadQuestion();
+          }, 2000);
+        }
+      } else {
+        slot.style.backgroundColor = '#ffcdd2';
+        message.textContent = '❌ Wrong component!';
+        score -= 5;
+        scoreDisplay.textContent = `Score: ${score}`;
+      }
+    });
+  });
+
+  // Quiz Logic
+  const questions = [
+    {
+      question: "Which part of the circuit provides energy?",
+      options: ["Bulb", "Wire", "Battery", "Switch"],
+      answer: "Battery"
+    },
+    {
+      question: "What happens when the circuit is open?",
+      options: ["Bulb glows", "Current flows", "No current", "Battery heats up"],
+      answer: "No current"
+    },
+    {
+      question: "Which material is a good conductor?",
+      options: ["Plastic", "Wood", "Copper", "Rubber"],
+      answer: "Copper"
+    },
+    {
+      question: "What is used to break or complete a circuit?",
+      options: ["Bulb", "Switch", "Battery", "Fan"],
+      answer: "Switch"
+    },
+    {
+      question: "Which of these is an insulator?",
+      options: ["Iron", "Aluminum", "Glass", "Silver"],
+      answer: "Glass"
+    }
+  ];
+
+  let current = 0;
+  let quizScore = 0;
+
+  const questionText = document.getElementById('questionText');
+  const optionButtons = document.querySelectorAll('.option');
+  const quizScoreDisplay = document.getElementById('quizScore');
+
+  function loadQuestion() {
+    const q = questions[current];
+    questionText.textContent = q.question;
+    optionButtons.forEach((btn, i) => {
+      btn.textContent = q.options[i];
+      btn.classList.remove('correct-answer', 'wrong-answer');
+      btn.style.display = 'block';
+    });
+  }
+
+  function checkAnswer(button) {
+    const correct = questions[current].answer;
+    if (button.textContent === correct) {
+      button.classList.add('correct-answer');
+      quizScore += 10;
+    } else {
+      button.classList.add('wrong-answer');
+      quizScore -= 5;
+    }
+    quizScoreDisplay.textContent = `Quiz Score: ${quizScore}`;
+    setTimeout(() => {
+      current++;
+      if (current < questions.length) {
+        loadQuestion();
+      } else {
+        questionText.textContent = "🎉 Quiz Complete!";
+        optionButtons.forEach(btn => btn.style.display = "none");
+      }
+    }, 1000);
+  }
+</script>
+
+</body>
+</html>

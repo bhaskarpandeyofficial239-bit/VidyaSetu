@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Motion Quiz Game</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #8fa7b1, #6da2b4, #8ba9b5);
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .game-container {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    #question-box {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: 20px auto;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #options button {
+      display: block;
+      margin: 10px auto;
+      padding: 12px 25px;
+      background-color: #1e90ff;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    #options button:hover {
+      background-color: #4682b4;
+    }
+
+    #score-board, #timer {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+    #progress {
+      width: 80%;
+      height: 20px;
+      background-color: #444;
+      margin: 20px auto;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #00ff7f;
+      transition: width 0.5s;
+    }
+
+    #game-over {
+      display: none;
+      font-size: 2em;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <audio id="correct-sound" src="sounds/correct.mp3"></audio>
+  <audio id="wrong-sound" src="sounds/wrong.mp3"></audio>
+
+  <div class="game-container">
+    <h1>Motion & Measurement Quiz</h1>
+    <div id="score-board">Score: 0</div>
+    <div id="timer">Time left: <span id="time">15</span>s</div>
+    <div id="progress"><div id="progress-bar"></div></div>
+
+    <div id="question-box">
+      <p id="question-text"></p>
+      <div id="options"></div>
+    </div>
+
+    <div id="game-over"></div>
+  </div>
+
+  <script>
+    const questions = [
+      { q: "Which unit is used to measure length?", options: ["Kilogram", "Meter", "Second", "Liter"], answer: "Meter" },
+      { q: "Which tool is used to measure short lengths?", options: ["Thermometer", "Ruler", "Clock", "Compass"], answer: "Ruler" },
+      { q: "Which of these is a standard unit?", options: ["Handspan", "Meter", "Footstep", "Cubit"], answer: "Meter" },
+      { q: "What is motion?", options: ["Change in shape", "Change in size", "Change in position", "Change in color"], answer: "Change in position" },
+      { q: "Which is NOT a mode of transport?", options: ["Car", "Train", "Tree", "Bicycle"], answer: "Tree" },
+      { q: "Which instrument measures time?", options: ["Scale", "Watch", "Thermometer", "Barometer"], answer: "Watch" },
+      { q: "Which is the SI unit of time?", options: ["Minute", "Hour", "Second", "Day"], answer: "Second" },
+      { q: "Which is the fastest mode of transport?", options: ["Bicycle", "Car", "Aeroplane", "Train"], answer: "Aeroplane" },
+      { q: "Which of these is a non-standard unit?", options: ["Meter", "Kilometer", "Handspan", "Centimeter"], answer: "Handspan" },
+      { q: "What is used to measure long distances?", options: ["Millimeter", "Centimeter", "Kilometer", "Meter"], answer: "Kilometer" }
+    ];
+
+    let currentIndex = 0;
+    let score = 0;
+    let answered = false;
+    let timeLeft = 15;
+    let timer;
+
+    const correctSound = document.getElementById("correct-sound");
+    const wrongSound = document.getElementById("wrong-sound");
+
+    function showQuestion() {
+      timeLeft = 15;
+      document.getElementById("time").textContent = timeLeft;
+      clearInterval(timer);
+      startTimer();
+
+      const question = questions[currentIndex];
+      document.getElementById("question-text").textContent = question.q;
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+
+      answered = false;
+
+      question.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => {
+          if (!answered) {
+            answered = true;
+            if (opt === question.answer) {
+              score++;
+              correctSound.play();
+            } else {
+              wrongSound.play();
+            }
+            document.getElementById("score-board").textContent = `Score: ${score}`;
+            document.querySelectorAll("#options button").forEach(b => b.disabled = true);
+            clearInterval(timer);
+            setTimeout(nextQuestion, 1000); // ✅ auto move after 1s
+          }
+        };
+        optionsDiv.appendChild(btn);
+      });
+
+      updateProgress();
+    }
+
+    function nextQuestion() {
+      currentIndex++;
+      if (currentIndex < questions.length) {
+        showQuestion();
+      } else {
+        endGame();
+      }
+    }
+
+    function updateProgress() {
+      const percent = (currentIndex / questions.length) * 100;
+      document.getElementById("progress-bar").style.width = `${percent}%`;
+    }
+
+    function startTimer() {
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("time").textContent = timeLeft;
+        if (timeLeft === 0 && !answered) {
+          answered = true;
+          document.querySelectorAll("#options button").forEach(b => b.disabled = true);
+          wrongSound.play();
+          clearInterval(timer);
+          setTimeout(nextQuestion, 1000); // ✅ auto move when time runs out
+        }
+      }, 1000);
+    }
+
+    function endGame() {
+      document.getElementById("question-box").style.display = "none";
+
+      const highScore = localStorage.getItem("motionHighScore") || 0;
+      if (score > highScore) {
+        localStorage.setItem("motionHighScore", score);
+      }
+
+      document.getElementById("game-over").style.display = "block";
+      document.getElementById("game-over").innerHTML = `
+        🎉 Game Over!<br>Your final score: ${score}/10<br>
+        🏆 High Score: ${Math.max(score, highScore)}/10
+      `;
+    }
+
+    // Start game
+    showQuestion();
+  </script>
+</body>
+</html>
+

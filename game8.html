@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🧮 Array Puzzle Builder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .box {
+      width: 50px;
+      height: 50px;
+      background-color: #facc15;
+      border-radius: 8px;
+      display: inline-block;
+      margin: 4px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .box:hover {
+      transform: scale(1.1);
+    }
+    .selected {
+      background-color: #10b981 !important;
+    }
+    .wrong {
+      background-color: #f87171 !important;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-yellow-50 to-green-100 text-center pt-20">
+
+  <h1 class="text-3xl font-bold text-yellow-700 mb-2">🧮 Array Puzzle Builder</h1>
+  <p class="text-gray-600 mb-4">Select boxes to build <span id="questionText">3 × 4</span> array</p>
+  <div class="text-lg text-yellow-800 font-semibold mb-6">Score: <span id="score">0</span> / 5</div>
+
+  <div id="gridContainer" class="inline-block mb-6 max-w-xl"></div>
+
+  <div id="feedback" class="text-lg font-medium text-green-700 mb-4 hidden"></div>
+  <button id="nextBtn" class="hidden bg-gradient-to-r from-yellow-400 to-green-600 text-white px-6 py-2 rounded-full" onclick="nextQuestion()">👉 Next Puzzle</button>
+
+  <div id="result" class="text-xl font-bold text-green-700 hidden mt-10"></div>
+
+  <script>
+    const questions = [
+      { rows: 2, cols: 3 },
+      { rows: 3, cols: 4 },
+      { rows: 4, cols: 5 },
+      { rows: 5, cols: 2 },
+      { rows: 3, cols: 3 }
+    ];
+
+    const praise = [
+      "🎉 Puzzle solved!",
+      "🌟 Grid genius!",
+      "👍 Well done!",
+      "💯 Array master!",
+      "🥳 Superb logic!"
+    ];
+
+    let current = 0;
+    let score = 0;
+    let selectedCount = 0;
+    let totalBoxes = 0;
+
+    const questionText = document.getElementById('questionText');
+    const gridContainer = document.getElementById('gridContainer');
+    const scoreEl = document.getElementById('score');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+
+    function showQuestion() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      gridContainer.innerHTML = '';
+      selectedCount = 0;
+
+      const q = questions[current];
+      totalBoxes = q.rows * q.cols;
+      questionText.textContent = `${q.rows} × ${q.cols}`;
+
+      let gridSize = 20;
+      for (let i = 0; i < gridSize; i++) {
+        const box = document.createElement('div');
+        box.className = 'box';
+        box.onclick = () => {
+          if (box.classList.contains('selected')) return;
+          box.classList.add('selected');
+          selectedCount++;
+          if (selectedCount === totalBoxes) {
+            validateSelection(q.rows, q.cols);
+          }
+        };
+        gridContainer.appendChild(box);
+      }
+    }
+
+    function validateSelection(rows, cols) {
+      const selectedBoxes = document.querySelectorAll('.selected');
+      if (selectedBoxes.length === rows * cols) {
+        score++;
+        scoreEl.textContent = score;
+        feedbackEl.textContent = praise[Math.floor(Math.random() * praise.length)];
+      } else {
+        feedbackEl.textContent = `❌ Oops! You needed ${rows * cols} boxes for ${rows} × ${cols}`;
+        selectedBoxes.forEach(box => box.classList.add('wrong'));
+      }
+      feedbackEl.classList.remove('hidden');
+      nextBtn.classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      gridContainer.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🏁 Game Over! You solved ${score} out of 5 array puzzles 🧱`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>

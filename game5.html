@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🐸 Frog River Race</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .pad {
+      width: 70px;
+      height: 70px;
+      background-color: #34d399;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+    .pad:hover {
+      transform: scale(1.1);
+    }
+    .frog {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-green-50 to-blue-100 text-center pt-20">
+
+  <h1 class="text-3xl font-bold text-green-700 mb-2">🐸 Frog River Race</h1>
+  <p class="text-gray-600 mb-4">Help the frog cross the river by jumping on <span id="skipBy">5</span>-count lily pads!</p>
+  <div class="text-lg text-green-800 font-semibold mb-6">Score: <span id="score">0</span> / 5</div>
+
+  <div class="frog">🐸</div>
+  <div id="padContainer" class="flex flex-wrap justify-center gap-4 mb-6"></div>
+
+  <div id="feedback" class="text-lg font-medium text-green-700 mb-4 hidden"></div>
+  <button id="nextBtn" class="hidden bg-gradient-to-r from-green-400 to-green-600 text-white px-6 py-2 rounded-full" onclick="nextQuestion()">👉 Next River</button>
+
+  <div id="result" class="text-xl font-bold text-green-700 hidden mt-10"></div>
+
+  <script>
+    const questions = [
+      { skip: 5, sequence: [5,10,15,20] },
+      { skip: 2, sequence: [2,4,6,8] },
+      { skip: 10, sequence: [10,20,30,40] },
+      { skip: 3, sequence: [3,6,9,12] },
+      { skip: 4, sequence: [4,8,12,16] }
+    ];
+
+    const praise = [
+      "🎉 Splash-free success!",
+      "🌟 Froggy champion!",
+      "👍 Perfect jumps!",
+      "💯 River master!",
+      "🥳 You nailed it!"
+    ];
+
+    let current = 0;
+    let score = 0;
+    let expectedSequence = [];
+
+    const padContainer = document.getElementById('padContainer');
+    const scoreEl = document.getElementById('score');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+    const skipByEl = document.getElementById('skipBy');
+
+    function showQuestion() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      padContainer.innerHTML = '';
+      const q = questions[current];
+      skipByEl.textContent = q.skip;
+      expectedSequence = [...q.sequence];
+      let options = [...expectedSequence];
+
+      while (options.length < 8) {
+        let rand = Math.floor(Math.random() * (q.sequence[q.sequence.length - 1] + 10)) + 1;
+        if (!options.includes(rand)) options.push(rand);
+      }
+
+      options.sort(() => Math.random() - 0.5);
+      let selected = [];
+
+      options.forEach(num => {
+        const pad = document.createElement('div');
+        pad.className = 'pad';
+        pad.textContent = num;
+        pad.onclick = () => {
+          if (selected.includes(num)) return;
+          selected.push(num);
+          pad.style.backgroundColor = expectedSequence.includes(num) ? '#10b981' : '#f87171';
+          if (selected.length === expectedSequence.length) {
+            let correctCount = selected.filter(n => expectedSequence.includes(n)).length;
+            if (correctCount === expectedSequence.length) {
+              score++;
+              scoreEl.textContent = score;
+              feedbackEl.textContent = praise[Math.floor(Math.random() * praise.length)];
+            } else {
+              feedbackEl.textContent = `❌ Frog splashed! Correct path: ${expectedSequence.join(', ')}`;
+            }
+            feedbackEl.classList.remove('hidden');
+            nextBtn.classList.remove('hidden');
+          }
+        };
+        padContainer.appendChild(pad);
+      });
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      padContainer.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🏁 Game Over! You helped the frog cross ${score} out of 5 rivers safely 🐸🌊`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>

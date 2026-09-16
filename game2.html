@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shape Puzzle Match</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .shape {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .shape:hover {
+      transform: scale(1.1);
+    }
+    .circle {
+      width: 100px;
+      height: 100px;
+      background-color: #60a5fa;
+      border-radius: 50%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .square {
+      width: 100px;
+      height: 100px;
+      background-color: #f59e0b;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .rectangle {
+      width: 120px;
+      height: 60px;
+      background-color: #10b981;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .triangle {
+      width: 0;
+      height: 0;
+      border-left: 50px solid transparent;
+      border-right: 50px solid transparent;
+      border-bottom: 100px solid #ef4444;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-blue-100 to-blue-200 text-center pt-20">
+
+  <h1 class="text-3xl font-bold text-blue-700 mb-2">🧩 Shape Puzzle Match</h1>
+  <p class="text-gray-700 mb-4">Click the correct shape!</p>
+  <div class="text-lg text-blue-800 font-semibold mb-6">Score: <span id="score">0</span> / 5</div>
+
+  <div id="question" class="text-2xl font-semibold text-blue-800 mb-6"></div>
+
+  <div id="shapeContainer" class="flex justify-center gap-6 flex-wrap mb-6"></div>
+
+  <div id="feedback" class="text-lg font-medium text-green-700 mb-4 hidden"></div>
+  <button id="nextBtn" class="hidden bg-gradient-to-r from-green-400 to-green-600 text-white px-6 py-2 rounded-full" onclick="nextQuestion()">Next</button>
+
+  <div id="result" class="text-xl font-bold text-green-700 hidden mt-10"></div>
+
+  <script>
+    const questions = [
+      { shape: 'Circle' },
+      { shape: 'Square' },
+      { shape: 'Triangle' },
+      { shape: 'Rectangle' },
+      { shape: 'Circle' }
+    ];
+
+    const praise = ["Great job! 🎉", "You're a shape master! 🌟", "Well done! 👍", "Awesome! 💯", "Superb! 🥳"];
+
+    let current = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById('question');
+    const shapeContainer = document.getElementById('shapeContainer');
+    const scoreEl = document.getElementById('score');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+
+    function showQuestion() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      shapeContainer.innerHTML = '';
+      const q = questions[current];
+      questionEl.textContent = `Find the ${q.shape}`;
+
+      const allShapes = ['Circle', 'Square', 'Triangle', 'Rectangle'];
+      const options = [...allShapes].sort(() => Math.random() - 0.5);
+
+      options.forEach(shape => {
+        const div = document.createElement('div');
+        div.className = 'shape ' + shape.toLowerCase();
+        div.onclick = () => {
+          shapeContainer.querySelectorAll('.shape').forEach(s => s.onclick = null);
+          if (shape === q.shape) {
+            score++;
+            scoreEl.textContent = score;
+            feedbackEl.textContent = praise[Math.floor(Math.random() * praise.length)];
+          } else {
+            feedbackEl.textContent = `Oops! ❌ The correct shape was ${q.shape}`;
+          }
+          feedbackEl.classList.remove('hidden');
+          nextBtn.classList.remove('hidden');
+        };
+        shapeContainer.appendChild(div);
+      });
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      questionEl.textContent = '';
+      shapeContainer.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🎯 Game Over! You matched ${score} out of 5 shapes correctly`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>

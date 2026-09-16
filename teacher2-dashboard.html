@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Digital Learning Platform - Nabha</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body { font-family: 'Open Sans', sans-serif; }
+    h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+    .btn-animate { transition: all 0.3s ease; }
+    .btn-animate:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+    .card { transition: transform 0.3s, box-shadow 0.3s; }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 12px 25px rgba(0,0,0,0.15); }
+    .fade-in { animation: fadeIn 1s ease-in-out; }
+    @keyframes fadeIn { from {opacity:0; transform: translateY(20px);} to {opacity:1; transform: translateY(0);} }
+  </style>
+</head>
+<body class="bg-white text-gray-800">
+
+  <!-- Header -->
+  <header class="fixed top-0 w-full bg-white/80 backdrop-blur-md shadow-md z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between p-4">
+      <h2 class="text-2xl font-bold text-sky-600">📘 VidyaSetu <span class="text-gray-700">Bridge of Knowledge</span></h2>
+      <nav class="space-x-6 hidden md:flex font-medium">
+        <a href="#home" class="hover:text-sky-500 transition">Home</a>
+        <a href="#courses" class="hover:text-sky-500 transition">Courses</a>
+        <a href="#quizzes" class="hover:text-sky-500 transition">Quizzes</a>
+        <a href="#videos" class="hover:text-sky-500 transition">Videos</a>
+        <a href="#community" class="hover:text-sky-500 transition">Community</a>
+        <a href="#about" class="hover:text-sky-500 transition">About</a>
+      </nav>
+      <button onclick="location.href='login.html'" class="bg-gradient-to-r from-sky-500 to-sky-600 text-white px-5 py-2 rounded-full btn-animate">Login</button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="pt-28 bg-gradient-to-r from-sky-100 via-white to-sky-50 fade-in">
+    <div class="max-w-7xl mx-auto text-center py-20">
+      <h1 class="text-4xl md:text-5xl font-bold text-sky-700 leading-tight">Digital Learning for Every Child</h1>
+      <p class="mt-4 text-lg text-gray-600">Accessible • Interactive • Engaging</p>
+      <div class="mt-6 space-x-4">
+        <button class="bg-gradient-to-r from-sky-500 to-sky-600 text-white px-6 py-3 rounded-full btn-animate">Start Learning</button>
+        <button class="border border-sky-500 text-sky-500 px-6 py-3 rounded-full btn-animate">Watch Demo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="py-16 bg-white fade-in">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+      <div class="card p-6 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl">
+        <h3 class="text-xl font-semibold">📱 Accessible Anywhere</h3>
+        <p class="mt-2 text-gray-600">Works on phones, tablets, and offline downloads.</p>
+      </div>
+      <div class="card p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-2xl">
+        <h3 class="text-xl font-semibold">🎮 Engaging Content</h3>
+        <p class="mt-2 text-gray-600">Quizzes, games, and interactive lessons.</p>
+      </div>
+      <div class="card p-6 bg-gradient-to-br from-sky-50 to-sky-100 rounded-2xl">
+        <h3 class="text-xl font-semibold">🌍 Language Friendly</h3>
+        <p class="mt-2 text-gray-600">Available in English, Hindi, and Punjabi.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Courses -->
+  <section id="courses" class="py-16 bg-gradient-to-b from-sky-50 to-white fade-in">
+    <div class="max-w-6xl mx-auto text-center">
+      <h2 class="text-3xl font-bold text-sky-700">Explore Courses</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
+        <div class="card bg-white p-6 rounded-2xl">
+          <h3 class="text-xl font-semibold">📐 Mathematics</h3>
+          <p class="mt-2 text-gray-600">Fun with numbers and puzzles</p>
+          <button class="mt-4 bg-gradient-to-r from-sky-500 to-sky-600 text-white px-4 py-2 rounded-full btn-animate">Continue</button>
+        </div>
+        <div class="card bg-white p-6 rounded-2xl">
+          <h3 class="text-xl font-semibold">🔬 Science</h3>
+          <p class="mt-2 text-gray-600">Explore experiments and nature</p>
+          <button class="mt-4 bg-gradient-to-r from-sky-500 to-sky-600 text-white px-4 py-2 rounded-full btn-animate">Continue</button>
+        </div>
+        <div class="card bg-white p-6 rounded-2xl">
+          <h3 class="text-xl font-semibold">📚 Language</h3>
+          <p class="mt-2 text-gray-600">Improve reading and storytelling</p>
+          <button class="mt-4 bg-gradient-to-r from-sky-500 to-sky-600 text-white px-4 py-2 rounded-full btn-animate">Continue</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quizzes -->
+  <section id="quizzes" class="py-16 bg-gradient-to-r from-yellow-50 to-yellow-100 fade-in">
+    <div class="max-w-6xl mx-auto text-center">
+      <h2 class="text-3xl font-bold text-yellow-700">Play & Learn</h2>
+      <p class="mt-4 text-gray-600">Daily quizzes and puzzles to earn badges 🎖️</p>
+      <button class="mt-6 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-6 py-3 rounded-full btn-animate">Take Quiz</button>
+    </div>
+  </section>
+
+  <!-- Video Library -->
+  <section id="videos" class="py-16 bg-white fade-in">
+    <div class="max-w-6xl mx-auto text-center">
+      <h2 class="text-3xl font-bold text-sky-700">Video Lessons</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
+        <div class="card p-4 bg-gray-50 rounded-2xl">
+          <img src="https://img.youtube.com/vi/1/0.jpg" class="rounded-xl w-full h-48 object-cover">
+          <p class="mt-2 text-gray-600">Learn Fractions with Stories</p>
+        </div>
+        <div class="card p-4 bg-gray-50 rounded-2xl">
+          <img src="https://img.youtube.com/vi/2/0.jpg" class="rounded-xl w-full h-48 object-cover">
+          <p class="mt-2 text-gray-600">Plants & Photosynthesis</p>
+        </div>
+        <div class="card p-4 bg-gray-50 rounded-2xl">
+          <img src="https://img.youtube.com/vi/3/0.jpg" class="rounded-xl w-full h-48 object-cover">
+          <p class="mt-2 text-gray-600">Fun with Grammar</p>
+        </div>
+      </div

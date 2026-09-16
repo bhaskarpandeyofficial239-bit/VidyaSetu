@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Figurative Frenzy - VidyaSetu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .phrase-tile {
+      background-color: #60a5fa;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-weight: bold;
+      cursor: grab;
+      transition: transform 0.3s ease;
+    }
+    .phrase-tile:hover { transform: scale(1.1); }
+    .drop-zone {
+      border: 2px dashed #93c5fd;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      background-color: #fff;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    .drop-zone.hovered { background-color: #e0f2fe; }
+    .drop-zone.matched { background-color: #bbf7d0; border-color: #22c55e; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-blue-50 via-pink-50 to-purple-50 text-center pt-20">
+
+  <h1 class="text-3xl font-bold text-blue-700 mb-2">🎭 Figurative Frenzy</h1>
+  <p class="text-gray-600 mb-4">Drag each phrase to its correct category: Simile, Metaphor, or Idiom!</p>
+  <div class="text-lg text-blue-800 font-semibold mb-6">Score: <span id="score">0</span> / 5</div>
+
+  <div id="roundText" class="text-xl font-semibold text-blue-800 mb-6"></div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 px-4 mb-6" id="dropContainer">
+    <div class="drop-zone" data-type="simile">🟢 Simile</div>
+    <div class="drop-zone" data-type="metaphor">🔵 Metaphor</div>
+    <div class="drop-zone" data-type="idiom">🟣 Idiom</div>
+  </div>
+
+  <div id="phraseBank" class="flex flex-wrap justify-center gap-4 mb-6 px-4"></div>
+
+  <div id="feedback" class="text-lg font-medium text-green-700 mb-4 hidden"></div>
+  <button id="nextBtn" class="hidden bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-2 rounded-full" onclick="nextRound()">Next</button>
+  <div id="result" class="text-xl font-bold text-green-700 hidden mt-10"></div>
+
+  <script>
+    const rounds = [
+      { phrases: { "as brave as a lion": "simile", "time is a thief": "metaphor", "break the ice": "idiom" } },
+      { phrases: { "as light as a feather": "simile", "the world is a stage": "metaphor", "hit the sack": "idiom" } },
+      { phrases: { "as busy as a bee": "simile", "he has a heart of stone": "metaphor", "spill the beans": "idiom" } },
+      { phrases: { "as cold as ice": "simile", "life is a rollercoaster": "metaphor", "piece of cake": "idiom" } },
+      { phrases: { "as fast as lightning": "simile", "he’s a walking encyclopedia": "metaphor", "under the weather": "idiom" } }
+    ];
+
+    const praise = ["Brilliant! 🎉", "You're a figurative master! 🌟", "Awesome! 👍", "Superb! 🥳", "Well done! 💯"];
+    let currentRound = 0;
+    let score = 0;
+    let matched = 0;
+
+    const scoreEl = document.getElementById('score');
+    const roundText = document.getElementById('roundText');
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const phraseBank = document.getElementById('phraseBank');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+
+    function loadRound() {
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      phraseBank.innerHTML = '';
+      dropZones.forEach(zone => {
+        zone.innerHTML = zone.dataset.type === "simile" ? "🟢 Simile" :
+                         zone.dataset.type === "metaphor" ? "🔵 Metaphor" :
+                         "🟣 Idiom";
+        zone.classList.remove('matched');
+      });
+      matched = 0;
+
+      const round = rounds[currentRound];
+      roundText.textContent = `Round ${currentRound + 1} of ${rounds.length}`;
+
+      const shuffledPhrases = Object.keys(round.phrases).sort(() => Math.random() - 0.5);
+      shuffledPhrases.forEach(phrase => {
+        const tile = document.createElement('div');
+        tile.className = 'phrase-tile';
+        tile.draggable = true;
+        tile.dataset.phrase = phrase;
+        tile.dataset.type = round.phrases[phrase];
+        tile.textContent = phrase;
+        phraseBank.appendChild(tile);
+
+        tile.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/plain', JSON.stringify({ phrase, type: tile.dataset.type }));
+        });
+      });
+
+      dropZones.forEach(zone => {
+        zone.addEventListener('dragover', e => {
+          e.preventDefault();
+          zone.classList.add('hovered');
+        });
+
+        zone.addEventListener('dragleave', () => {
+          zone.classList.remove('hovered');
+        });
+
+        zone.addEventListener('drop', e => {
+          e.preventDefault();
+          const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+          if (data.type === zone.dataset.type) {
+            zone.classList.add('matched');
+            zone.innerHTML += `<div class="mt-2 text-green-600 font-bold">${data.phrase} ✅</div>`;
+            document.querySelector(`[data-phrase="${data.phrase}"]`).remove();
+            matched++;
+            zone.classList.remove('hovered');
+            if (matched === Object.keys(round.phrases).length) {
+              score++;
+              scoreEl.textContent = score;
+              feedbackEl.textContent = praise[Math.floor(Math.random() * praise.length)];
+              feedbackEl.classList.remove('hidden');
+              nextBtn.classList.remove('hidden');
+            }
+          } else {
+            feedbackEl.textContent = `Oops! ❌ "${data.phrase}" doesn't belong in ${zone.dataset.type}`;
+            feedbackEl.classList.remove('hidden');
+            zone.classList.remove('hovered');
+          }
+        });
+      });
+    }
+
+    function nextRound() {
+      currentRound++;
+      if (currentRound < rounds.length) {
+        loadRound();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      roundText.textContent = '';
+      phraseBank.innerHTML = '';
+      feedbackEl.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      resultEl.classList.remove('hidden');
+      resultEl.textContent = `🎯 Game Over! You scored ${score} out of ${rounds.length}`;
+    }
+
+    loadRound();
+  </script>
+</body>
+</html>

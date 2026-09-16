@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Air Around Us – Game + Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #e3f2fd, #ffffff, #bbdefb);
+      text-align: center;
+      padding: 20px;
+      color: #0d47a1;
+    }
+    h1 {
+      color: #1565c0;
+      font-size: 2em;
+    }
+    .section {
+      margin: 30px 0;
+    }
+    .items, .zones {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .object {
+      width: 120px;
+      height: 100px;
+      background-color: #bbdefb;
+      border: 2px solid #1565c0;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: grab;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .zone {
+      width: 160px;
+      height: 120px;
+      background-color: #e8f5e9;
+      border: 2px dashed #1e88e5;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-weight: bold;
+      color: #1565c0;
+    }
+    .correct {
+      background-color: #c8e6c9;
+      transform: scale(1.1);
+    }
+    .wrong {
+      background-color: #ffcdd2;
+      transform: rotate(-5deg);
+    }
+    .quiz-box {
+      background-color: #e3f2fd;
+      border-radius: 10px;
+      padding: 20px;
+      width: 340px;
+      margin: auto;
+      box-shadow: 0 0 12px rgba(21, 101, 192, 0.3);
+    }
+    .question {
+      margin-bottom: 15px;
+      font-weight: bold;
+      color: #0d47a1;
+    }
+    .option {
+      display: block;
+      margin: 8px 0;
+      padding: 10px;
+      background-color: #90caf9;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #0d47a1;
+      font-weight: bold;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .option:hover {
+      background-color: #64b5f6;
+      transform: scale(1.05);
+    }
+    .correct-answer {
+      background-color: #c8e6c9 !important;
+    }
+    .wrong-answer {
+      background-color: #ffcdd2 !important;
+    }
+    #score, #quizScore {
+      font-weight: bold;
+      margin-top: 15px;
+      font-size: 18px;
+      color: #0d47a1;
+    }
+    #levelUp {
+      color: #1b5e20;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    #feedback {
+      margin-top: 10px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🌬️ Air Around Us – Game + Quiz</h1>
+
+<!-- Game Section -->
+<div class="section" id="gameSection">
+  <h2>Drag the items to the correct zone</h2>
+  <p>Sort air-related and non-air-related phenomena</p>
+
+  <div class="items">
+    <div class="object" draggable="true" data-type="air">Flying Kite</div>
+    <div class="object" draggable="true" data-type="non-air">Boiling Water</div>
+    <div class="object" draggable="true" data-type="air">Winnowing</div>
+    <div class="object" draggable="true" data-type="non-air">Melting Ice</div>
+    <div class="object" draggable="true" data-type="air">Firki Rotation</div>
+    <div class="object" draggable="true" data-type="non-air">Cooking Rice</div>
+  </div>
+
+  <div class="zones">
+    <div class="zone" data-accept="air"><strong>Air-Related</strong></div>
+    <div class="zone" data-accept="non-air"><strong>Not Air-Related</strong></div>
+  </div>
+
+  <div id="score">Score: 0</div>
+  <div id="levelUp"></div>
+</div>
+
+<!-- Quiz Section -->
+<div class="section" id="quizSection" style="display:none;">
+  <h2>Quiz Time: Air Around Us</h2>
+  <div class="quiz-box">
+    <div class="question" id="questionText">Loading question...</div>
+    <button class="option" onclick="checkAnswer(this)">Option A</button>
+    <button class="option" onclick="checkAnswer(this)">Option B</button>
+    <button class="option" onclick="checkAnswer(this)">Option C</button>
+    <button class="option" onclick="checkAnswer(this)">Option D</button>
+    <div id="quizScore">Quiz Score: 0</div>
+    <div id="feedback"></div>
+  </div>
+</div>
+
+<script>
+  // Game Logic
+  const objects = document.querySelectorAll('.object');
+  const zones = document.querySelectorAll('.zone');
+  const scoreDisplay = document.getElementById('score');
+  const levelUp = document.getElementById('levelUp');
+  const quizSection = document.getElementById('quizSection');
+  let score = 0;
+  let placed = 0;
+
+  objects.forEach(obj => {
+    obj.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('type', obj.dataset.type);
+      e.dataTransfer.setData('id', obj.innerText);
+    });
+  });
+
+  zones.forEach(zone => {
+    zone.addEventListener('dragover', e => e.preventDefault());
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      const type = e.dataTransfer.getData('type');
+      const id = e.dataTransfer.getData('id');
+      const accept = zone.dataset.accept;
+      const dragged = [...objects].find(o => o.innerText === id);
+
+      if (!dragged.classList.contains('correct') && !dragged.classList.contains('wrong')) {
+        if (type === accept) {
+          zone.appendChild(dragged);
+          dragged.classList.add('correct');
+          score += 5;
+        } else {
+          zone.appendChild(dragged);
+          dragged.classList.add('wrong');
+          score -= 2;
+        }
+        placed++;
+        scoreDisplay.textContent = `Score: ${score}`;
+        if (placed === objects.length) {
+          levelUp.textContent = '✅ Game Complete! Starting Quiz...';
+          setTimeout(() => {
+            document.getElementById('gameSection').style.display = 'none';
+            quizSection.style.display = 'block';
+            loadQuestion();
+          }, 2000);
+        }
+      }
+    });
+  });
+
+  // Quiz Logic
+  const questions = [
+    {
+      question: "What is the major component of air?",
+      options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
+      answer: "Nitrogen"
+    },
+    {
+      question: "Which gas supports burning?",
+      options: ["Carbon dioxide", "Nitrogen", "Oxygen", "Argon"],
+      answer: "Oxygen"
+    },
+    {
+      question: "What is the name of the gas we breathe out?",
+      options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Helium"],
+      answer: "Carbon dioxide"
+    },
+    {
+      question: "What makes firki rotate?",
+      options: ["Water", "Heat", "Moving Air", "Gravity"],
+      answer: "Moving Air"
+    },
+    {
+      question: "What is the envelope of air around Earth called?",
+      options: ["Stratosphere", "Cloud", "Atmosphere", "Ozone"],
+      answer: "Atmosphere"
+    }
+  ];
+
+  let current = 0;
+  let quizScore = 0;
+
+  const questionText = document.getElementById('questionText');
+  const optionButtons = document.querySelectorAll('.option');
+  const quizScoreDisplay = document.getElementById('quizScore');
+  const feedback = document.getElementById('feedback');
+
+  function loadQuestion() {
+    const q = questions[current];
+    questionText.textContent = q.question;
+    optionButtons.forEach((btn, i) => {
+      btn.textContent = q.options[i];
+      btn.classList.remove('correct-answer', 'wrong-answer');
+      btn.style.display = 'block';
+    });
+    feedback.textContent = "";
+  }
+
+  function checkAnswer(button) {
+    const correct = questions[current].answer;
+    let correctButton = null;
+
+    optionButtons.forEach(btn => {
+      if (btn.textContent === correct) {
+        correctButton = btn;
+      }
+    });
+
+    if (button.textContent === correct) {
+      button.classList.add('correct-answer');
+      quizScore += 5;
+      feedback.textContent = "✅ Correct!";
+      feedback.style.color = "green";
+    } else {
+      button.classList.add('wrong-answer');
+      correctButton.classList.add('correct-answer');
+      quizScore -= 2;
+      feedback.textContent = `❌ Wrong! Correct Answer: ${correct}`;
+      feedback.style.color = "red";
+    }
+
+    quizScoreDisplay.textContent = `Quiz Score: ${quizScore}`;
+
+    setTimeout(() => {
+      feedback.textContent = "";
+      current++;
+      if (current < questions.length) {
+        loadQuestion();
+      } else {
+        questionText.textContent = "🎉 Quiz Complete!";
+        optionButtons.forEach(btn => btn.style.display = "none");
+      }
+    }, 1500);
+  }
+</script>
+
+</body>
+</html>

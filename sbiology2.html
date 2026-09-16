@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Human Body Game — Class 6 Biology</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: linear-gradient(180deg,#f0f9ff,#eff6ff 40%); }
+    .organ { transition: filter 420ms ease, transform 420ms ease, opacity 420ms; transform-origin: center; cursor: default; }
+    .highlight { filter: drop-shadow(0 6px 18px rgba(34,197,94,0.28)); transform: scale(1.04); }
+    .pulse { animation: pulse 900ms ease-out; }
+    @keyframes pulse {
+      0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(34,197,94,0)); }
+      50% { transform: scale(1.08); filter: drop-shadow(0 12px 26px rgba(34,197,94,0.35)); }
+      100% { transform: scale(1); filter: drop-shadow(0 6px 18px rgba(34,197,94,0.28)); }
+    }
+    .wrong { animation: shake 420ms ease; }
+    @keyframes shake {
+      0% { transform: translateX(0) }
+      25% { transform: translateX(-6px) }
+      50% { transform: translateX(6px) }
+      75% { transform: translateX(-4px) }
+      100% { transform: translateX(0) }
+    }
+    .confetti { pointer-events:none; position:absolute; inset:0; overflow:hidden; z-index:60; }
+    .confetti-piece { position:absolute; width:10px; height:16px; opacity:0; transform:translateY(-20px) rotate(0deg); animation: confetti-fall 1600ms forwards; }
+    @keyframes confetti-fall {
+      to { opacity:1; transform: translateY(600px) rotate(540deg); }
+    }
+
+    .btn { transition: transform 120ms ease; }
+    .btn:active { transform: scale(0.98); }
+    .organ-label { font-size:13px; fill:#0f1724; font-weight:600; pointer-events:none; }
+    /* responsive */
+    @media (max-width:900px) {
+      svg#humanSVG { width: 100%; height: auto; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <h1 class="text-lg font-bold text-sky-700">🧍 Human Body Game — Chapter: Human Body (Class 6)</h1>
+      <div class="text-sm text-sky-600">Identify organs to feed knowledge — get them right to light up the body!</div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-6xl mx-auto w-full px-4 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Left: SVG Human -->
+      <section class="bg-white rounded-xl shadow p-6 relative">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <div class="text-sm text-gray-500">Body status</div>
+            <div id="statusLabel" class="text-xl font-semibold text-sky-700">Ready</div>
+          </div>
+          <div class="text-right">
+            <div class="text-sm text-gray-500">Score</div>
+            <div id="score" class="text-xl font-bold text-green-600">0</div>
+          </div>
+        </div>
+
+        <!-- Human SVG (stylized realistic-ish) -->
+        <div id="svgWrap" class="flex justify-center">
+          <svg id="humanSVG" width="320" height="640" viewBox="0 0 320 640" xmlns="http://www.w3.org/2000/svg" aria-label="Human body diagram">
+            <!-- faint torso outline -->
+            <g id="bodyOutline" opacity="0.95">
+              <path d="M160 48c-18 0-36 6-46 18-10 12-22 36-22 70 0 28 6 60 6 84 0 18-3 26-14 36-11 10-20 20-20 42 0 24 28 50 66 56v96c0 6 5 12 12 12h48c7 0 12-6 12-12v-96c38-6 66-32 66-56 0-22-9-32-20-42-11-10-14-18-14-36 0-24 6-56 6-84 0-34-12-58-22-70-10-12-28-18-46-18z" fill="#f8fafc"/>
+              <path d="M106 198c0-29 10-57 10-57s21 0 44-4 46 3 46 3 8 28 8 56" fill="none" stroke="#e6eef6" stroke-width="2"/>
+            </g>
+
+            <!-- Brain (top, partially visible) -->
+            <g id="brainGroup" transform="translate(90,18)">
+              <path id="brain" class="organ" d="M70 10c-16-2-34 2-44 10-8 7-14 18-14 30 0 18 14 24 26 28 12 4 36 4 54-6 12-7 22-18 22-32 0-14-8-28-20-32-10-4-20-6-24-6z"
+                    fill="#f3d6e6" stroke="#e6b6d1" stroke-width="1.2" />
+              <text x="70" y="76" class="organ-label" text-anchor="middle">Brain</text>
+            </g>
+
+            <!-- Lungs -->
+            <g id="lungsGroup" transform="translate(80,120)">
+              <path id="leftLung" class="organ" d="M40 12c-12 10-24 30-22 52 2 26 12 42 24 56 10 12 20 8 28 6 10-2 22-12 30-24 12-16 18-38 18-62 0-14-2-28-8-36-6-8-18-12-34-8-10 2-20 6-26 12z" fill="#dff9ff" stroke="#9fe5f3" stroke-width="1.6"/>
+              <path id="rightLung" class="organ" d="M150 12c12 10 24 30 22 52-2 26-12 42-24 56-10 12-20 8-28 6-10-2-22-12-30-24-12-16-18-38-18-62 0-14 2-28 8-36 6-8 18-12 34-8 10 2 20 6 26 12z" fill="#dff9ff" stroke="#9fe5f3" stroke-width="1.6" transform="translate(-62,0)"/>
+              <text x="85" y="130" class="organ-label" text-anchor="middle">Lungs</text>
+            </g>
+
+            <!-- Heart -->
+            <g id="heartGroup" transform="translate(120,210)">
+              <path id="heart" class="organ" d="M20 20c-12-8-20-2-24 6-6 12 6 30 20 40 14-10 30-26 36-40 4-8-2-16-10-18-10-2-16 4-22 12z" fill="#ff6b6b" stroke="#ff4b4b" stroke-width="1.4" transform="scale(1.7) translate(-6,-12)"/>
+              <text x="24" y="48" class="organ-label" text-anchor="middle">Heart</text>
+            </g>
+
+            <!-- Stomach & Intestines (digestive) -->
+            <g id="digestGroup" transform="translate(80,300)">
+              <path id="stomach" class="organ" d="M60 18c-18-8-36 4-40 18s0 28 12 36c10 8 30 12 48 6 16-6 24-18 26-32 2-12-6-28-20-32-8-2-20-6-26- -2z" fill="#fff0d6" stroke="#ffd28a" stroke-width="1.3"/>
+              <path id="intestine" class="organ" d="M30 66c12 8 28 12 44 10 18-2 34-10 44-18 8-6 12-12 10-18" fill="none" stroke="#ffd9a6" stroke-width="6" stroke-linecap="round"/>
+              <text x="80" y="100" class="organ-label" text-anchor="middle">Digestive</text>
+            </g>
+
+            <!-- faint labels / guide -->
+            <g id="labels" opacity="0.0">
+              <text x="160" y="44" text-anchor="middle" class="organ-label">Brain</text>
+            </g>
+
+          </svg>
+        </div>
+
+        <div class="mt-4 text-xs text-gray-500">Correct answers highlight systems. Try to light all systems!</div>
+
+        <!-- confetti container -->
+        <div id="confetti" class="confetti hidden"></div>
+      </section>
+
+      <!-- Right: Quiz & Controls -->
+      <section class="bg-white rounded-xl shadow p-6 col-span-1 lg:col-span-2">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="text-sm text-gray-500">Question</div>
+            <div id="questionText" class="text-2xl font-semibold text-gray-800">Press Start to begin</div>
+          </div>
+          <div class="text-right">
+            <div class="text-sm text-gray-500">Lives</div>
+            <div id="lives" class="text-2xl font-bold text-amber-600">3</div>
+          </div>
+        </div>
+
+        <!-- options area -->
+        <div id="options" class="space-y-3 mt-3"></div>
+
+        <!-- feedback -->
+        <div id="feedback" class="mt-3 h-10 text-sm font-medium"></div>
+
+        <!-- controls -->
+        <div class="mt-6 flex items-center gap-3">
+          <button id="startBtn" class="btn bg-sky-600 text-white px-4 py-2 rounded shadow">▶ Start</button>
+          <button id="nextBtn" class="btn bg-emerald-600 text-white px-4 py-2 rounded shadow hidden">➡ Next</button>
+          <button id="restartBtn" class="btn ml-auto bg-gray-100 text-gray-800 px-3 py-2 rounded hidden">Restart</button>
+        </div>
+
+        <!-- progress -->
+        <div class="mt-6">
+          <div class="text-sm text-gray-500 mb-1">Progress</div>
+          <div class="w-full bg-gray-200 h-3 rounded">
+            <div id="progress" class="bg-sky-500 h-3 rounded" style="width:0%"></div>
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="mt-6 grid grid-cols-2 gap-3 text-sm text-gray-600">
+          <div>✅ Correct will highlight the matching organ.</div>
+          <div>❌ Wrong reduces lives. Try again!</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="bg-sky-800 text-white py-4 text-center">
+    <div class="max-w-6xl mx-auto">Made with ❤️ for Nabha Students | Powered by SIH</div>
+  </footer>
+
+  <script>
+    /* QUESTIONS */
+    const questions = [
+      {
+        q: "Which organ system controls body movements and coordination?",
+        options: ["Circulatory system", "Nervous system", "Respiratory system", "Digestive system"],
+        correct: 1,
+        highlight: "brainGroup"
+      },
+      {
+        q: "Which organ pumps blood throughout the body?",
+        options: ["Brain", "Lungs", "Heart", "Liver"],
+        correct: 2,
+        highlight: "heartGroup"
+      },
+      {
+        q: "Which system helps in the exchange of gases in the body?",
+        options: ["Digestive system", "Respiratory system", "Nervous system", "Excretory system"],
+        correct: 1,
+        highlight: "lungsGroup"
+      },
+      {
+        q: "Which organ digests food and absorbs nutrients?",
+        options: ["Kidney", "Stomach & Intestines", "Skin", "Spleen"],
+        correct: 1,
+        highlight: "digestGroup"
+      }
+    ];
+
+    // Game state
+    let idx = -1;
+    let score = 0;
+    let lives = 3;
+    const total = questions.length;
+    const unlocked = new Set();
+
+    // DOM
+    const startBtn = document.getElementById('startBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const questionText = document.getElementById('questionText');
+    const optionsDiv = document.getElementById('options');
+    const feedback = document.getElementById('feedback');
+    const scoreEl = document.getElementById('score');
+    const livesEl = document.getElementById('lives');
+    const progressEl = document.getElementById('progress');
+    const statusLabel = document.getElementById('statusLabel');
+    const confettiContainer = document.getElementById('confetti');
+
+    // Organ groups map for easy access
+    const organMap = {
+      brainGroup: document.getElementById('brainGroup'),
+      lungsGroup: document.getElementById('lungsGroup'),
+      heartGroup: document.getElementById('heartGroup'),
+      digestGroup: document.getElementById('digestGroup'),
+      // additional organs can be added easily
+    };
+
+    function updateHUD() {
+      scoreEl.textContent = score;
+      livesEl.textContent = lives;
+      const pct = Math.round((unlocked.size / total) * 100);
+      progressEl.style.width = pct + '%';
+      statusLabel.textContent = unlocked.size === total ? 'Complete!' : 'Playing';
+    }
+
+    function resetOrganEffects() {
+      Object.values(organMap).forEach(group => {
+        if (group) {
+          const elems = group.querySelectorAll('.organ');
+          elems.forEach(e => {
+            e.classList.remove('highlight','pulse');
+            e.style.opacity = 1;
+            e.style.transition = 'filter 420ms ease, transform 420ms ease, opacity 420ms';
+          });
+        }
+      });
+    }
+
+    function highlightOrgan(name) {
+      const el = organMap[name];
+      if (!el) return;
+      // flash and pulse
+      const organs = el.querySelectorAll('.organ');
+      organs.forEach(o => {
+        o.classList.add('highlight','pulse');
+        // remove pulse after it finishes so it can re-trigger
+        setTimeout(()=> o.classList.remove('pulse'), 1000);
+      });
+    }
+
+    function playConfetti() {
+      confettiContainer.innerHTML = '';
+      confettiContainer.classList.remove('hidden');
+      const colors = ['#ff3b30','#ff9500','#fff200','#34c759','#0a84ff','#af52de'];
+      for (let i=0;i<30;i++){
+        const piece = document.createElement('div');
+        piece.classList.add('confetti-piece');
+        piece.style.background = colors[i % colors.length];
+        piece.style.left = (10 + Math.random()*80) + '%';
+        piece.style.top = (-10 - Math.random()*10) + '%';
+        piece.style.width = (6 + Math.random()*8)+'px';
+        piece.style.height = (10 + Math.random()*12)+'px';
+        piece.style.animationDelay = (Math.random()*400) + 'ms';
+        confettiContainer.appendChild(piece);
+      }
+      setTimeout(()=> confettiContainer.classList.add('hidden'), 2000);
+    }
+
+    function showQuestion() {
+      idx++;
+      optionsDiv.innerHTML = '';
+      feedback.textContent = '';
+      nextBtn.classList.add('hidden');
+
+      if (idx >= total || lives <= 0) {
+        endGame();
+        return;
+      }
+
+      const Q = questions[idx];
+      questionText.textContent = Q.q;
+
+      Q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'w-full text-left border rounded px-4 py-3 hover:bg-sky-50 transition';
+        btn.textContent = opt;
+        btn.onclick = () => handleAnswer(i);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(choice) {
+      const Q = questions[idx];
+      // disable buttons
+      Array.from(optionsDiv.children).forEach(b => b.disabled = true);
+
+      if (choice === Q.correct) {
+        score++;
+        unlocked.add(Q.highlight);
+        highlightOrgan(Q.highlight);
+        feedback.innerHTML = `<span class="text-green-600 font-semibold">✅ Correct — ${getOrganName(Q.highlight)} highlighted!</span>`;
+        updateHUD();
+
+        // If all unlocked, celebrate
+        if (unlocked.size === total) {
+          setTimeout(()=> {
+            playConfetti();
+            document.getElementById('svgWrap').classList.add('glow');
+          }, 500);
+        }
+
+        // show next after short delay
+        setTimeout(()=> {
+          nextBtn.classList.remove('hidden');
+        }, 600);
+      } else {
+        lives--;
+        feedback.innerHTML = `<span class="text-red-600 font-semibold">❌ Wrong — try next. Correct: <strong>${Q.options[Q.correct]}</strong></span>`;
+        // shake the chosen button for feedback
+        const clicked = Array.from(optionsDiv.children).find(b => b.textContent === Q.options[choice]);
+        if (clicked) clicked.classList.add('wrong');
+        updateHUD();
+        setTimeout(()=> {
+          if (clicked) clicked.classList.remove('wrong');
+          if (lives <= 0) endGame(); else nextBtn.classList.remove('hidden');
+        }, 650);
+      }
+    }
+
+    function getOrganName(groupId) {
+      switch(groupId) {
+        case 'brainGroup': return 'Brain (Nervous system)';
+        case 'heartGroup': return 'Heart (Circulatory)';
+        case 'lungsGroup': return 'Lungs (Respiratory)';
+        case 'digestGroup': return 'Digestive organs';
+        default: return 'Organ';
+      }
+    }
+
+    function endGame() {
+      // show final message in panel
+      optionsDiv.innerHTML = '';
+      const finishTitle = unlocked.size === total ? '🎉 You lit up all systems!' : (lives <= 0 ? '💔 Game Over' : 'All questions completed');
+      questionText.textContent = finishTitle;
+      feedback.innerHTML = `<div class="text-sm mt-1">Score: <strong class="text-green-700">${score}</strong> / ${total} • Systems lit: ${unlocked.size} / ${total}</div>`;
+      nextBtn.classList.add('hidden');
+      restartBtn.classList.remove('hidden');
+      startBtn.classList.remove('hidden');
+      startBtn.textContent = 'Play Again';
+      if (unlocked.size === total) {
+        playConfetti();
+      }
+    }
+
+    function restartGame() {
+      idx = -1; score = 0; lives = 3; unlocked.clear();
+      resetOrganEffects();
+      updateHUD();
+      questionText.textContent = 'Press Start to begin';
+      feedback.textContent = '';
+      optionsDiv.innerHTML = '';
+      nextBtn.classList.add('hidden');
+      restartBtn.classList.add('hidden');
+      startBtn.classList.remove('hidden');
+      startBtn.textContent = '▶ Start';
+      confettiContainer.innerHTML = '';
+    }
+
+    // wire events
+    startBtn.addEventListener('click', () => {
+      // first start hides startBtn and shows first question
+      startBtn.classList.add('hidden');
+      restartBtn.classList.remove('hidden');
+      idx = -1; score = 0; lives = 3; unlocked.clear();
+      updateHUD();
+      resetOrganEffects();
+      showQuestion();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      showQuestion();
+    });
+
+    restartBtn.addEventListener('click', restartGame);
+
+    // initialize HUD
+    updateHUD();
+
+    // keyboard accessibility: Enter to select first option, N for next
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'n' || e.key === 'N') {
+        if (!nextBtn.classList.contains('hidden')) nextBtn.click();
+      }
+    });
+
+  </script>
+</body>
+</html>

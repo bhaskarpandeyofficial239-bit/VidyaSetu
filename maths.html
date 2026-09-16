@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mathematics Classes - VidyaSetu</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body { font-family: 'Open Sans', sans-serif; }
+    h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+    .tile { transition: transform 0.4s ease, box-shadow 0.4s ease; }
+    .tile:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 12px 25px rgba(0,0,0,0.15); }
+    .fade-in { opacity: 0; transform: translateY(30px); animation: fadeUp 0.8s forwards; }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-sky-50 via-white to-sky-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="fixed top-0 w-full bg-white/80 backdrop-blur-md shadow-md z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between p-4">
+      <h2 class="text-2xl font-bold text-sky-600">📘 VidyaSetu <span class="text-gray-700">Mathematics</span></h2>
+      <nav class="space-x-6 hidden md:flex font-medium">
+        <a href="index.html#home" class="hover:text-sky-500 transition">Home</a>
+        <a href="index.html#courses" class="hover:text-sky-500 transition">Courses</a>
+        <a href="index.html#quizzes" class="hover:text-sky-500 transition">Quizzes</a>
+        <a href="index.html#videos" class="hover:text-sky-500 transition">Videos</a>
+        <a href="index.html#community" class="hover:text-sky-500 transition">Community</a>
+      </nav>
+      <button onclick="location.href='login.html'" class="bg-gradient-to-r from-sky-500 to-sky-600 text-white px-5 py-2 rounded-full">Login</button>
+    </div>
+  </header>
+
+  <!-- Main Section -->
+  <main class="pt-28 pb-20 fade-in">
+    <div class="max-w-6xl mx-auto text-center">
+      <h1 class="text-4xl font-bold text-sky-700 mb-4">Choose Your Class</h1>
+      <p class="text-gray-600 mb-10">Interactive math lessons from Class 1 to Class 6</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <!-- Class Tiles -->
+        <a href="mclass1.html" class="tile bg-white rounded-2xl p-6 text-center shadow-md hover:bg-sky-50">
+          <h3 class="text-2xl font-semibold text-sky-600">Class 1</h3>
+          <p class="text-gray-600 mt-2">Basic numbers & shapes</p>
+        </a>
+        <a href="mclass2.html" class="tile bg-white rounded-2xl p-6 text-center shadow-md hover:bg-sky-50">
+          <h3 class="text-2xl font-semibold text-sky-600">Class 2</h3>
+          <p class="text-gray-600 mt-2">Addition, subtraction & patterns</p>
+        </a>
+        <a href="mclass3.html" class="tile bg-white rounded-2xl p-6 text-center shadow-md hover:bg-sky-50">
+          <h3 class="text-2xl font-semibold text-sky-600">Class 3</h3>
+          <p class="text-gray-600 mt-2">Multiplication, division & time</p>
+        </a>
+        <a href="mclass4.html" class="tile bg-white rounded-2xl p-6 text-center shadow-md hover:bg-sky-50">
+          <h3 class="text-2xl font-semibold text-sky-600">Class 4</h3>
+          <p class="text-gray-600 mt-2">Fractions, measurements & money</p>
+        </a>
+        <a href="mclass5.html" class="tile bg-white rounded-2xl p-6 text-center shadow-md hover:bg-sky-50">
+          <h3 class="text-2xl font-semibold text-sky-600">Class 5</h3>
+          <p class="text-gray-600 mt-2">Geometry, decimals & data</p>
+        </a>
+        <a href="mclass6.html" class="tile bg-white rounded-2xl p-6 text-center shadow-md hover:bg-sky-50">
+          <h3 class="text-2xl font-semibold text-sky-600">Class 6</h3>
+          <p class="text-gray-600 mt-2">Algebra, ratios & advanced topics</p>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-sky-700 text-white py-8 text-center">
+    <p>Made with ❤️ for Nabha Students | Powered by SIH</p>
+    <p class="mt-2">Contact: support@nabhaedu.in | Helpline: +91-XXXX-XXXXXX</p>
+  </footer>
+
+</body>
+</html>
