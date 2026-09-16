@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -41,7 +41,7 @@
         <input id="register-password" type="password" autocomplete="new-password" required minlength="8" class="mb-5 w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100" placeholder="At least 8 characters">
         <button class="w-full rounded-lg bg-green-600 py-2.5 font-semibold text-white transition hover:bg-green-700" type="submit">Create student account</button>
       </form>
-      <p class="mt-5 text-center text-xs text-slate-500">Student accounts only. Teachers can continue using their existing dashboard pages.</p>
+      <p class="mt-5 text-center text-xs text-slate-500">On the published static site, accounts are saved only in this browser. Teachers can continue using their existing dashboard pages.</p>
     </section>
   </main>
   <script>
@@ -58,8 +58,46 @@
       message.classList.add('hidden');
     }
     function showMessage(text, isError = true) { message.textContent = text; message.className = `mb-4 rounded-lg px-3 py-2 text-sm ${isError ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`; }
-    async function request(endpoint, body) { const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); const result = await response.json(); if (!response.ok) throw new Error(result.error || 'Request failed.'); return result; }
-    function finish(result) { localStorage.setItem('vidyaSetuToken', result.token); localStorage.setItem('vidyaSetuStudent', JSON.stringify(result.student)); window.location.href = '../dashboards/student-dashboard.html'; }
+    const LOCAL_ACCOUNTS_KEY = 'vidyaSetuLocalAccounts';
+function localAccounts() { return JSON.parse(localStorage.getItem(LOCAL_ACCOUNTS_KEY) || '[]'); }
+function saveLocalAccounts(accounts) { localStorage.setItem(LOCAL_ACCOUNTS_KEY, JSON.stringify(accounts)); }
+function localRegister(body) {
+  const name = String(body.name || '').trim().replace(/\s+/g, ' ');
+  const email = String(body.email || '').trim().toLowerCase();
+  const grade = String(body.grade || '').trim();
+  const password = String(body.password || '');
+  if (name.length < 2) throw new Error('Enter a valid full name.');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Enter a valid email address.');
+  if (!grade) throw new Error('Select your class.');
+  if (password.length < 8) throw new Error('Password must contain at least 8 characters.');
+  const accounts = localAccounts();
+  if (accounts.some(account => account.email === email)) throw new Error('An account with this email already exists on this device.');
+  const student = { id: 'local-' + Date.now(), name, email, grade, password };
+  accounts.push(student); saveLocalAccounts(accounts);
+  return { message: 'Student account created on this device.', token: 'local-storage', student };
+}
+function localLogin(body) {
+  const email = String(body.email || '').trim().toLowerCase();
+  const account = localAccounts().find(item => item.email === email && item.password === String(body.password || ''));
+  if (!account) throw new Error('Incorrect email or password.');
+  const { password, ...student } = account;
+  return { message: 'Welcome back!', token: 'local-storage', student };
+}
+async function request(endpoint, body) {
+  try {
+    const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const contentType = response.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Request failed.');
+      return result;
+    }
+  } catch (error) {
+    if (error.message && !error.message.includes('Failed to fetch')) throw error;
+  }
+  return endpoint.endsWith('/register') ? localRegister(body) : localLogin(body);
+}
+    function finish(result) { localStorage.setItem('vidyaSetuToken', result.token); localStorage.setItem('vidyaSetuStudent', JSON.stringify(result.student)); if (result.token === 'local-storage') localStorage.setItem('vidyaSetuLocalStudent', JSON.stringify(result.student)); else localStorage.removeItem('vidyaSetuLocalStudent'); window.location.href = '../dashboards/student-dashboard.html'; }
     loginTab.addEventListener('click', () => setMode('login')); registerTab.addEventListener('click', () => setMode('register'));
     loginForm.addEventListener('submit', async event => { event.preventDefault(); try { const result = await request('/api/auth/login', { email: document.querySelector('#login-email').value, password: document.querySelector('#login-password').value }); finish(result); } catch (error) { showMessage(error.message); } });
     registerForm.addEventListener('submit', async event => { event.preventDefault(); try { const result = await request('/api/auth/register', { name: document.querySelector('#register-name').value, email: document.querySelector('#register-email').value, grade: document.querySelector('#register-grade').value, password: document.querySelector('#register-password').value }); showMessage(result.emailStatus || result.message, false); finish(result); } catch (error) { showMessage(error.message); } });
